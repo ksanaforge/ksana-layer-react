@@ -1,7 +1,7 @@
 var assert=require("assert");
 var API=require("ksana-layer");
 var flatten=require("..").flatten;
-var text="aaabbbccc";
+var text="aaabbbcccdd";
 var segid="a";
 
 
@@ -39,7 +39,7 @@ describe("test flattenview",function(){
 
 		assert.equal(C[3].props.children,"cc");
 		assert.deepEqual(C[3].props.mid,[1]);
-		assert.equal(C[4].props.children,"c");
+		assert.equal(C[4].props.children,"cdd");
 		assert.equal(C[4].props.mid,null);
 	});
 

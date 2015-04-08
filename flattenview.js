@@ -42,18 +42,17 @@ var FlattenView=React.createClass({
 		for (var i=0;i<this.props.text.length;i++) {
 			if (!this.sameArray(this.flatten[i],previous)) {
 				if (textnow) {
-					out.push(E(this.props.span,{mid:previous,start:textstart},textnow ));
+					out.push(E(this.props.span,{key:out.length,mid:previous,start:textstart},textnow ));
 					textstart=i;
 				}
 				textnow="";
 			}
 			previous=this.flatten[i]?JSON.parse(JSON.stringify(this.flatten[i])):null; 
+			if (i>this.flatten.length) break;
 			textnow +=this.props.text[i];
 		}
-
-		if (textnow) {
-			out.push(E(this.props.span,{mid:previous,start:textstart},textnow ));
-		}
+		textnow=this.props.text.substr(textstart) ;
+		if (textnow) out.push(E(this.props.span,{key:out.length,mid:previous,start:textstart}, textnow));
 		return out;
 	}
 	,render:function(){
