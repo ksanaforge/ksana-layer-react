@@ -33,6 +33,7 @@ var spreadMarkup=function(markups){
 
 var FlattenView=React.createClass({
 	mixins: [PureRenderMixin]
+	,displayName:"FlattenView"
 	,getDefaultProps:function() {
 		return {span:React.Text||"span", div:React.View||"div"};
 	}
@@ -45,8 +46,9 @@ var FlattenView=React.createClass({
 	,propTypes:{
 		text:PT.string.isRequired
 		,markups:PT.array.isRequired
-		,span:PT.oneOfType([PT.string,PT.object]) //should be a ReactClass
-		,div:PT.oneOfType([PT.string,PT.object]) //should be a ReactClass
+		,span:PT.oneOfType([PT.string,PT.function]) //should be a ReactClass
+		,div:PT.oneOfType([PT.string,PT.function]) //should be a ReactClass
+		,onSelect:PT.func
 	}
 	,click:function() {
 		this.setState({content:"hello"});
@@ -64,7 +66,7 @@ var FlattenView=React.createClass({
 		for (var i=0;i<this.props.text.length;i++) {
 			if (!this.sameArray(this.spreaded[i],previous)) {
 				if (textnow) {
-					out.push(E(this.props.span,{key:out.length,mid:previous,start:textstart},textnow ));
+					out.push(E(this.props.span,{key:out.length,markups:this.props.markups,mid:previous,start:textstart},textnow ));
 					textstart=i;
 				}
 				textnow="";
@@ -74,11 +76,35 @@ var FlattenView=React.createClass({
 			textnow +=this.props.text[i];
 		}
 		textnow=this.props.text.substr(textstart) ;
-		if (textnow) out.push(E(this.props.span,{key:out.length,mid:previous,start:textstart}, textnow));
+		if (textnow) out.push(E(this.props.span,{key:out.length,markups:this.props.markups,mid:previous,start:textstart}, textnow));
 		return out;
 	}
+	,getPos:function(node,off){
+	    var sel = window.getSelection();
+	    var pos=0,thechar='';
+	    if (off>=node.length) {
+	    	if (node.parentNode.nextSibling) {
+			    pos=parseInt(node.parentNode.nextSibling.dataset['start']);
+		    	thechar=node.parentNode.nextSibling.innerText[0];
+	    	} else { //at end of span
+	    		thechar=node.parentNode.innerText[off-1];
+	    		pos=parseInt(node.parentNode.dataset['start'])+off;
+	    	}
+	    } else {
+		    thechar=node.data[off];
+		    pos=parseInt(node.parentNode.dataset['start'])+off;
+	    }
+	    return {thechar:thechar,pos:pos};
+	}
+	,mouseUp:function(e) {
+	    var sel = window.getSelection();
+	    var off=this.getPos(sel.baseNode,sel.baseOffset);
+	    var off2=this.getPos(sel.extentNode,sel.extentOffset);
+	    this.props.onSelect && this.props.onSelect(off.pos,off2.pos-off.pos,off.thechar);
+  	}
 	,render:function(){
-		return E(this.props.div,this.props,this.renderChildren());
+
+		return E(this.props.div,{onMouseUp:this.mouseUp},this.renderChildren());
 	}
 });
 
