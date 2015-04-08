@@ -1,6 +1,11 @@
-var React=require("react/addons");
-var PureRenderMixin = React.addons.PureRenderMixin;
-var flatten=require("./flatten");
+try {
+	var React=require("react-native");
+	var PureRenderMixin=null;
+} catch(e) {
+	var React=require("react/addons");
+	var PureRenderMixin = React.addons.PureRenderMixin;
+}
+
 
 var E=React.createElement;
 var PT=React.PropTypes;
@@ -8,17 +13,34 @@ var PT=React.PropTypes;
 //  create less span for overlap markup.
 //  each span holds an array of markups id in props.mid
 //  props.start is the starting offset of the text snippnet in the span
+//  [ array of markup at 0, array of markups at 1 ... ]
+
+var spreadMarkup=function(markups){
+	var out=[];
+	for (var i=0;i<markups.length;i++) {
+		var m=markups[i];
+		var start=m[0],len=m[1];
+		for (var j=start;j<start+len;j++) {
+			if (!out[j]) out[j]=[];
+			out[j].push(i);
+		}
+	}
+	for (var i=0;i<out.length;i++) {
+		out[i]&&out[i].sort(function(a,b){return a-b});
+	}
+	return out;
+}
 
 var FlattenView=React.createClass({
 	mixins: [PureRenderMixin]
 	,getDefaultProps:function() {
-		return {span:"span", div:"div"};
+		return {span:React.Text||"span", div:React.View||"div"};
 	}
 	,componentWillMount:function() {
-		this.flatten=flatten(this.props.markups);		
+		this.spreaded=spreadMarkup(this.props.markups);		
 	}
 	,componentWillReceiveProps:function() {
-		this.flatten=flatten(this.props.markups);	
+		this.spreaded=spreadMarkup(this.props.markups);	
 	}
 	,propTypes:{
 		text:PT.string.isRequired
@@ -40,15 +62,15 @@ var FlattenView=React.createClass({
 		var previous=["impossible item"] ;
 
 		for (var i=0;i<this.props.text.length;i++) {
-			if (!this.sameArray(this.flatten[i],previous)) {
+			if (!this.sameArray(this.spreaded[i],previous)) {
 				if (textnow) {
 					out.push(E(this.props.span,{key:out.length,mid:previous,start:textstart},textnow ));
 					textstart=i;
 				}
 				textnow="";
 			}
-			previous=this.flatten[i]?JSON.parse(JSON.stringify(this.flatten[i])):null; 
-			if (i>this.flatten.length) break;
+			previous=this.spreaded[i]?JSON.parse(JSON.stringify(this.spreaded[i])):null; 
+			if (i>this.spreaded.length) break;
 			textnow +=this.props.text[i];
 		}
 		textnow=this.props.text.substr(textstart) ;
@@ -59,4 +81,6 @@ var FlattenView=React.createClass({
 		return E(this.props.div,this.props,this.renderChildren());
 	}
 });
+
+FlattenView.spreadMarkup=spreadMarkup; //for test only
 module.exports=FlattenView;

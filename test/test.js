@@ -17,7 +17,7 @@ var renderer=TestUtils.createRenderer();
 
 describe("test",function(){
 	it("render layerdoc",function(){
-
+/*
 		//var c=renderer.render(React.createElement("div",{},"xyz"));
 		var c=TestUtils.renderIntoDocument(React.createElement(Component,{label:"xyz"}));
 		var btn=React.findDOMNode(c.refs.btn);
@@ -27,6 +27,7 @@ describe("test",function(){
 		console.log("q",c.getDOMNode().outerHTML);
 		//console.log(c.getRenderOutput());
 		//console.log("a",c)
+*/
 	});
 /*
 	it("shallow",function(){

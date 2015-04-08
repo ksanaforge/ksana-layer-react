@@ -1,6 +1,6 @@
 var assert=require("assert");
 var API=require("ksana-layer");
-var flatten=require("..").flatten;
+
 var text="aaabbbcccdd";
 var segid="a";
 
@@ -10,6 +10,8 @@ var TestUtils=React.addons.TestUtils;
 
 var renderer=TestUtils.createRenderer();
 var FlattenView=require("..").FlattenView;
+
+
 var createoverlapmarkups =function() {
 	var doc=API.layerdoc.create();
 	doc.put(segid,text);
@@ -21,7 +23,18 @@ var createoverlapmarkups =function() {
 }
 
 describe("test flattenview",function(){
-	it("overlap",function(){
+	it("spread markup to span",function(){
+		var res=createoverlapmarkups();
+		var M=FlattenView.spreadMarkup(res.markups);
+		assert.deepEqual(M[2],[0]);
+		assert.deepEqual(M[3],[0]);
+		assert.deepEqual(M[4],[0,1]);
+		assert.deepEqual(M[5],[0,1]);
+		assert.deepEqual(M[6],[1]);
+		assert.deepEqual(M[7],[1]);
+	});
+
+	it("check rendered output",function(){
 		var res=createoverlapmarkups();
 
 		renderer.render(React.createElement(FlattenView,res));
