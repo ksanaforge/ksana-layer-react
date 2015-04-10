@@ -6,7 +6,7 @@ try {
 	var PureRenderMixin = React.addons.PureRenderMixin;
 }
 
-
+var defaultSpan=require("./defaultspan");
 var E=React.createElement;
 var PT=React.PropTypes;
 
@@ -35,7 +35,7 @@ var FlattenView=React.createClass({
 	mixins: [PureRenderMixin]
 	,displayName:"FlattenView"
 	,getDefaultProps:function() {
-		return {span:React.Text||"span", div:React.View||"div"};
+		return {span:defaultSpan,div:React.View||"div"};
 	}
 	,componentWillMount:function() {
 		this.spreaded=spreadMarkup(this.props.markups);		
@@ -46,9 +46,10 @@ var FlattenView=React.createClass({
 	,propTypes:{
 		text:PT.string.isRequired
 		,markups:PT.array.isRequired
-		,span:PT.oneOfType([PT.string,PT.function]) //should be a ReactClass
-		,div:PT.oneOfType([PT.string,PT.function]) //should be a ReactClass
+		//,span:PT.oneOf([PT.func,PT.string])
+		//,div:PT.oneOf([PT.func,PT.string])
 		,onSelect:PT.func
+		,markupStyles:PT.object
 	}
 	,click:function() {
 		this.setState({content:"hello"});
@@ -66,7 +67,9 @@ var FlattenView=React.createClass({
 		for (var i=0;i<this.props.text.length;i++) {
 			if (!this.sameArray(this.spreaded[i],previous)) {
 				if (textnow) {
-					out.push(E(this.props.span,{key:out.length,markups:this.props.markups,mid:previous,start:textstart},textnow ));
+					out.push(E(this.props.span
+					,{styles:this.props.markupStyles,key:out.length,markups:this.props.markups,mid:previous,start:textstart}
+					,textnow ));
 					textstart=i;
 				}
 				textnow="";
@@ -76,7 +79,11 @@ var FlattenView=React.createClass({
 			textnow +=this.props.text[i];
 		}
 		textnow=this.props.text.substr(textstart) ;
-		if (textnow) out.push(E(this.props.span,{key:out.length,markups:this.props.markups,mid:previous,start:textstart}, textnow));
+		if (textnow) {
+			out.push(E(this.props.span
+			,{styles:this.props.markupStyles,key:out.length,markups:this.props.markups,mid:previous,start:textstart}
+			, textnow));
+		}
 		return out;
 	}
 	,getPos:function(node,off){
@@ -103,8 +110,7 @@ var FlattenView=React.createClass({
 	    this.props.onSelect && this.props.onSelect(off.pos,off2.pos-off.pos,off.thechar);
   	}
 	,render:function(){
-
-		return E(this.props.div,{onMouseUp:this.mouseUp},this.renderChildren());
+		return E("this.props.div",{onMouseUp:this.mouseUp},this.renderChildren());
 	}
 });
 
