@@ -1,3 +1,3 @@
-var FlattenView=require("./flattenview");
+var BaseView=require("./baseview");
 
-module.exports={FlattenView:FlattenView}
+module.exports={BaseView:BaseView}

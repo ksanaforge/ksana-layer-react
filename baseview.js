@@ -16,6 +16,7 @@ var PT=React.PropTypes;
 //  [ array of markup at 0, array of markups at 1 ... ]
 
 var spreadMarkup=function(markups){
+	if (!markups) return [];
 	var out=[];
 	for (var i=0;i<markups.length;i++) {
 		var m=markups[i];
@@ -31,21 +32,21 @@ var spreadMarkup=function(markups){
 	return out;
 }
 
-var FlattenView=React.createClass({
+var BaseView=React.createClass({
 	mixins: [PureRenderMixin]
-	,displayName:"FlattenView"
+	,displayName:"BaseView"
 	,getDefaultProps:function() {
-		return {span:defaultSpan,div:React.View||"div"};
+		return {span:defaultSpan,div:React.View||"div",markups:[]};
 	}
 	,componentWillMount:function() {
-		this.spreaded=spreadMarkup(this.props.markups);		
+		this.spreaded=spreadMarkup(this.props.markups);
 	}
 	,componentWillReceiveProps:function() {
 		this.spreaded=spreadMarkup(this.props.markups);	
 	}
 	,propTypes:{
 		text:PT.string.isRequired
-		,markups:PT.array.isRequired
+		,markups:PT.array
 		//,span:PT.oneOf([PT.func,PT.string])
 		//,div:PT.oneOf([PT.func,PT.string])
 		,onSelect:PT.func
@@ -114,5 +115,5 @@ var FlattenView=React.createClass({
 	}
 });
 
-FlattenView.spreadMarkup=spreadMarkup; //for test only
-module.exports=FlattenView;
+BaseView.spreadMarkup=spreadMarkup; //for test only
+module.exports=BaseView;

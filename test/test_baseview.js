@@ -9,7 +9,7 @@ var React=require("react/addons")
 var TestUtils=React.addons.TestUtils;
 
 var renderer=TestUtils.createRenderer();
-var FlattenView=require("..").FlattenView;
+var BaseView=require("..").BaseView;
 
 
 var createoverlapmarkups =function() {
@@ -22,10 +22,10 @@ var createoverlapmarkups =function() {
 	return {text:text, markups:M.markups[segid]};
 }
 
-describe("test flattenview",function(){
+describe("test BaseView",function(){
 	it("spread markup to span",function(){
 		var res=createoverlapmarkups();
-		var M=FlattenView.spreadMarkup(res.markups);
+		var M=BaseView.spreadMarkup(res.markups);
 		assert.deepEqual(M[2],[0]);
 		assert.deepEqual(M[3],[0]);
 		assert.deepEqual(M[4],[0,1]);
@@ -37,7 +37,7 @@ describe("test flattenview",function(){
 	it("check rendered output",function(){
 		var res=createoverlapmarkups();
 
-		renderer.render(React.createElement(FlattenView,res));
+		renderer.render(React.createElement(BaseView,res));
 		var renderoutput=renderer.getRenderOutput();
 		var C=renderoutput.props.children;
 		assert.equal(C.length,5);
