@@ -13,10 +13,10 @@ var create=function() {
 		});
 		return overlap;
 	}
-	var combine=function(selections) {
+	var combine=function(sels) {
 		var start=Number.MAX_VALUE,end=0;
-		for (var i=0;i<selections.length;i++) {
-			var sel=selections[i];
+		for (var i=0;i<sels.length;i++) {
+			var sel=sels[i];
 			if (sel[0]<start) start=sel[0];
 			if (sel[0]+sel[1]>end) end=sel[0]+sel[1];
 		}

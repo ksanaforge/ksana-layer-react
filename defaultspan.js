@@ -24,7 +24,7 @@ var SpanClass = React.createClass({
     mid:PT.array
     ,markups:PT.array.isRequired
     ,start:PT.number.isRequired
-    ,styles:PT.object
+    ,markupStyles:PT.object
   }
   ,getInitialState:function() {
     return {span:React.Text||"span"}
@@ -33,7 +33,7 @@ var SpanClass = React.createClass({
     if (!mid) return {};
     var out=[];
     return mid.map(function(m){
-      return this.props.styles[this.props.markups[m][2].type];
+      return this.props.markupStyles[this.props.markups[m][2].type];
     },this);
   }
   ,render:function() {

@@ -8,9 +8,15 @@ try {
 var E=React.createElement;
 var PT=React.PropTypes;
 var BaseView=require("./baseview");
+var multiselect=require("./multiselect");
 var MultiSelectView=React.createClass({
 	getInitialState:function() {
-		return {markups:this.props.markups||[]}
+		var markupStyles=JSON.parse(JSON.stringify(this.props.markupStyles||{}));
+		markupStyles.selected={"backgroundColor":"highlight",color:"black"};
+		return {markups:this.props.markups||[], selections:multiselect.create() , markupStyles:markupStyles}
+	}
+	,getDefaultProps:function() {
+		return {markupStyles:{}};
 	}
 	,propTypes:{
 		text:PT.string.isRequired
@@ -19,12 +25,25 @@ var MultiSelectView=React.createClass({
 		,markupStyles:PT.object
 	}
 	,onSelect:function(start,len,thechar,modifier) {
-		console.log(modifier);
+		var selections=this.state.selections;
+		var markups=this.state.markups;
+
+		markups=markups.filter(function(m){
+			return m[2].type!=="selected";
+		});
+
+		modifier.ctrlKey?selections.add(start,len):selections.set(start,len);
+
+		selections.get().map(function(sel){
+			markups.push([sel[0],sel[1],{type:"selected"}]);
+		});
+
+		this.setState({selections:selections,markups:markups});
 		this.props.onSelect&& this.props.onSelect(start,len,thechar,modifier);
 	}
 	,render:function() {
 		return E(BaseView,{text:this.props.text,markups:this.state.markups,
-			onSelect:this.onSelect,makurpStyles:this.props.markupStyles},this.props.children);
+			onSelect:this.onSelect,markupStyles:this.state.markupStyles},this.props.children);
 	}
 });
 

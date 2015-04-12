@@ -41,8 +41,8 @@ var BaseView=React.createClass({
 	,componentWillMount:function() {
 		this.spreaded=spreadMarkup(this.props.markups);
 	}
-	,componentWillReceiveProps:function() {
-		this.spreaded=spreadMarkup(this.props.markups);	
+	,componentWillReceiveProps:function(nextProps) {
+		this.spreaded=spreadMarkup(nextProps.markups);	
 	}
 	,propTypes:{
 		text:PT.string.isRequired
@@ -64,7 +64,7 @@ var BaseView=React.createClass({
 			if (!this.sameArray(this.spreaded[i],previous)) {
 				if (textnow) {
 					out.push(E(this.props.span
-					,{styles:this.props.markupStyles,key:out.length,markups:this.props.markups,mid:previous,start:textstart}
+					,{markupStyles:this.props.markupStyles,key:out.length,markups:this.props.markups,mid:previous,start:textstart}
 					,textnow ));
 					textstart=i;
 				}
@@ -77,7 +77,7 @@ var BaseView=React.createClass({
 		textnow=this.props.text.substr(textstart) ;
 		if (textnow) {
 			out.push(E(this.props.span
-			,{styles:this.props.markupStyles,key:out.length,markups:this.props.markups,mid:previous,start:textstart}
+			,{markupStyles:this.props.markupStyles,key:out.length,markups:this.props.markups,mid:previous,start:textstart}
 			, textnow));
 		}
 		return out;
