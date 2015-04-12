@@ -1,3 +1,4 @@
 var BaseView=require("./baseview");
-
-module.exports={BaseView:BaseView}
+var MultiSelectView=require("./multiselectview");
+var multiselect=require("./multiselect");
+module.exports={BaseView:BaseView,MultiSelectView:MultiSelectView,multiselect:multiselect};

@@ -47,13 +47,8 @@ var BaseView=React.createClass({
 	,propTypes:{
 		text:PT.string.isRequired
 		,markups:PT.array
-		//,span:PT.oneOf([PT.func,PT.string])
-		//,div:PT.oneOf([PT.func,PT.string])
 		,onSelect:PT.func
 		,markupStyles:PT.object
-	}
-	,click:function() {
-		this.setState({content:"hello"});
 	}
 	,sameArray:function(a1,a2) {
 		if (!a1 && !a2) return true;
@@ -108,7 +103,7 @@ var BaseView=React.createClass({
 	    var sel = window.getSelection();
 	    var off=this.getPos(sel.baseNode,sel.baseOffset);
 	    var off2=this.getPos(sel.extentNode,sel.extentOffset);
-	    this.props.onSelect && this.props.onSelect(off.pos,off2.pos-off.pos,off.thechar);
+	    this.props.onSelect && this.props.onSelect(off.pos,off2.pos-off.pos,off.thechar,{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey});
   	}
 	,render:function(){
 		return E("this.props.div",{onMouseUp:this.mouseUp},this.renderChildren());
