@@ -41,7 +41,7 @@ var MultiSelectView=React.createClass({
 		});
 
 		this.setState({selections:selections,markups:markups});
-		this.props.onSelect&& this.props.onSelect(start,len,thechar,modifier);
+		this.props.onSelect&& this.props.onSelect(start,len,thechar,modifier,selections.get());
 	}
 	,render:function() {
 		return E(BaseView,{text:this.props.text,markups:this.state.markups,
