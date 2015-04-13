@@ -34,11 +34,12 @@ var SpanClass = React.createClass({
     var out=[];
     for (var i=0;i<mid.length;i++){
       var m=mid[i];
+      var styles=this.props.markupStyles;
       var markup=this.props.markups[m];
       var type=markup[2].type;
-      this.props.markupStyles[type]?out.push(this.props.markupStyles[type]):0;
-      this.props.markupStyles[type+"_first"]?out.push(this.props.markupStyles[type+"_first"]):0;
-      this.props.markupStyles[type+"_last"]?out.push(this.props.markupStyles[type+"_last"]):0;
+      styles[type]&&out.push(styles[type]);
+      styles[type+"_first"]&&out.push(styles[type+"_first"]);
+      styles[type+"_last"]&&out.push(styles[type+"_last"]);
     };
     return out;
   }
