@@ -26,6 +26,10 @@ var MultiSelectView=React.createClass({
 		,onSelect:PT.func
 		,markupStyles:PT.object
 	}
+	,onkeydown:function(e) { 
+		console.log("keydown")
+		e.preventDefault();
+	}
 	,onSelect:function(start,len,thechar,modifier) {
 		var selections=this.state.selections;
 		var markups=this.state.markups;
@@ -44,8 +48,11 @@ var MultiSelectView=React.createClass({
 		this.props.onSelect&& this.props.onSelect(start,len,thechar,modifier,selections.get());
 	}
 	,render:function() {
-		return E(BaseView,{text:this.props.text,markups:this.state.markups,
-			onSelect:this.onSelect,markupStyles:this.state.markupStyles},this.props.children);
+		return E(BaseView,{showCaret:this.props.showCaret,text:this.props.text,markups:this.state.markups,
+			onSelect:this.onSelect,markupStyles:this.state.markupStyles,
+			onKeyDown:this.onkeydown},
+
+			this.props.children);
 	}
 });
 

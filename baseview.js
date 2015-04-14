@@ -33,6 +33,7 @@ var spreadMarkup=function(markups){
 var BaseView=React.createClass({
 	mixins: [PureRenderMixin]
 	,displayName:"BaseView"
+	,mixins:[require("./keyboard_mixin")]
 	,getDefaultProps:function() {
 		return {span:defaultSpan,div:React.View||"div",markups:[]};
 	}
@@ -95,6 +96,11 @@ var BaseView=React.createClass({
 	    }
 	    return {thechar:thechar,pos:pos};
 	}
+	,componentDidMount:function() {
+		if (this.props.showCaret) {
+			this.getDOMNode().contentEditable=true;
+		}
+	}
 	,mouseUp:function(e) {
 	    var sel=window.getSelection();
 	    if (!sel.baseNode) return;
@@ -103,7 +109,14 @@ var BaseView=React.createClass({
 	    this.props.onSelect && this.props.onSelect(off.pos,off2.pos-off.pos,off.thechar,{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey});
   	}
 	,render:function(){
-		return E("this.props.div",{onMouseUp:this.mouseUp},this.renderChildren());
+		return E("this.props.div",
+			{style:{"outline": "0px solid transparent"},
+			onKeyDown:this.props.onKeyDown||this.onkeydown,
+			onKeyUp:this.props.onKeyUp||this.onkeyup,
+			onKeyPress:this.props.onKeyPress||this.onkeypress,
+			onMouseUp:this.mouseUp},
+			this.renderChildren()
+		);
 	}
 });
 
