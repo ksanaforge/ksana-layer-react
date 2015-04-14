@@ -3,18 +3,16 @@ try {
 	var PureRenderMixin=null;
 } catch(e) {
 	var React=require("react/addons");
-	var PureRenderMixin = React.addons.PureRenderMixin;
+	var PureRenderMixin=React.addons.PureRenderMixin;
 }
-
 var defaultSpan=require("./defaultspan");
 var E=React.createElement;
 var PT=React.PropTypes;
 
 //  create less span for overlap markup.
 //  each span holds an array of markups id in props.mid
-//  props.start is the starting offset of the text snippnet in the span
+//  this.spreaded is the starting offset of the text snippnet in the span
 //  [ array of markup at 0, array of markups at 1 ... ]
-
 var spreadMarkup=function(markups){
 	if (!markups) return [];
 	var out=[];
@@ -56,35 +54,33 @@ var BaseView=React.createClass({
 		if (a1 && !a2) return false;
 		return JSON.stringify(a1)===JSON.stringify(a2);
 	}
+	,renderSpan:function(out,textstart,textnow,mid) {
+		var markups=this.props.markups;
+		out=out.concat(mid.map(function(m){return markups[m][2].before||null}));
+		out.push(E(this.props.span
+				,{markupStyles:this.props.markupStyles,key:out.length,markups:this.props.markups,mid:mid,start:textstart}
+				,textnow ));
+		out=out.concat(mid.map(function(m){return markups[m][2].after||null}));
+		return out;
+	}
 	,renderChildren:function() {
-		var out=[], textnow="" ,textstart=0;
-		var previous=["impossible item"] ;
-
+		var out=[], textnow="" ,textstart=0, previous=["impossible item"] ;
 		for (var i=0;i<this.props.text.length;i++) {
 			if (!this.sameArray(this.spreaded[i],previous)) {
-				if (textnow) {
-					out.push(E(this.props.span
-					,{markupStyles:this.props.markupStyles,key:out.length,markups:this.props.markups,mid:previous,start:textstart}
-					,textnow ));
-					textstart=i;
-				}
+				textnow&& (out=this.renderSpan(out,textstart,textnow,previous));
+				textstart=i;
 				textnow="";
 			}
-			previous=this.spreaded[i]?JSON.parse(JSON.stringify(this.spreaded[i])):null; 
+			previous=this.spreaded[i]?JSON.parse(JSON.stringify(this.spreaded[i])):[]; 
 			if (i>this.spreaded.length) break;
-			textnow +=this.props.text[i];
+			textnow += this.props.text[i];
 		}
 		textnow=this.props.text.substr(textstart) ;
-		if (textnow) {
-			out.push(E(this.props.span
-			,{markupStyles:this.props.markupStyles,key:out.length,markups:this.props.markups,mid:previous,start:textstart}
-			, textnow));
-		}
+		textnow&& (out=this.renderSpan(out,textstart,textnow,previous));
 		return out;
 	}
 	,getPos:function(node,off){
-	    var sel = window.getSelection();
-	    var pos=0,thechar='';
+	    var sel=window.getSelection(), pos=0, thechar='';
 	    if (off>=node.length) {
 	    	if (node.parentNode.nextSibling) {
 			    pos=parseInt(node.parentNode.nextSibling.dataset['start']);
@@ -100,7 +96,8 @@ var BaseView=React.createClass({
 	    return {thechar:thechar,pos:pos};
 	}
 	,mouseUp:function(e) {
-	    var sel = window.getSelection();
+	    var sel=window.getSelection();
+	    if (!sel.baseNode) return;
 	    var off=this.getPos(sel.baseNode,sel.baseOffset);
 	    var off2=this.getPos(sel.extentNode,sel.extentOffset);
 	    this.props.onSelect && this.props.onSelect(off.pos,off2.pos-off.pos,off.thechar,{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey});
