@@ -50,7 +50,8 @@ var MultiSelectView=React.createClass({
 	,render:function() {
 		return E(BaseView,{showCaret:this.props.showCaret,text:this.props.text,markups:this.state.markups,
 			onSelect:this.onSelect,markupStyles:this.state.markupStyles,
-			onKeyDown:this.onkeydown},
+			//onKeyDown:this.onkeydown  //may overwrite
+			},
 
 			this.props.children);
 	}

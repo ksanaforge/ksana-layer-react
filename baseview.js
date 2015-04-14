@@ -107,6 +107,7 @@ var BaseView=React.createClass({
 	    var off=this.getPos(sel.baseNode,sel.baseOffset);
 	    var off2=this.getPos(sel.extentNode,sel.extentOffset);
 	    this.props.onSelect && this.props.onSelect(off.pos,off2.pos-off.pos,off.thechar,{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey});
+	    if (off2.pos>off.pos)sel.empty();
   	}
 	,render:function(){
 		return E("this.props.div",
