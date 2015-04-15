@@ -8,7 +8,7 @@ try {
 var defaultSpan=require("./defaultspan");
 var E=React.createElement;
 var PT=React.PropTypes;
-
+var selection=require("./selection");
 //  create less span for overlap markup.
 //  each span holds an array of markups id in props.mid
 //  this.spreaded is the starting offset of the text snippnet in the span
@@ -35,16 +35,20 @@ var BaseView=React.createClass({
 	,displayName:"BaseView"
 	,mixins:[require("./keyboard_mixin")]
 	,getDefaultProps:function() {
-		return {span:defaultSpan,div:React.View||"div",markups:[]};
+		return {span:defaultSpan,div:React.View||"div",markups:[],sel:{}};
 	}
 	,componentWillMount:function() {
 		this.spreaded=spreadMarkup(this.props.markups);
+	}
+	,componentDidUpdate:function() {
+		selection.restore(this.getDOMNode(),this.state.sel);
 	}
 	,componentWillReceiveProps:function(nextProps) {
 		this.spreaded=spreadMarkup(nextProps.markups);	
 	}
 	,propTypes:{
 		text:PT.string.isRequired
+		,index:PT.number
 		,markups:PT.array
 		,onSelect:PT.func
 		,markupStyles:PT.object
@@ -57,11 +61,12 @@ var BaseView=React.createClass({
 	}
 	,renderSpan:function(out,textstart,textnow,mid) {
 		var markups=this.props.markups;
-		out=out.concat(mid.map(function(m){return markups[m][2].before||null}));
+		out=out.concat((mid||[]).map(function(m){return markups[m][2].before||null}));
 		out.push(E(this.props.span
-				,{markupStyles:this.props.markupStyles,key:out.length,markups:this.props.markups,mid:mid,start:textstart}
+				,{index:this.props.index,markupStyles:this.props.markupStyles,key:out.length,
+				  markups:this.props.markups,mid:mid,start:textstart}
 				,textnow ));
-		out=out.concat(mid.map(function(m){return markups[m][2].after||null}));
+		out=out.concat((mid||[]).map(function(m){return markups[m][2].after||null}));
 		return out;
 	}
 	,renderChildren:function() {
@@ -72,7 +77,7 @@ var BaseView=React.createClass({
 				textstart=i;
 				textnow="";
 			}
-			previous=this.spreaded[i]?JSON.parse(JSON.stringify(this.spreaded[i])):[]; 
+			previous=this.spreaded[i]?JSON.parse(JSON.stringify(this.spreaded[i])):null; 
 			if (i>this.spreaded.length) break;
 			textnow += this.props.text[i];
 		}
@@ -80,37 +85,22 @@ var BaseView=React.createClass({
 		textnow&& (out=this.renderSpan(out,textstart,textnow,previous));
 		return out;
 	}
-	,getPos:function(node,off){
-	    var sel=window.getSelection(), pos=0, thechar='';
-	    if (off>=node.length) {
-	    	if (node.parentNode.nextSibling) {
-			    pos=parseInt(node.parentNode.nextSibling.dataset['start']);
-		    	thechar=node.parentNode.nextSibling.innerText[0];
-	    	} else { //at end of span
-	    		thechar=node.parentNode.innerText[off-1];
-	    		pos=parseInt(node.parentNode.dataset['start'])+off;
-	    	}
-	    } else {
-		    thechar=node.data[off];
-		    pos=parseInt(node.parentNode.dataset['start'])+off;
-	    }
-	    return {thechar:thechar,pos:pos};
-	}
 	,componentDidMount:function() {
 		if (this.props.showCaret) {
 			this.getDOMNode().contentEditable=true;
 		}
 	}
+	,markSelection:function(e){
+		var sel=selection.get(e);
+		this.setState({sel:sel});
+		sel&&this.props.onSelect && this.props.onSelect(sel.start,sel.len,sel.thechar,{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey});
+	}
 	,mouseUp:function(e) {
-	    var sel=window.getSelection();
-	    if (!sel.baseNode) return;
-	    var off=this.getPos(sel.baseNode,sel.baseOffset);
-	    var off2=this.getPos(sel.extentNode,sel.extentOffset);
-	    this.props.onSelect && this.props.onSelect(off.pos,off2.pos-off.pos,off.thechar,{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey});
-	    if (off2.pos>off.pos)sel.empty();
+		console.log("mark")
+		this.markSelection(e);
   	}
 	,render:function(){
-		return E("this.props.div",
+		return E("div",
 			{style:{"outline": "0px solid transparent"},
 			onKeyDown:this.props.onKeyDown||this.onkeydown,
 			onKeyUp:this.props.onKeyUp||this.onkeyup,

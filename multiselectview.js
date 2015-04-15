@@ -10,7 +10,8 @@ var PT=React.PropTypes;
 var BaseView=require("./baseview");
 var multiselect=require("./multiselect");
 var MultiSelectView=React.createClass({
-	getInitialState:function() {
+	displayName:"MultiSelectView"
+	,getInitialState:function() {
 		var markupStyles=JSON.parse(JSON.stringify(this.props.markupStyles||{}));
 		markupStyles.selected_first={"borderTopLeftRadius":"0.35em","borderBottomLeftRadius":"0.35em"};
 		markupStyles.selected={"backgroundColor":"highlight",color:"black"};
@@ -22,13 +23,10 @@ var MultiSelectView=React.createClass({
 	}
 	,propTypes:{
 		text:PT.string.isRequired
+		,index:PT.number
 		,markups:PT.array
 		,onSelect:PT.func
 		,markupStyles:PT.object
-	}
-	,onkeydown:function(e) { 
-		console.log("keydown")
-		e.preventDefault();
 	}
 	,onSelect:function(start,len,thechar,modifier) {
 		var selections=this.state.selections;
@@ -48,9 +46,9 @@ var MultiSelectView=React.createClass({
 		this.props.onSelect&& this.props.onSelect(start,len,thechar,modifier,selections.get());
 	}
 	,render:function() {
-		return E(BaseView,{showCaret:this.props.showCaret,text:this.props.text,markups:this.state.markups,
+		return E(BaseView,{showCaret:this.props.showCaret,index:this.props.index,
+			text:this.props.text,markups:this.state.markups,
 			onSelect:this.onSelect,markupStyles:this.state.markupStyles,
-			//onKeyDown:this.onkeydown  //may overwrite
 			},
 
 			this.props.children);

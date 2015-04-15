@@ -20,8 +20,10 @@ var mergeStyles=function(styles) {
   return out;
 }
 var SpanClass = React.createClass({
-  propTypes:{
+  displayName:"defaultSpan"
+  ,propTypes:{
     mid:PT.array
+    ,index:PT.number
     ,markups:PT.array.isRequired
     ,start:PT.number.isRequired
     ,markupStyles:PT.object
@@ -46,7 +48,10 @@ var SpanClass = React.createClass({
   ,render:function() {
     var styles=this.getMarkupStyle(this.props.mid);
     var style=mergeStyles(styles);
-    return E(this.state.span, {style:style,onClick:this.click,"data-start":this.props.start}, this.props.children);
+    return E(this.state.span
+      ,{"data-index":this.props.index,style:style,onClick:this.click,"data-start":this.props.start}
+      ,this.props.children
+    );
   }
 });
 module.exports=SpanClass;
