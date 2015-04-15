@@ -19,7 +19,7 @@ var spreadMarkup=function(markups){
 	for (var i=0;i<markups.length;i++) {
 		var m=markups[i];
 		var start=m[0],len=m[1];
-		for (var j=start;j<start+len;j++) {
+		for (var j=start;j<start+len+1;j++) {
 			if (!out[j]) out[j]=[];
 			out[j].push(i);
 		}

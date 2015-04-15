@@ -9,7 +9,7 @@ var getPos=function(node,off){
     		pos=parseInt(node.parentNode.dataset['start'])+off;
     	}
     } else {
-	    thechar=node.data[off];
+    	if (node.data) thechar=node.data[off];
 	    pos=parseInt(node.parentNode.dataset['start'])+off;
     }
     return {thechar:thechar,pos:pos};
