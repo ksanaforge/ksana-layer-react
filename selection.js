@@ -19,10 +19,12 @@ var posInSpan=function(children,pos) {
 	for (var i=0;i<children.length;i++) {
 		var spanstart=parseInt(children[i].dataset.start);
 		if (spanstart>pos) {
-			return {idx:i-1,element:children[i-1], offset:pos-spanstart};
+			laststart=parseInt(children[i-1].dataset.start);
+			return {idx:i-1,element:children[i-1], offset:pos-laststart};
 		}
 	}
-	return {idx:children.length-1,element:children[children.length-1], offset:pos-spanstart };
+	laststart=parseInt(children[children.length-1].dataset.start);
+	return {idx:children.length-1,element:children[children.length-1], offset:pos-laststart };
 }
 var restore=function(domnode,sel) {
 	var span=posInSpan(domnode.childNodes,sel.start+sel.len)
