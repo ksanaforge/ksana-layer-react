@@ -54,10 +54,9 @@ var BaseView=React.createClass({
 		,markupStyles:PT.object
 	}
 	,sameArray:function(a1,a2) {
-		if (!a1 && !a2) return true;
-		if (!a1 && a2) return false;
-		if (a1 && !a2) return false;
-		return JSON.stringify(a1)===JSON.stringify(a2);
+		if (!a1 && !a2) return true; //both are empty
+		if ((!a1 && a2) || (a1 && !a2) ) return false;
+		return a1.toString()===a2.toString(); //one dimensional array
 	}
 	,renderSpan:function(out,textstart,textnow,mid) {
 		var markups=this.props.markups;
@@ -86,9 +85,7 @@ var BaseView=React.createClass({
 		return out;
 	}
 	,componentDidMount:function() {
-		if (this.props.showCaret) {
-			this.getDOMNode().contentEditable=true;
-		}
+		if (this.props.showCaret) this.getDOMNode().contentEditable=true;
 	}
 	,markSelection:function(e){
 		var sel=selection.get(e);

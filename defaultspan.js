@@ -6,7 +6,6 @@ try {
   var PureRenderMixin = React.addons.PureRenderMixin;
 }
 
-
 var E=React.createElement;
 var PT=React.PropTypes;
 

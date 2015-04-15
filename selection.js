@@ -30,6 +30,9 @@ var restore=function(domnode,sel) {
 	var span=posInSpan(domnode.childNodes,sel.start+sel.len)
     var sel = window.getSelection();
     var range = document.createRange();
+    if (span.element.nodeType!==3 && span.element.childNodes[0].nodeType===3) {
+    	span.element=span.element.childNodes[0];
+    }
     range.setStart(span.element ,span.offset);
     range.setEnd( span.element,span.offset);
     sel.removeAllRanges();
