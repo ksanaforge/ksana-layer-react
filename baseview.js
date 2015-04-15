@@ -29,11 +29,19 @@ var spreadMarkup=function(markups){
 	}
 	return out;
 }
-
+var keyboard_mixin=require("./keyboard_mixin");
 var BaseView=React.createClass({
 	mixins: [PureRenderMixin]
 	,displayName:"BaseView"
-	,mixins:[require("./keyboard_mixin")]
+	,mixins:[keyboard_mixin]
+	,getInitialState:function() {
+		var markupStyles=JSON.parse(JSON.stringify(this.props.markupStyles||{}));
+		markupStyles.selected_first={"borderTopLeftRadius":"0.35em","borderBottomLeftRadius":"0.35em"};
+		markupStyles.selected={"backgroundColor":"highlight",color:"black"};
+		markupStyles.selected_last={"borderTopRightRadius":"0.35em","borderBottomRightRadius":"0.35em"};
+		var allowkeys=keyboard_mixin.arrowkeys();
+		return { markupStyles:markupStyles,allowkeys:allowkeys}
+	}
 	,getDefaultProps:function() {
 		return {span:defaultSpan,div:React.View||"div",markups:[],sel:{}};
 	}
@@ -62,7 +70,7 @@ var BaseView=React.createClass({
 		var markups=this.props.markups;
 		out=out.concat((mid||[]).map(function(m){return markups[m][2].before||null}));
 		out.push(E(this.props.span
-				,{index:this.props.index,markupStyles:this.props.markupStyles,key:out.length,
+				,{index:this.props.index,markupStyles:this.state.markupStyles,key:out.length,
 				  markups:this.props.markups,mid:mid,start:textstart}
 				,textnow ));
 		out=out.concat((mid||[]).map(function(m){return markups[m][2].after||null}));

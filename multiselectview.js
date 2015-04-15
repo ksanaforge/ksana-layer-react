@@ -12,11 +12,7 @@ var multiselect=require("./multiselect");
 var MultiSelectView=React.createClass({
 	displayName:"MultiSelectView"
 	,getInitialState:function() {
-		var markupStyles=JSON.parse(JSON.stringify(this.props.markupStyles||{}));
-		markupStyles.selected_first={"borderTopLeftRadius":"0.35em","borderBottomLeftRadius":"0.35em"};
-		markupStyles.selected={"backgroundColor":"highlight",color:"black"};
-		markupStyles.selected_last={"borderTopRightRadius":"0.35em","borderBottomRightRadius":"0.35em"};
-		return {markups:this.props.markups||[], selections:multiselect.create() , markupStyles:markupStyles}
+		return {markups:this.props.markups||[], selections:multiselect.create()}
 	}
 	,getDefaultProps:function() {
 		return {markupStyles:{}};
@@ -48,7 +44,7 @@ var MultiSelectView=React.createClass({
 	,render:function() {
 		return E(BaseView,{showCaret:this.props.showCaret,index:this.props.index,
 			text:this.props.text,markups:this.state.markups,
-			onSelect:this.onSelect,markupStyles:this.state.markupStyles,
+			onSelect:this.onSelect,markupStyles:this.props.markupStyles,
 			},
 
 			this.props.children);
