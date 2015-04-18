@@ -35,7 +35,7 @@ var MultiSelectView=React.createClass({
 		modifier.ctrlKey?selections.add(start,len):selections.set(start,len);
 
 		selections.get().map(function(sel){
-			markups.push([sel[0],sel[1],{type:"selected"}]);
+			if (sel[1]>0) markups.push([sel[0],sel[1],{type:"selected"}]);
 		});
 
 		this.setState({selections:selections,markups:markups});

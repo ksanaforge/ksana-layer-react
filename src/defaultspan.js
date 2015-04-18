@@ -48,7 +48,8 @@ var SpanClass = React.createClass({
     var styles=this.getMarkupStyle(this.props.mid);
     var style=mergeStyles(styles);
     return E(this.state.span
-      ,{"data-index":this.props.index,style:style,onClick:this.click,"data-start":this.props.start}
+      ,{style:{"float":"left"},"data-index":this.props.index,
+      "data-mid":this.props.mid,style:style,onClick:this.click,"data-start":this.props.start}
       ,this.props.children
     );
   }

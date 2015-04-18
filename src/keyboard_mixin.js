@@ -5,7 +5,7 @@ var keyboard_mixin={
 		var allowkeys=this.state.allowkeys||[];
 		if (allowkeys.indexOf(e.key)>-1 || (e.ctrlKey && e.keyCode===67)) return;
 		if (e.keyCode==77) {
-			this.markSelection(e);
+			this.markSelection&&this.markSelection(e);
 		}
 		e.preventDefault();
 	}

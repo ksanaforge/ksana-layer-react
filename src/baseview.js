@@ -13,6 +13,7 @@ var selection=require("./selection");
 //  each span holds an array of markups id in props.mid
 //  this.spreaded is the starting offset of the text snippnet in the span
 //  [ array of markup at 0, array of markups at 1 ... ]
+//  if len==0 same as len==1 , so that it is reachable in rendering phrase
 var spreadMarkup=function(markups){
 	if (!markups) return [];
 	var out=[];
@@ -21,12 +22,13 @@ var spreadMarkup=function(markups){
 		var start=m[0],len=m[1];
 		for (var j=start;j<start+len+1;j++) {
 			if (!out[j]) out[j]=[];
-			out[j].push(i);
+			if (!len || j<start+len) out[j].push(i);
 		}
 	}
 	for (var i=0;i<out.length;i++) {
 		out[i]&&out[i].sort(function(a,b){return a-b});
 	}
+
 	return out;
 }
 var keyboard_mixin=require("./keyboard_mixin");
@@ -46,7 +48,7 @@ var BaseView=React.createClass({
 		return {span:defaultSpan,div:React.View||"div",markups:[],sel:{}};
 	}
 	,componentWillMount:function() {
-		this.spreaded=spreadMarkup(this.props.markups);
+		this.spreaded=spreadMarkup(this.props.markups)
 	}
 	,componentDidUpdate:function() {
 		selection.restore(this.getDOMNode(),this.state.sel);
@@ -84,7 +86,7 @@ var BaseView=React.createClass({
 				textstart=i;
 				textnow="";
 			}
-			previous=this.spreaded[i]?JSON.parse(JSON.stringify(this.spreaded[i])):null; 
+			previous=(this.spreaded[i]&&this.spreaded[i].length)?JSON.parse(JSON.stringify(this.spreaded[i])):null; 
 			if (i>this.spreaded.length) break;
 			textnow += this.props.text[i];
 		}
@@ -106,7 +108,7 @@ var BaseView=React.createClass({
   	}
 	,render:function(){
 		return E("div",
-			{style:{"outline": "0px solid transparent"},
+			{style:{"lineHeight":"180%","outline": "0px solid transparent"},
 			onKeyDown:this.props.onKeyDown||this.onkeydown,
 			onKeyUp:this.props.onKeyUp||this.onkeyup,
 			onKeyPress:this.props.onKeyPress||this.onkeypress,

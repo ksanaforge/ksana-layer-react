@@ -1,6 +1,6 @@
 var assert=require("assert");
 var API=require("ksana-layer");
-
+       // 01234567890
 var text="aaabbbcccdd";
 var segid="a";
 
@@ -36,24 +36,29 @@ describe("test BaseView",function(){
 
 	it("check rendered output",function(){
 		var res=createoverlapmarkups();
-
-		renderer.render(React.createElement(BaseView,res));
+		var ele=React.createElement(BaseView,res);
+		renderer.render(ele);
 		var renderoutput=renderer.getRenderOutput();
 		var C=renderoutput.props.children;
-		assert.equal(C.length,5);
+
+		assert.equal(C.length,13);
 		assert.equal(C[0].props.children,"aa")
 		assert.equal(C[0].props.start,0);
 		assert.equal(C[0].props.mid,null);
-		assert.equal(C[1].props.children,"ab");
-		assert.equal(C[1].props.start,2);
-		assert.deepEqual(C[1].props.mid,[0]);
-		assert.equal(C[2].props.children,"bb");
-		assert.deepEqual(C[2].props.mid,[0,1]); //overlap
 
-		assert.equal(C[3].props.children,"cc");
-		assert.deepEqual(C[3].props.mid,[1]);
-		assert.equal(C[4].props.children,"cdd");
-		assert.equal(C[4].props.mid,null);
+		//console.log(React.renderToString(ele))
+		assert.equal(C[2].props.children,"ab");
+		assert.equal(C[2].props.start,2);
+		assert.deepEqual(C[2].props.mid,[0]);
+		
+		assert.equal(C[6].props.children,"bb");
+		assert.deepEqual(C[6].props.mid,[0,1]); //overlap
+		
+		assert.equal(C[10].props.children,"cc");
+		assert.deepEqual(C[10].props.mid,[1]);
+		
+		assert.equal(C[12].props.children,"cdd");
+		assert.equal(C[12].props.mid,null);
 	});
 
 });

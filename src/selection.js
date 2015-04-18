@@ -26,15 +26,17 @@ var posInSpan=function(children,pos) {
 	laststart=parseInt(children[children.length-1].dataset.start);
 	return {idx:children.length-1,element:children[children.length-1], offset:pos-laststart };
 }
-var restore=function(domnode,sel) {
-	var span=posInSpan(domnode.childNodes,sel.start+sel.len)
-    var sel = window.getSelection();
+var restore=function(domnode,oldsel) {
+    if (!oldsel) return;
+	var span=posInSpan(domnode.childNodes,oldsel.start+oldsel.len)
+
     var range = document.createRange();
     if (span.element.nodeType!==3 && span.element.childNodes[0].nodeType===3) {
     	span.element=span.element.childNodes[0];
     }
     range.setStart(span.element ,span.offset);
     range.setEnd( span.element,span.offset);
+    var sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
 }
