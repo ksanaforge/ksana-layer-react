@@ -41,6 +41,11 @@ var BaseView=React.createClass({
 		markupStyles.selected_first={"borderTopLeftRadius":"0.35em","borderBottomLeftRadius":"0.35em"};
 		markupStyles.selected={"backgroundColor":"highlight",color:"black"};
 		markupStyles.selected_last={"borderTopRightRadius":"0.35em","borderBottomRightRadius":"0.35em"};
+
+		markupStyles.replaceActive={"display":"none"};
+		markupStyles.replacePreview={"textDecoration":"line-through"};
+		markupStyles.replaceEdit={"textDecoration":"line-through"};
+
 		var allowkeys=keyboard_mixin.arrowkeys();
 		return { markupStyles:markupStyles,allowkeys:allowkeys}
 	}
@@ -102,6 +107,7 @@ var BaseView=React.createClass({
 		if (this.props.showCaret) this.getDOMNode().contentEditable=true;
 	}
 	,markSelection:function(e){
+		if (e.target.nodeName!="SPAN") return;
 		var sel=selection.get(e);
 		this.setState({sel:sel});
 		sel&&this.props.onSelect && this.props.onSelect(sel.start,sel.len,sel.thechar,{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey});
