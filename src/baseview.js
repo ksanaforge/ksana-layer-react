@@ -70,12 +70,16 @@ var BaseView=React.createClass({
 	}
 	,renderSpan:function(out,textstart,textnow,mid) {
 		var markups=this.props.markups;
-		out=out.concat((mid||[]).map(function(m){return markups[m][2].before||null}));
+		var before=(mid||[]).map(function(m){return markups[m][2].before||null});
+		if (before.length) out.push(E("span",{key:"before"+textstart},before));
+
 		out.push(E(this.props.span
 				,{index:this.props.index,markupStyles:this.state.markupStyles,key:out.length,
 				  markups:this.props.markups,mid:mid,start:textstart}
 				,textnow ));
-		out=out.concat((mid||[]).map(function(m){return markups[m][2].after||null}));
+		var after=(mid||[]).map(function(m){return markups[m][2].after||null});
+		
+		if (after.length) out.push(E("span",{key:"after"+textstart},after));
 		return out;
 	}
 	,renderChildren:function() {
@@ -108,7 +112,7 @@ var BaseView=React.createClass({
   	}
 	,render:function(){
 		return E("div",
-			{style:{"lineHeight":"180%","outline": "0px solid transparent"},
+			{style:{"lineHeight":"180%","outline": "0px solid transparent","color":"white"},
 			onKeyDown:this.props.onKeyDown||this.onkeydown,
 			onKeyUp:this.props.onKeyUp||this.onkeyup,
 			onKeyPress:this.props.onKeyPress||this.onkeypress,

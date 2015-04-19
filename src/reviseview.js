@@ -25,7 +25,7 @@ var Input=React.createClass({
 		e.stopPropagation();		
 	}
 	,clickMe:function(e) {
-		console.log(e)
+		console.log(e) 
 		e.stopPropagation()
 	}
 	,render:function() {
