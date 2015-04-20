@@ -4,6 +4,74 @@ var inputStyle={background:"black",color:"white","border": "1px solid #BBBBBB","
 
 var SimpleInterline=require("./interline").Single;
 var MultipleInterline=require("./interline").Multiple;
+//markup state  
+//  1: activate   
+//  2: editing    
+
+var groupByOffset=function(markups) {
+	var i=0,lastoffset=-1,m;
+	var out=[];
+	var same=[];
+	while(i<markups.length) {
+		var m=markups[i];
+		if (m[0]!==lastoffset && lastoffset>=0) {
+			out.push(same);
+			same=[];
+		}
+		same.push(m);
+		lastoffset=m[0];
+		i++;
+	}
+	if (same.length) out.push(same);
+	return out;
+}
+
+var getActive=function(markups) {
+	for (var i=0;i<markups.length;i++) {
+		if (markups[i][2].state) return i;
+	}
+	return 0;
+}
+var createMultiMarkupHandle=function(markups,active,action,selected) {
+}
+var createMarkupHandle=function(markups,active,action,selected) {
+	var m=markups[active];
+	if (markups.length>1) return createMultiMarkupHandle(markups,active,action,selected);
+	return E(SimpleInterline,{idx:active,action:action,markup:m,selected:selected});
+}
+var createInsertText=function(markups,active,selected) {
+	var m=markups[active];
+	if (selected) {
+		return E("span",{style:{textDecoration:"overline"}},m[2].t);
+	} else if (m[2].state==1) {
+		return E("span",{},m[2].t);
+	}
+}
+var createPayload=function(i,markups,active,action,selected) {
+	var m=markups[active];
+	var handle=createMarkupHandle(markups,active,action,selected);
+
+	var payload=JSON.parse(JSON.stringify(m[2]));
+	var insertText=createInsertText(markups,active,selected);
+
+	if (selected) payload.type="revisionSelected";
+	else if (payload.state==1) payload.type="revisionActivated";
+	payload.before=E("span",{key:i},handle,insertText);
+	return payload;
+}
+var elementFromMarkup=function(markups,action,seloffset,selidx) {
+	var grouped=groupByOffset(markups),out=[];
+	for (var i=0;i<grouped.length;i++) {
+		var markups=grouped[i],selected=false;
+		var active=getActive(markups), m=markups[active];
+		if (m[0]===seloffset && active==selidx) selected=true;
+		var payload=createPayload(i,markups,active,action,selected);
+		out.push([m[0],m[1], payload] );
+    };
+	return out;
+}
+
+/*
 
 var pickOneElement=function(markups,i,action,seloffset,selidx) {
 	var next=markups[i+1];
@@ -38,9 +106,7 @@ var pickOneElement=function(markups,i,action,seloffset,selidx) {
     return {insertLine:insertLine,insertText:insertText,i:i,payload:payload,start:start,len:len};
 }
 
-var elementFromMarkup=function(markups,action,seloffset,selidx) {
-	var out=[],i=0,m;
-	while (i<markups.length) {
+
 		m=markups[i];
 		var start=m[0],len=m[1];
     	var payload=JSON.parse(JSON.stringify(m[2]));
@@ -65,7 +131,5 @@ var elementFromMarkup=function(markups,action,seloffset,selidx) {
     	payload.before=E("span",{key:i},insertLine,insertText);
     	out.push([start,len,payload]);
     	i++;
-    };
-	return out;
-}
+*/
 module.exports=elementFromMarkup;

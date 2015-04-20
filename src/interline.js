@@ -6,14 +6,16 @@ try {
 	var PureRenderMixin = React.addons.PureRenderMixin;
 }
 
-var underStyle=function(state) {
-	var style={borderStyle:"dotted",borderColor:"silver",fontSize:"50%",color:"yellow",borderWidth:1
-			,borderRadius:"50%",cursor:"pointer",verticalAlign:"top",
+var underStyle=function(state,selected) {
+	var style={borderStyle:"solid",borderColor:"gray",fontSize:"50%",color:"silver",borderWidth:1
+			,borderRadius:"25%",cursor:"pointer",verticalAlign:"top",
 			backgroundColor:"drakgray",height:"0.5em",width:"0.5em"};
-	if (state==="selected") {
-		style.borderStyle="solid";
-		style.borderWidth=1.5;
 
+	if (selected) {
+		style.color="yellow";
+	}
+	if (state==1) {
+		style.borderColor="green";
 	}
 	return style;
 }
@@ -27,14 +29,20 @@ var E=React.createElement;
 var PT=React.PropTypes;
 var SingleInterline=React.createClass({
 	displayName:"SingleInterline"
-	,mixins:[PureRenderMixin]
 	,onClick:function() {
-
+		this.props.action("toggle",this.props.markup);
+	}
+	,mouseenter:function() {
+		this.props.action("enter",this.props.markup[0],this.props.idx);
+	}
+	,mouseleave:function() {
+		this.props.action("leave",this.props.markup[0],this.props.idx);
 	}
 	,render:function(){
-		return E("span",{style:{position:"relative"}},
+		var author=this.props.markup[2].author;
+		return E("span",{onMouseEnter:this.mouseenter,onMouseLeave:this.mouseleave,style:{position:"relative"}},
 			E("div",{style:{position:"absolute",left:0,top:"0.6em"},size:2,onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
-			,E("span",{onClick:this.clickMe,style:underStyle()},this.props.caption)));
+			,E("span",{onClick:this.onClick,style:underStyle(this.props.markup[2].state,this.props.selected)},author)));
 	}
 });
 var MultipleInterline=React.createClass({

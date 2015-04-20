@@ -42,9 +42,9 @@ var BaseView=React.createClass({
 		markupStyles.selected={"backgroundColor":"highlight",color:"black"};
 		markupStyles.selected_last={"borderTopRightRadius":"0.35em","borderBottomRightRadius":"0.35em"};
 
-		markupStyles.replaceActive={"display":"none"};
-		markupStyles.replacePreview={"textDecoration":"line-through"};
-		markupStyles.replaceEdit={"textDecoration":"line-through"};
+		markupStyles.revisionActivated={"display":"none"};
+		markupStyles.revisionSelected={"textDecoration":"line-through"};
+		markupStyles.revisionEditing={"textDecoration":"line-through"};
 
 		var allowkeys=keyboard_mixin.arrowkeys();
 		return { markupStyles:markupStyles,allowkeys:allowkeys}
