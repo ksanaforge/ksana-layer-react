@@ -87,12 +87,18 @@ var MultipleInterline=React.createClass({
 			that.props.action("leave");
 		},500);
 	}
+	,sameWithActivated:function(m,activated){
+		return (m[0]===activated[0] && m[1]===activated[1] && m[2].t===activated[2].t);
+	}
 	,renderChoice:function() {
 		var that=this;
+		var activated=this.getActive();
 		return E("span",{onMouseLeave:this.mouseleave,onMouseEnter:this.mouseenter},
 			this.props.markups.map(function(m,idx){
 				var state="";
-				return E("span",{onClick:that.onClick,style:underStyle(m[2].state,idx==that.state.selected),onMouseMove:that.mousemove,
+				var activate=m[2].state || (activated&&that.sameWithActivated(m,activated));
+				return E("span",{onClick:that.onClick,style:underStyle(activate,idx==that.state.selected),
+					onMouseMove:that.mousemove,
 					key:idx,"data-offset":m[0],"data-idx":idx+1},m[2].author)	
 			})
 		);
