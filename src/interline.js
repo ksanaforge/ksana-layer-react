@@ -35,12 +35,13 @@ var SingleInterline=React.createClass({
 	displayName:"SingleInterline"
 	,onClick:function() {
 		this.props.action("toggle",this.props.markup);
+		this.props.action("leave");
 	}
 	,mouseenter:function() {
 		this.props.action("enter",this.props.markup[0],this.props.idx);
 	}
 	,mouseleave:function() {
-		this.props.action("leave",this.props.markup[0],this.props.idx);
+		this.props.action("leave");
 	}
 	,render:function(){
 		var author=this.props.markup[2].author;
@@ -72,6 +73,7 @@ var MultipleInterline=React.createClass({
 	,onClick:function(e) {
 		var idx=parseInt(e.target.dataset.idx)-1;
 		var markup=this.props.markups[idx];
+		this.leaveChoice();
 		this.props.action("toggle",markup);
 	}
 	,mouseenter:function() {
@@ -79,12 +81,15 @@ var MultipleInterline=React.createClass({
 		this.props.action("enter",this.props.markups[0][0],0);
 		this.setState({extend:true,idx:0});
 	}
+	,leaveChoice:function() {
+		this.setState({extend:false,selected:0});
+		this.props.action("leave");
+	}
 	,mouseleave:function() {
 		var that=this;
 		clearTimeout(this.leavetimer);
 		this.leavetimer=setTimeout(function(){
-			that.setState({extend:false,selected:0});
-			that.props.action("leave");
+			that.leaveChoice();
 		},500);
 	}
 	,sameWithActivated:function(m,activated){
