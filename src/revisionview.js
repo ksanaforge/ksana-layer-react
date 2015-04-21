@@ -14,7 +14,7 @@ var BaseView=require("./baseview");
 var RevisionView=React.createClass({
   //mixins: [React.addons.PureRenderMixin]
   onselect:function(start,len,thechar) {
-    console.log(this.props.index,start,len,thechar);
+    //console.log(this.props.index,start,len,thechar);
   }
   ,getInitialState:function() {
   	return {seloffset:-1,selidx:-1}
@@ -42,12 +42,17 @@ var RevisionView=React.createClass({
         m[2].state=1;
       }
 		  else m[2].state=0;
+
 		  this.forceUpdate();
+      var that=this;
+      setTimeout(function(){//wait until render finish
+        that.refs.baseview.moveCaret(m[0]);  
+      },200);
     }
   }
   ,render:function() {
     var markups=elementFromMarkup(this.props.markups||[],this.action,this.state.seloffset,this.state.selidx);
-    return E(BaseView,{index:this.props.index,
+    return E(BaseView,{index:this.props.index,ref:"baseview",
             showCaret:true,markups:markups, onSelect:this.onselect, text:(this.props.text||"")}
     );
   }

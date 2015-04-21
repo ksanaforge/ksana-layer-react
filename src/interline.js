@@ -44,9 +44,10 @@ var SingleInterline=React.createClass({
 	}
 	,render:function(){
 		var author=this.props.markup[2].author;
-		return E("span",{onMouseEnter:this.mouseenter,onMouseLeave:this.mouseleave,style:{position:"relative"}},
+		return E("span",{style:{position:"relative"}},
 			E("div",{style:{position:"absolute",left:0,top:"0.6em"},size:2,onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
-			,E("span",{onClick:this.onClick,style:underStyle(this.props.markup[2].state,this.props.selected)},author)));
+			,E("span",{onMouseEnter:this.mouseenter,onMouseLeave:this.mouseleave,
+				onClick:this.onClick,style:underStyle(this.props.markup[2].state,this.props.selected)},author)));
 	}
 });
 var MultipleInterline=React.createClass({
@@ -63,7 +64,7 @@ var MultipleInterline=React.createClass({
 		var idx=e.target.dataset.idx;
 		if (!idx) return;
 		idx=parseInt(idx);
-		var start=parseInt(e.target.dataset.start);
+		var start=parseInt(e.target.dataset.offset);//cannot use dataset.start, it is only for base text
 		if (this.state.selected===idx-1) return;
 		this.setState({selected:idx-1});
 		this.props.action("enter",start,idx-1);
@@ -92,7 +93,7 @@ var MultipleInterline=React.createClass({
 			this.props.markups.map(function(m,idx){
 				var state="";
 				return E("span",{onClick:that.onClick,style:underStyle(m[2].state,idx==that.state.selected),onMouseMove:that.mousemove,
-					key:idx,"data-start":m[0],"data-idx":idx+1},m[2].author)	
+					key:idx,"data-offset":m[0],"data-idx":idx+1},m[2].author)	
 			})
 		);
 	}

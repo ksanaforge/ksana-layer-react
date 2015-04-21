@@ -16,12 +16,15 @@ var getPos=function(node,off){
 }
 // return the span containing the pos
 var posInSpan=function(children,pos) {
+    var lasti;
 	for (var i=0;i<children.length;i++) {
+        if (!children[i].dataset.start)continue;
 		var spanstart=parseInt(children[i].dataset.start);
 		if (spanstart>pos) {
-			laststart=parseInt(children[i-1].dataset.start);
-			return {idx:i-1,element:children[i-1], offset:pos-laststart};
+			laststart=parseInt(children[lasti].dataset.start);
+			return {idx:i-1,element:children[lasti], offset:pos-laststart};
 		}
+        lasti=i;
 	}
 	laststart=parseInt(children[children.length-1].dataset.start);
 	return {idx:children.length-1,element:children[children.length-1], offset:pos-laststart };
@@ -31,6 +34,7 @@ var restore=function(domnode,oldsel) {
 	var span=posInSpan(domnode.childNodes,oldsel.start+oldsel.len)
     if (!span) return;
     if (!span.element.childNodes[0])return;
+
     var range = document.createRange();
     if (span.element.nodeType!==3 && span.element.childNodes[0].nodeType===3) {
     	span.element=span.element.childNodes[0];

@@ -55,6 +55,10 @@ var BaseView=React.createClass({
 	,componentWillMount:function() {
 		this.spreaded=spreadMarkup(this.props.markups)
 	}
+	,moveCaret:function(start) {
+		this.state.sel=null;
+		selection.restore(this.getDOMNode(),{start:start,len:0});
+	}
 	,componentDidUpdate:function() {
 		selection.restore(this.getDOMNode(),this.state.sel);
 	}
@@ -109,11 +113,12 @@ var BaseView=React.createClass({
 	,markSelection:function(e){
 		if (e.target.nodeName!="SPAN") return;
 		var sel=selection.get(e);
+		if (isNaN(sel.start))return;
+		console.log('mark',sel);
 		this.setState({sel:sel});
 		sel&&this.props.onSelect && this.props.onSelect(sel.start,sel.len,sel.thechar,{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey});
 	}
 	,mouseUp:function(e) {
-		console.log("mark")
 		this.markSelection(e);
   	}
 	,render:function(){
