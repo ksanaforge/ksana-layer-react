@@ -32,27 +32,28 @@ var getActive=function(markups) {
 	}
 	return 0;
 }
-var createMultiMarkupHandle=function(markups,active,action,selected) {
+var createMultiMarkupHandle=function(markups,action,selected) {
+	return E(MultipleInterline,{action:action,markups:markups,selected:selected});
 }
-var createMarkupHandle=function(markups,active,action,selected) {
-	var m=markups[active];
-	if (markups.length>1) return createMultiMarkupHandle(markups,active,action,selected);
-	return E(SimpleInterline,{idx:active,action:action,markup:m,selected:selected});
+var createMarkupHandle=function(markups,n,action,selected) {
+	var m=markups[n];
+	if (markups.length>1) return createMultiMarkupHandle(markups,action,selected);
+	return E(SimpleInterline,{idx:n,action:action,markup:m,selected:selected});
 }
-var createInsertText=function(markups,active,selected) {
-	var m=markups[active];
+var createInsertText=function(markups,n,selected) {
+	var m=markups[n];
 	if (selected) {
 		return E("span",{style:{textDecoration:"overline"}},m[2].t);
 	} else if (m[2].state==1) {
 		return E("span",{},m[2].t);
 	}
 }
-var createPayload=function(i,markups,active,action,selected) {
-	var m=markups[active];
-	var handle=createMarkupHandle(markups,active,action,selected);
+var createPayload=function(i,markups,n,action,selected) {
+	var m=markups[n];
+	var handle=createMarkupHandle(markups,n,action,selected);
 
 	var payload=JSON.parse(JSON.stringify(m[2]));
-	var insertText=createInsertText(markups,active,selected);
+	var insertText=createInsertText(markups,n,selected);
 
 	if (selected) payload.type="revisionSelected";
 	else if (payload.state==1) payload.type="revisionActivated";
@@ -63,8 +64,13 @@ var elementFromMarkup=function(markups,action,seloffset,selidx) {
 	var grouped=groupByOffset(markups),out=[];
 	for (var i=0;i<grouped.length;i++) {
 		var markups=grouped[i],selected=false;
-		var active=getActive(markups), m=markups[active];
-		if (m[0]===seloffset && active==selidx) selected=true;
+		var active=getActive(markups);
+
+		if (markups[0][0]===seloffset) {
+			active=selidx;
+			selected=true;
+		}
+		var m=markups[active];
 		var payload=createPayload(i,markups,active,action,selected);
 		out.push([m[0],m[1], payload] );
     };

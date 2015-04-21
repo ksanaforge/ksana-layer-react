@@ -29,7 +29,8 @@ var posInSpan=function(children,pos) {
 var restore=function(domnode,oldsel) {
     if (!oldsel) return;
 	var span=posInSpan(domnode.childNodes,oldsel.start+oldsel.len)
-
+    if (!span) return;
+    if (!span.element.childNodes[0])return;
     var range = document.createRange();
     if (span.element.nodeType!==3 && span.element.childNodes[0].nodeType===3) {
     	span.element=span.element.childNodes[0];

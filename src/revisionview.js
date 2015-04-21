@@ -19,6 +19,14 @@ var RevisionView=React.createClass({
   ,getInitialState:function() {
   	return {seloffset:-1,selidx:-1}
   }
+  ,deactiveOverlapMarkup:function(start,len) {
+    //set state to 0 for any overlap markup
+    this.props.markups.forEach(function(m){
+      if (!(start>=m[0]+m[1] || start+len<=m[0]) ) {
+        if (m[2].state) m[2].state=0;
+      }
+    });
+  }
   ,action:function() {
   	var args=[];
     Array.prototype.push.apply( args, arguments );
@@ -29,7 +37,10 @@ var RevisionView=React.createClass({
 		  this.setState({seloffset:-1,selidx:-1});	
     } else if (action==="toggle") {
 		  var m=args[0];
-		  if (!m[2].state) m[2].state=1;
+		  if (!m[2].state) {
+        this.deactiveOverlapMarkup(m[0],m[1]);
+        m[2].state=1;
+      }
 		  else m[2].state=0;
 		  this.forceUpdate();
     }
