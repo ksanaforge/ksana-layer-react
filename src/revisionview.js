@@ -34,7 +34,8 @@ var RevisionView=React.createClass({
   ,deleteEmptyMarkup:function(m) {
     if (!m) return;
     if (m[1]===0 && !m[2].t) {
-      console.log("empty markup,deleting");
+      var i=this.props.markups.indexOf(m);
+      if (i>-1) this.props.markups.splice(i,1);
     }
   }
   ,leave:function(m) {
@@ -67,8 +68,6 @@ var RevisionView=React.createClass({
       if (newlen<0 || !newlen) newlen=0;
       m[1]=newlen;
       this.forceUpdate();
-    } else if (action==="delete"){
-      //delete markup
     } else if (action==="toggle") {
 		  var m=args[0];
 		  if (!m[2].state) this.activateMarkup(m);
