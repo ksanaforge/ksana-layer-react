@@ -31,7 +31,14 @@ var RevisionView=React.createClass({
       this.deactiveOverlapMarkup(m[0],m[1]);
       m[2].state=1;
   }
-  ,leave:function() {
+  ,deleteEmptyMarkup:function(m) {
+    if (!m) return;
+    if (m[1]===0 && !m[2].t) {
+      console.log("empty markup,deleting");
+    }
+  }
+  ,leave:function(m) {
+    this.deleteEmptyMarkup(m);
     this.setState({seloffset:-1,selidx:-1,editing:false});
   }
   ,enter:function(offset,idx) {
@@ -45,16 +52,21 @@ var RevisionView=React.createClass({
       this.enter(args[0],args[1]);
     	this.setState({editing:false});
     } else if (action==="leave") {
-		  this.leave();
+		  this.leave(args[0]);
     } else if (action==="edit") {
-      console.log('edit',args[0],args[1])
       this.enter(args[0],args[1]);
       this.setState({editing:true});
     } else if (action==="settext"){      
       var m=args[0];
       this.activateMarkup(m);
       m[2].t=args[1];
-      this.leave();
+      this.leave(m);
+    } else if (action=="setlength") {
+      var m=args[0];
+      var newlen=args[1];
+      if (newlen<0 || !newlen) newlen=0;
+      m[1]=newlen;
+      this.forceUpdate();
     } else if (action==="delete"){
       //delete markup
     } else if (action==="toggle") {

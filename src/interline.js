@@ -20,14 +20,14 @@ var SingleInterline=React.createClass({
 			this.props.action("edit",this.props.markup[0],this.props.idx);
 		} else {
 			this.props.action("toggle",this.props.markup);
-			this.props.action("leave");			
+			this.props.action("leave",this.props.markup);
 		}
 	}
 	,mouseenter:function() {
 		this.props.action("enter",this.props.markup[0],this.props.idx);
 	}
 	,mouseleave:function() {
-		this.props.action("leave");
+		this.props.action("leave",this.props.markup);
 	}
 	,render:function(){
 		var author=this.props.markup[2].author;

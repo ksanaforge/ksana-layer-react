@@ -62,6 +62,9 @@ var createPayload=function(i,markups,n,action,selected,editmode) {
 	}
 	else if (selected) payload.type="revisionSelected";
 	else if (payload.state==1) payload.type="revisionActivated";
+
+	if (!m[1]) payload.type=""; 
+
 	payload.before=E("span",{key:i},handle,insertText);
 	return payload;
 }
