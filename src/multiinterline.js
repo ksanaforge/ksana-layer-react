@@ -33,11 +33,11 @@ var MultipleInterline=React.createClass({
 	,onClick:function(e) {
 		var idx=parseInt(e.target.dataset.idx)-1;
 		var markup=this.props.markups[idx];
-		if (markup[2].author==user.getName()) {
-			this.props.action("edit",this.props.markups[0][0],0);
+		if (markup[2].author==user.getName() && !markup[2].state ) {
+			this.props.action("edit",this.props.markups[0][0],idx);
 		} else {
 			this.props.action("toggle",markup);
-			this.setState({extend:false,selected:0});
+			this.leaveChoice();
 		}
 	}
 	,mouseenter:function() {

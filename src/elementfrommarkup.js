@@ -5,9 +5,6 @@ var inputStyle={background:"black",color:"white","border": "1px solid #BBBBBB","
 var SimpleInterline=require("./interline").Single;
 var MultipleInterline=require("./interline").Multiple;
 var EditInterline=require("./interline").Editing;
-//markup state  
-//  1: activate   
-//  2: editing    
 
 var groupByOffset=function(markups) {
 	var i=0,lastoffset=-1,m;
@@ -36,9 +33,9 @@ var getActive=function(markups) {
 var createMultiMarkupHandle=function(markups,action,selected) {
 	return E(MultipleInterline,{action:action,markups:markups,selected:selected});
 }
-var createMarkupHandle=function(markups,n,action,selected,editing) {
+var createMarkupHandle=function(markups,n,action,selected,editmode) {
 	var m=markups[n];
-	if (editing) {
+	if (editmode) {
 		return E(EditInterline,{idx:n,action:action,markup:m});
 	}
 	else if (markups.length>1) return createMultiMarkupHandle(markups,action,selected);
@@ -47,19 +44,19 @@ var createMarkupHandle=function(markups,n,action,selected,editing) {
 var createInsertText=function(markups,n,selected) {
 	var m=markups[n];
 	if (selected) {
-		return E("span",{style:{textDecoration:"overline"}},m[2].t);
+		return E("span",{style:{textDecoration:"underline"}},m[2].t);
 	} else if (m[2].state==1) {
 		return E("span",{},m[2].t);
 	}
 }
-var createPayload=function(i,markups,n,action,selected,editing) {
+var createPayload=function(i,markups,n,action,selected,editmode) {
 	var m=markups[n];
-	var handle=createMarkupHandle(markups,n,action,selected,editing);
+	var handle=createMarkupHandle(markups,n,action,selected,editmode);
 
 	var payload=JSON.parse(JSON.stringify(m[2]));
 	var insertText=createInsertText(markups,n,selected);
 
-	if (editing) {
+	if (editmode) {
 		payload.type="revisionEditing";
 		insertText=null;
 	}
@@ -72,14 +69,15 @@ var elementFromMarkup=function(markups,action,seloffset,selidx,editing) {
 	var grouped=groupByOffset(markups),out=[];
 	for (var i=0;i<grouped.length;i++) {
 		var markups=grouped[i],selected=false;
-		var active=getActive(markups);
-
+		var n=getActive(markups);
+		var editmode=false;
 		if (markups[0][0]===seloffset) {
-			active=selidx;
+			n=selidx;
 			selected=true;
+			editmode=editing;
 		}
-		var m=markups[active];
-		var payload=createPayload(i,markups,active,action,selected,editing);
+		var m=markups[n];
+		var payload=createPayload(i,markups,n,action,selected,editmode);
 		out.push([m[0],m[1], payload] );
     };
 	return out;

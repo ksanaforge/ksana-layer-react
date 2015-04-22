@@ -6,7 +6,6 @@ try {
 	var PureRenderMixin = React.addons.PureRenderMixin;
 }
 var user=require("./user");
-var RevisionEdit=require("./revisionedit");
 var MultipleInterline=require("./multiinterline");
 var EditInterline=require("./editinterline");
 var interlinestyle=require("./interlinestyle");
@@ -16,10 +15,12 @@ var PT=React.PropTypes;
 var SingleInterline=React.createClass({
 	displayName:"SingleInterline"
 	,onClick:function() {
-		if (this.props.markup[2].author==user.getName()) {
+		var m=this.props.markup;
+		if (m[2].author==user.getName() && !m[2].state) {
 			this.props.action("edit",this.props.markup[0],this.props.idx);
 		} else {
-			this.props.action("toggle",this.props.markup);		
+			this.props.action("toggle",this.props.markup);
+			this.props.action("leave");			
 		}
 	}
 	,mouseenter:function() {

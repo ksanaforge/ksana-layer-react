@@ -5,9 +5,8 @@ var singleStyle=function(state,selected) {
 			backgroundColor:"drakgray",height:"0.5em",width:"0.5em"};
 
 	if (selected) {
-		style.color="yellow";
-	}
-	if (state==1) {
+		style.borderColor="lightyellow";
+	} else if (state==1) {
 		style.borderColor="green";
 	}
 	return style;

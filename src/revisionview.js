@@ -27,26 +27,40 @@ var RevisionView=React.createClass({
       }
     });
   }
+  ,activateMarkup:function(m) {
+      this.deactiveOverlapMarkup(m[0],m[1]);
+      m[2].state=1;
+  }
+  ,leave:function() {
+    this.setState({seloffset:-1,selidx:-1,editing:false});
+  }
+  ,enter:function(offset,idx) {
+    this.setState({seloffset:offset,selidx:idx});
+  }
   ,action:function() {
   	var args=[];
     Array.prototype.push.apply( args, arguments );
     var action=args.shift();
     if (action==="enter") {
-    	this.setState({seloffset:args[0],selidx:args[1],editing:false});
+      this.enter(args[0],args[1]);
+    	this.setState({editing:false});
     } else if (action==="leave") {
-		  this.setState({seloffset:-1,selidx:-1,editing:false});
+		  this.leave();
     } else if (action==="edit") {
+      console.log('edit',args[0],args[1])
+      this.enter(args[0],args[1]);
+      this.setState({editing:true});
+    } else if (action==="settext"){      
       var m=args[0];
-      this.setState({seloffset:args[0],selidx:args[1],editing:true});
+      this.activateMarkup(m);
+      m[2].t=args[1];
+      this.leave();
+    } else if (action==="delete"){
+      //delete markup
     } else if (action==="toggle") {
 		  var m=args[0];
-		  if (!m[2].state) {
-        this.deactiveOverlapMarkup(m[0],m[1]);
-        m[2].state=1;
-      }
+		  if (!m[2].state) this.activateMarkup(m);
 		  else m[2].state=0;
-
-		  this.setState({eseloffset:-1,selidx:-1,editing:false})
       var that=this;
       setTimeout(function(){//wait until render finish
         that.refs.baseview.moveCaret(m[0]);  
