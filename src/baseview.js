@@ -47,6 +47,7 @@ var BaseView=React.createClass({
 		markupStyles.revisionEditing={"textDecoration":"line-through"};
 
 		var allowkeys=keyboard_mixin.arrowkeys();
+		if (this.props.allowKeys) allowkeys=allowkeys.concat(this.props.allowKeys);
 		return { markupStyles:markupStyles,allowkeys:allowkeys}
 	}
 	,getDefaultProps:function() {
@@ -70,6 +71,7 @@ var BaseView=React.createClass({
 		,index:PT.number
 		,markups:PT.array
 		,onSelect:PT.func
+		,allowKeys:PT.array
 		,markupStyles:PT.object
 	}
 	,sameArray:function(a1,a2) {

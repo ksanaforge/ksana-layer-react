@@ -16,7 +16,9 @@ var inputStyle={
     borderWidth: "0px 0px 1px 0px",
     borderColor: "gray",
     outline:0,
-    color: "white"
+    fontSize:"100%",
+    fontFamily:"inherit",
+    color: "inherit"
  } 
 
 var EditInterline=React.createClass({
@@ -67,6 +69,7 @@ var EditInterline=React.createClass({
 	,render:function() {
 		var text=this.props.markup[2].t;
 		var size=text.length;
+		if (size==0) size=1;
 
 		return E("span",{style:{position:"relative"}}
 			,E("input",{ref:"input",onKeyPress:this.onKeyPress,onFocus:this.onFocus,onBlur:this.onblur,

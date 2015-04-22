@@ -2,8 +2,14 @@ var getPos=function(node,off){
     var sel=window.getSelection(), pos=0, thechar='';
     if (off>=node.length) {
     	if (node.parentNode.nextSibling) {
-		    pos=parseInt(node.parentNode.nextSibling.dataset['start']);
-	    	thechar=node.parentNode.nextSibling.innerText[0];
+            var next=node.parentNode.nextSibling;
+            var start=next.dataset['start'];
+            thechar=next.innerText[0];
+            if (!start) {
+                start=next.nextSibling.dataset['start']
+                thechar=next.nextSibling.innerText[0];
+            }
+		    pos=parseInt(start);
     	} else { //at end of span
     		thechar=node.parentNode.innerText[off-1];
     		pos=parseInt(node.parentNode.dataset['start'])+off;

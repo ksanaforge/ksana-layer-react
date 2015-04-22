@@ -1,7 +1,7 @@
 
 var singleStyle=function(state,selected) {
 	var style={borderStyle:"solid",borderColor:"gray",fontSize:"50%",color:"silver",borderWidth:1
-			,borderRadius:"25%",cursor:"pointer",verticalAlign:"top",
+			,borderRadius:"20%",cursor:"pointer",verticalAlign:"top",
 			backgroundColor:"drakgray",height:"0.5em",width:"0.5em"};
 
 	if (selected) {
@@ -14,7 +14,7 @@ var singleStyle=function(state,selected) {
 
 var multiStyle=function(activemarkup) {
 	var style={borderStyle:"solid",borderColor:"gray",fontSize:"50%",color:"silver",borderWidth:1
-			,borderRadius:"25%",cursor:"pointer",verticalAlign:"top",
+			,borderRadius:"20%",cursor:"pointer",verticalAlign:"top",
 			backgroundColor:"drakgray",height:"0.5em",width:"0.5em"};
 
 	if (activemarkup&&activemarkup[2].state==1) {

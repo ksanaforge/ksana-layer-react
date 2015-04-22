@@ -7,10 +7,12 @@ try {
 }
 var E=React.createElement;
 var PT=React.PropTypes;
+var user=require("./user");
 
 var Interline=require("./interline");
 var elementFromMarkup=require("./elementFromMarkup");
 var BaseView=require("./baseview");
+var selection=require("./selection");
 var RevisionView=React.createClass({
   //mixins: [React.addons.PureRenderMixin]
   onselect:function(start,len,thechar) {
@@ -25,6 +27,7 @@ var RevisionView=React.createClass({
       if (!(start>=m[0]+m[1] || start+len<=m[0]) ) {
         if (m[2].state) m[2].state=0;
       }
+      if (start===m[0] && m[2].state) m[2].state=0;
     });
   }
   ,activateMarkup:function(m) {
@@ -44,6 +47,22 @@ var RevisionView=React.createClass({
   }
   ,enter:function(offset,idx) {
     this.setState({seloffset:offset,selidx:idx});
+  }
+  ,nmarkupAtPos:function(pos) {
+    return this.props.markups.reduce(function(prev,m){return (m[0]===pos)?prev+1:prev },0);
+  }
+  ,onKeyPress:function(e) {
+    if (e.target.nodeName==="INPUT") return;
+    if (e.key===" ") {
+      var sel=selection.get();
+      var start=sel.start,len=sel.len;
+      if (start>-1 && len===0) {
+        var n=this.nmarkupAtPos(start);
+        this.props.markups.push([start,0,{t:'',author:user.getName()}]);
+        this.action("edit",start,n);
+      }
+    }
+    e.preventDefault();
   }
   ,action:function() {
   	var args=[];
@@ -80,8 +99,8 @@ var RevisionView=React.createClass({
   }
   ,render:function() {
     var markups=elementFromMarkup(this.props.markups||[],this.action,this.state.seloffset,this.state.selidx,this.state.editing);
-    return E(BaseView,{index:this.props.index,ref:"baseview",
-            showCaret:true,markups:markups, onSelect:this.onselect, text:(this.props.text||"")}
+    return E(BaseView,{index:this.props.index,ref:"baseview",allowKeys:[" "],
+            showCaret:true,markups:markups, onKeyPress:this.onKeyPress,onSelect:this.onselect, text:(this.props.text||"")}
     );
   }
 });
