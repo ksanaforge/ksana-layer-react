@@ -10,6 +10,10 @@ var PT=React.PropTypes;
 
 
 var RevisionEdit=React.createClass({
-	
+	render:function() {
+		var text=this.props.markup[2].t;
+		var size=text.length;
+		return E("input",{defaultValue:text,size:size});
+	}
 })
 module.exports=RevisionEdit;

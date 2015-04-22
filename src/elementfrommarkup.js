@@ -4,6 +4,7 @@ var inputStyle={background:"black",color:"white","border": "1px solid #BBBBBB","
 
 var SimpleInterline=require("./interline").Single;
 var MultipleInterline=require("./interline").Multiple;
+var EditInterline=require("./interline").Editing;
 //markup state  
 //  1: activate   
 //  2: editing    
@@ -35,9 +36,12 @@ var getActive=function(markups) {
 var createMultiMarkupHandle=function(markups,action,selected) {
 	return E(MultipleInterline,{action:action,markups:markups,selected:selected});
 }
-var createMarkupHandle=function(markups,n,action,selected) {
+var createMarkupHandle=function(markups,n,action,selected,editing) {
 	var m=markups[n];
-	if (markups.length>1) return createMultiMarkupHandle(markups,action,selected);
+	if (editing) {
+		return E(EditInterline,{idx:n,action:action,markup:m});
+	}
+	else if (markups.length>1) return createMultiMarkupHandle(markups,action,selected);
 	return E(SimpleInterline,{idx:n,action:action,markup:m,selected:selected});
 }
 var createInsertText=function(markups,n,selected) {
@@ -48,19 +52,23 @@ var createInsertText=function(markups,n,selected) {
 		return E("span",{},m[2].t);
 	}
 }
-var createPayload=function(i,markups,n,action,selected) {
+var createPayload=function(i,markups,n,action,selected,editing) {
 	var m=markups[n];
-	var handle=createMarkupHandle(markups,n,action,selected);
+	var handle=createMarkupHandle(markups,n,action,selected,editing);
 
 	var payload=JSON.parse(JSON.stringify(m[2]));
 	var insertText=createInsertText(markups,n,selected);
 
-	if (selected) payload.type="revisionSelected";
+	if (editing) {
+		payload.type="revisionEditing";
+		insertText=null;
+	}
+	else if (selected) payload.type="revisionSelected";
 	else if (payload.state==1) payload.type="revisionActivated";
 	payload.before=E("span",{key:i},handle,insertText);
 	return payload;
 }
-var elementFromMarkup=function(markups,action,seloffset,selidx) {
+var elementFromMarkup=function(markups,action,seloffset,selidx,editing) {
 	var grouped=groupByOffset(markups),out=[];
 	for (var i=0;i<grouped.length;i++) {
 		var markups=grouped[i],selected=false;
@@ -71,7 +79,7 @@ var elementFromMarkup=function(markups,action,seloffset,selidx) {
 			selected=true;
 		}
 		var m=markups[active];
-		var payload=createPayload(i,markups,active,action,selected);
+		var payload=createPayload(i,markups,active,action,selected,editing);
 		out.push([m[0],m[1], payload] );
     };
 	return out;

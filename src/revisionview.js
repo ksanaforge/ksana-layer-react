@@ -32,9 +32,12 @@ var RevisionView=React.createClass({
     Array.prototype.push.apply( args, arguments );
     var action=args.shift();
     if (action==="enter") {
-    	this.setState({seloffset:args[0],selidx:args[1]});	
+    	this.setState({seloffset:args[0],selidx:args[1],editing:false});
     } else if (action==="leave") {
-		  this.setState({seloffset:-1,selidx:-1});	
+		  this.setState({seloffset:-1,selidx:-1,editing:false});
+    } else if (action==="edit") {
+      var m=args[0];
+      this.setState({seloffset:args[0],selidx:args[1],editing:true});
     } else if (action==="toggle") {
 		  var m=args[0];
 		  if (!m[2].state) {
@@ -43,7 +46,7 @@ var RevisionView=React.createClass({
       }
 		  else m[2].state=0;
 
-		  this.forceUpdate();
+		  this.setState({eseloffset:-1,selidx:-1,editing:false})
       var that=this;
       setTimeout(function(){//wait until render finish
         that.refs.baseview.moveCaret(m[0]);  
@@ -51,7 +54,7 @@ var RevisionView=React.createClass({
     }
   }
   ,render:function() {
-    var markups=elementFromMarkup(this.props.markups||[],this.action,this.state.seloffset,this.state.selidx);
+    var markups=elementFromMarkup(this.props.markups||[],this.action,this.state.seloffset,this.state.selidx,this.state.editing);
     return E(BaseView,{index:this.props.index,ref:"baseview",
             showCaret:true,markups:markups, onSelect:this.onselect, text:(this.props.text||"")}
     );
