@@ -9,6 +9,7 @@ var defaultSpan=require("./defaultspan");
 var E=React.createElement;
 var PT=React.PropTypes;
 var selection=require("./selection");
+var caretPos=require("./caretpos");
 //  create less span for overlap markup.
 //  each span holds an array of markups id in props.mid
 //  this.spreaded is the starting offset of the text snippnet in the span
@@ -28,7 +29,7 @@ var spreadMarkup=function(markups){
 	for (var i=0;i<out.length;i++) {
 		out[i]&&out[i].sort(function(a,b){return a-b});
 	}
-
+	console.log(out)
 	return out;
 }
 var keyboard_mixin=require("./keyboard_mixin");
@@ -95,7 +96,10 @@ var BaseView=React.createClass({
 	}
 	,renderChildren:function() {
 		var out=[], textnow="" ,textstart=0, previous=["impossible item"] ;
-		for (var i=0;i<this.props.text.length;i++) {
+		var caretpos=caretPos.create(this.props.text);
+
+		while (caretpos.get()<this.props.text.length) {
+			var i=caretpos.get();
 			if (!this.sameArray(this.spreaded[i],previous)) {
 				textnow&& (out=this.renderSpan(out,textstart,textnow,previous));
 				textstart=i;
@@ -103,7 +107,8 @@ var BaseView=React.createClass({
 			}
 			previous=(this.spreaded[i]&&this.spreaded[i].length)?JSON.parse(JSON.stringify(this.spreaded[i])):null; 
 			if (i>this.spreaded.length) break;
-			textnow += this.props.text[i];
+
+			textnow += caretpos.nextToken();
 		}
 		textnow=this.props.text.substr(textstart) ;
 		textnow&& (out=this.renderSpan(out,textstart,textnow,previous));

@@ -39,10 +39,8 @@ var EditInterline=React.createClass({
 		var input=this.refs.input.getDOMNode();
 		if (input!==document.activeElement)	this.setCaret();	
 	}
-	,adjustLen:function(delta) {
-		var newlength=this.props.markup[1]+delta;
-		if (newlength<0) newlength=0;
-		this.props.action("setlength",this.props.markup,newlength);
+	,adjustLen:function(direction) {
+		this.props.action("movecaret",this.props.markup,direction);
 	}
 	,onKeyPress:function(e) {
 		if (e.key=="Enter") {
@@ -60,10 +58,10 @@ var EditInterline=React.createClass({
 			that.props.action("leave",that.props.markup);
 		},500);
 	}
-	,lenm1:function() {
+	,caretprev:function() {
 		this.adjustLen(-1);
 	}
-	,lenp1:function() {
+	,caretnext:function() {
 		this.adjustLen(1);
 	}
 	,render:function() {
@@ -76,8 +74,8 @@ var EditInterline=React.createClass({
 						defaultValue:text,size:size,style:inputStyle})
 			,E("div",{style:{position:"absolute",left:0,top:"0.6em"},size:2,onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
 			  ,E("span",{}
-			  	,E("a",{onClick:this.lenm1,style:interlinestyle.buttonStyle()},"←")
-			  	,E("a",{onClick:this.lenp1,style:interlinestyle.buttonStyle()},"→")
+			  	,E("a",{onClick:this.caretprev,style:interlinestyle.buttonStyle()},"←")
+			  	,E("a",{onClick:this.caretnext,style:interlinestyle.buttonStyle()},"→")
 			  )
 		));
 

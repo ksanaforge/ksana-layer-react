@@ -13,6 +13,7 @@ var Interline=require("./interline");
 var elementFromMarkup=require("./elementFromMarkup");
 var BaseView=require("./baseview");
 var selection=require("./selection");
+var caretPos=require("./caretpos");
 var RevisionView=React.createClass({
   //mixins: [React.addons.PureRenderMixin]
   onselect:function(start,len,thechar) {
@@ -20,6 +21,9 @@ var RevisionView=React.createClass({
   }
   ,getInitialState:function() {
   	return {seloffset:-1,selidx:-1}
+  }
+  ,getDefaultProps:function() {
+    return {text:""};
   }
   ,deactiveOverlapMarkup:function(start,len) {
     //set state to 0 for any overlap markup
@@ -81,11 +85,11 @@ var RevisionView=React.createClass({
       this.activateMarkup(m);
       m[2].t=args[1];
       this.leave(m);
-    } else if (action=="setlength") {
+    } else if (action=="movecaret") {
       var m=args[0];
-      var newlen=args[1];
-      if (newlen<0 || !newlen) newlen=0;
-      m[1]=newlen;
+      var direction=args[1];
+      var caretpos=caretPos.create(this.props.text.substr(m[0]));
+      m[1]=direction<0?caretpos.prev(m[1]):caretpos.next(m[1]);
       this.forceUpdate();
     } else if (action==="toggle") {
 		  var m=args[0];
@@ -100,7 +104,7 @@ var RevisionView=React.createClass({
   ,render:function() {
     var markups=elementFromMarkup(this.props.markups||[],this.action,this.state.seloffset,this.state.selidx,this.state.editing);
     return E(BaseView,{index:this.props.index,ref:"baseview",allowKeys:[" "],
-            showCaret:true,markups:markups, onKeyPress:this.onKeyPress,onSelect:this.onselect, text:(this.props.text||"")}
+            showCaret:true,markups:markups, onKeyPress:this.onKeyPress,onSelect:this.onselect, text:(this.props.text)}
     );
   }
 });

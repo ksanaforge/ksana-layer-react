@@ -37,6 +37,16 @@ var create=function(_text) {
 		if (pos>text.length) pos=text.length;
 		return pos;
 	}
+	caretPos.nextToken=function(_pos) {
+		var start=snapPrev(_pos);
+		this.next(start);
+		return text.substring(start,pos);
+	}
+	caretPos.prevToken=function(_pos) {
+		var end=snapNext(_pos);
+		this.prev(end);
+		return text.substring(pos,end);
+	}
 	caretPos.prev=function(_pos) {
 		pos=snapNext(_pos);
 		pos--;

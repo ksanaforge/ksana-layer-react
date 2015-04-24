@@ -88,3 +88,30 @@ describe("arbitrary char pos to valid caret pos",function(){
 	})
 
 });
+
+describe("next token and prev token",function(){
+	var text="རསྟེབཅོམ་བ";  //valid caret point "|ར|སྟེ|བ|ཅོ|མ|་|བ"
+	var caretpos=caretPos.create(text);
+
+	it("next token",function(){
+		assert.equal(caretpos.nextToken(),"ར");
+		assert.equal(caretpos.nextToken(),"སྟེ");
+		assert.equal(caretpos.nextToken(),"བ");
+		assert.equal(caretpos.nextToken(),"ཅོ");
+		assert.equal(caretpos.nextToken(),"མ");
+		assert.equal(caretpos.nextToken(),"་");
+		assert.equal(caretpos.nextToken(),"བ");
+		assert.equal(caretpos.nextToken(),"");
+	});
+	it("previous token",function(){
+		assert.equal(caretpos.prevToken(),"བ");
+		assert.equal(caretpos.prevToken(),"་");
+		assert.equal(caretpos.prevToken(),"མ");
+		assert.equal(caretpos.prevToken(),"ཅོ");
+		assert.equal(caretpos.prevToken(),"བ");
+		assert.equal(caretpos.prevToken(),"སྟེ");
+		assert.equal(caretpos.prevToken(),"ར");
+		assert.equal(caretpos.prevToken(),"");
+	});
+
+});
