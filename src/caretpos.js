@@ -8,6 +8,7 @@ var create=function(_text) {
 	var nonstop=function(code) {
 		return (code>=0xDC00 && code<=0xDFFF) || (code>=0x0f71 && code<=0x0f87)|| (code>=0x0f8d && code<=0x0fbc);
 	}
+
 	var snapNext=function(_pos) {
 		if (typeof _pos=="undefined") _pos=pos;
 		var code=text.charCodeAt(_pos);
@@ -47,6 +48,10 @@ var create=function(_text) {
 		if (pos<0) pos=0;
 		return pos;
 	}
+	caretPos.valid=function(_pos) {
+		return !nonstop(text.charCodeAt(_pos));
+	}
+
 	return caretPos;
 }
 module.exports={create:create};

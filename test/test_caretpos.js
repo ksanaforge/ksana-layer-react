@@ -64,3 +64,27 @@ describe("caret Pos for Tibetan",function(){ //only skip dependent vowels
 		assert.equal(caretpos.prev(),0);
 	});
 });
+
+describe("arbitrary char pos to valid caret pos",function(){
+	var text="རསྟེབཅོམ་བ";  //valid caret point "|ར|སྟེ|བ|ཅོ|མ|་|བ"
+	var caretpos=caretPos.create(text);
+
+	it("check if char pos is valid",function(){
+		assert.equal(caretpos.valid(1),true);
+		assert.equal(caretpos.valid(2),false);
+		assert.equal(caretpos.valid(3),false);
+	});
+
+	it("next stop from invalid position",function(){
+		assert.equal(caretpos.next(2),4);
+		assert.equal(caretpos.next(3),4);
+	});
+
+	it("prev stop from invalid position",function(){
+		assert.equal(caretpos.prev(2),1);
+		assert.equal(caretpos.prev(3),1);
+		assert.equal(caretpos.prev(4),1);
+		assert.equal(caretpos.prev(5),4);
+	})
+
+});
