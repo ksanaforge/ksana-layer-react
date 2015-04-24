@@ -116,7 +116,7 @@ var BaseView=React.createClass({
 		if (e.target.nodeName!="SPAN") return;
 		var sel=selection.get(e);
 		if (isNaN(sel.start))return;
-		console.log('mark',sel);
+		//console.log('mark',sel);
 		this.setState({sel:sel});
 		sel&&this.props.onSelect && this.props.onSelect(sel.start,sel.len,sel.thechar,{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey});
 	}
