@@ -29,7 +29,6 @@ var spreadMarkup=function(markups){
 	for (var i=0;i<out.length;i++) {
 		out[i]&&out[i].sort(function(a,b){return a-b});
 	}
-	console.log(out)
 	return out;
 }
 var keyboard_mixin=require("./keyboard_mixin");
@@ -119,7 +118,7 @@ var BaseView=React.createClass({
 	}
 	,markSelection:function(e){
 		if (e.target.nodeName!="SPAN") return;
-		var sel=selection.get(e);
+		var sel=selection.get(this.getDOMNode());
 		if (isNaN(sel.start))return;
 		//console.log('mark',sel);
 		this.setState({sel:sel});

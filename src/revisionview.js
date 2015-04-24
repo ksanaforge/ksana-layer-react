@@ -10,10 +10,12 @@ var PT=React.PropTypes;
 var user=require("./user");
 
 var Interline=require("./interline");
-var elementFromMarkup=require("./elementFromMarkup");
+var markuputil=require("./markuputil");
+var elementFromMarkup=require("./elementfrommarkup");
 var BaseView=require("./baseview");
 var selection=require("./selection");
 var caretPos=require("./caretpos");
+
 var RevisionView=React.createClass({
   //mixins: [React.addons.PureRenderMixin]
   onselect:function(start,len,thechar) {
@@ -52,17 +54,14 @@ var RevisionView=React.createClass({
   ,enter:function(offset,idx) {
     this.setState({seloffset:offset,selidx:idx});
   }
-  ,nmarkupAtPos:function(pos) {
-    return this.props.markups.reduce(function(prev,m){return (m[0]===pos)?prev+1:prev },0);
-  }
+
   ,onKeyPress:function(e) {
     if (e.target.nodeName==="INPUT") return;
     if (e.key===" ") {
-      var sel=selection.get();
+      var sel=selection.get(this.getDOMNode());
       var start=sel.start,len=sel.len;
       if (start>-1 && len===0) {
-        var n=this.nmarkupAtPos(start);
-        this.props.markups.push([start,0,{t:'',author:user.getName()}]);
+        var n=markuputil.newMarkup(this.props.markups,start);
         this.action("edit",start,n);
       }
     }
@@ -102,9 +101,9 @@ var RevisionView=React.createClass({
     }
   }
   ,render:function() {
-    var markups=elementFromMarkup(this.props.markups||[],this.action,this.state.seloffset,this.state.selidx,this.state.editing);
+    var M=elementFromMarkup(this.props.markups||[],this.action,this.state.seloffset,this.state.selidx,this.state.editing);
     return E(BaseView,{index:this.props.index,ref:"baseview",allowKeys:[" "],
-            showCaret:true,markups:markups, onKeyPress:this.onKeyPress,onSelect:this.onselect, text:(this.props.text)}
+            showCaret:true,markups:M, onKeyPress:this.onKeyPress,onSelect:this.onselect, text:(this.props.text)}
     );
   }
 });

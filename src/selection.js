@@ -1,14 +1,35 @@
-var getPos=function(node,off){
-    var sel=window.getSelection(), pos=0, thechar='';
+var getPos=function(rootele,node,off){
+    var pos=0, thechar='';
+    if (!node) return;
+    while (node.parentElement!==rootele && node) {
+        node=node.parentElement;
+    }
+
+    while (!node.dataset.start&&node) {
+        node=node.nextSibling;
+    }
+
+    if (!node) return {thechar:'',pos:-1};
+
+    if (node.data) thechar=node.data[off];
+    pos=parseInt(node.dataset.start)+off;
+    return {thechar:thechar,pos:pos};
+
+    /*
     if (off>=node.length) {
     	if (node.parentNode.nextSibling) {
-            var next=node.parentNode.nextSibling;
-            var start=next.dataset['start'];
-            thechar=next.innerText[0];
-            if (!start) {
-                start=next.nextSibling.dataset['start']
-                thechar=next.nextSibling.innerText[0];
+            var now=node.parentNode;
+            var next=now.nextSibling;
+            var start=null;
+            while (next && now && !next.dataset['start']) {
+                start=next.dataset['start'];
+                if (!start) {
+                    now=now.parentNode;
+                    next=now.nextSibling;
+                }  else break;
             }
+            if (!next) return;
+            thechar=next.innerText[0];
 		    pos=parseInt(start);
     	} else { //at end of span
     		thechar=node.parentNode.innerText[off-1];
@@ -18,6 +39,7 @@ var getPos=function(node,off){
     	if (node.data) thechar=node.data[off];
 	    pos=parseInt(node.parentNode.dataset['start'])+off;
     }
+    */
     return {thechar:thechar,pos:pos};
 }
 // return the span containing the pos
@@ -52,11 +74,11 @@ var restore=function(domnode,oldsel) {
     sel.addRange(range);
 }
 
-var get=function(e) {
+var get=function(rootele) {
     var sel=window.getSelection();
     if (!sel.baseNode) return;
-    var off=getPos(sel.baseNode,sel.baseOffset);
-    var off2=getPos(sel.extentNode,sel.extentOffset);
+    var off=getPos(rootele,sel.baseNode,sel.baseOffset);
+    var off2=getPos(rootele,sel.extentNode,sel.extentOffset);
     var p1=sel.baseNode.parentElement,p2=sel.extentNode.parentElement;
     if (p1.nodeName!="SPAN"||p2.nodeName!="SPAN") return;
 

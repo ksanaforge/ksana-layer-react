@@ -5,24 +5,8 @@ var inputStyle={background:"black",color:"white","border": "1px solid #BBBBBB","
 var SimpleInterline=require("./interline").Single;
 var MultipleInterline=require("./interline").Multiple;
 var EditInterline=require("./interline").Editing;
+var markuputil=require("./markuputil");
 
-var groupByOffset=function(markups) {
-	var i=0,lastoffset=-1,m;
-	var out=[];
-	var same=[];
-	while(i<markups.length) {
-		var m=markups[i];
-		if (m[0]!==lastoffset && lastoffset>=0) {
-			out.push(same);
-			same=[];
-		}
-		same.push(m);
-		lastoffset=m[0];
-		i++;
-	}
-	if (same.length) out.push(same);
-	return out;
-}
 
 var getActive=function(markups) {
 	for (var i=0;i<markups.length;i++) {
@@ -69,7 +53,7 @@ var createPayload=function(i,markups,n,action,selected,editmode) {
 	return payload;
 }
 var elementFromMarkup=function(markups,action,seloffset,selidx,editing) {
-	var grouped=groupByOffset(markups),out=[];
+	var grouped=markuputil.groupByOffset(markups),out=[];
 	for (var i=0;i<grouped.length;i++) {
 		var markups=grouped[i],selected=false;
 		var n=getActive(markups);
