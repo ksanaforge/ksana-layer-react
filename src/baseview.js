@@ -20,10 +20,9 @@ var spreadMarkup=function(markups){
 	var out=[];
 	for (var i=0;i<markups.length;i++) {
 		var m=markups[i];
-		var start=m[0],len=m[1];
-		for (var j=start;j<start+len+1;j++) {
+		for (var j=m.s;j<m.s+m.l+1;j++) {
 			if (!out[j]) out[j]=[];
-			if (!len || j<start+len) out[j].push(i);
+			if (!m.l || j<m.s+m.l) out[j].push(i);
 		}
 	}
 	for (var i=0;i<out.length;i++) {
@@ -81,14 +80,14 @@ var BaseView=React.createClass({
 	}
 	,renderSpan:function(out,textstart,textnow,mid) {
 		var markups=this.props.markups;
-		var before=(mid||[]).map(function(m){return markups[m][2].before||null});
+		var before=(mid||[]).map(function(m){return markups[m].before||null});
 		if (before.length) out.push(E("span",{key:"before"+textstart},before));
 
 		out.push(E(this.props.span
 				,{index:this.props.index,markupStyles:this.state.markupStyles,key:out.length,
 				  markups:this.props.markups,mid:mid,start:textstart}
 				,textnow ));
-		var after=(mid||[]).map(function(m){return markups[m][2].after||null});
+		var after=(mid||[]).map(function(m){return markups[m].after||null});
 		
 		if (after.length) out.push(E("span",{key:"after"+textstart},after));
 		return out;

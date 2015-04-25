@@ -65,7 +65,7 @@ var EditInterline=React.createClass({
 		this.adjustLen(1);
 	}
 	,render:function() {
-		var text=this.props.markup[2].t;
+		var text=this.props.markup.t;
 		var size=text.length;
 		if (size==0) size=1;
 

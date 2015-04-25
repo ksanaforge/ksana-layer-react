@@ -30,19 +30,19 @@ var RevisionView=React.createClass({
   ,deactiveOverlapMarkup:function(start,len) {
     //set state to 0 for any overlap markup
     this.props.markups.forEach(function(m){
-      if (!(start>=m[0]+m[1] || start+len<=m[0]) ) {
-        if (m[2].state) m[2].state=0;
+      if (!(start>=m.s+m.l || start+len<=m.s) ) {
+        if (m.state) m.state=0;
       }
-      if (start===m[0] && m[2].state) m[2].state=0;
+      if (start===m.s && m.state) m.state=0;
     });
   }
   ,activateMarkup:function(m) {
-      this.deactiveOverlapMarkup(m[0],m[1]);
-      m[2].state=1;
+      this.deactiveOverlapMarkup(m.s,m.l);
+      m.state=1;
   }
   ,deleteEmptyMarkup:function(m) {
     if (!m) return;
-    if (m[1]===0 && !m[2].t) {
+    if (m.l===0 && !m.t) {
       var i=this.props.markups.indexOf(m);
       if (i>-1) this.props.markups.splice(i,1);
     }
@@ -82,21 +82,21 @@ var RevisionView=React.createClass({
     } else if (action==="settext"){      
       var m=args[0];
       this.activateMarkup(m);
-      m[2].t=args[1];
+      m.t=args[1];
       this.leave(m);
     } else if (action=="movecaret") {
       var m=args[0];
       var direction=args[1];
-      var caretpos=caretPos.create(this.props.text.substr(m[0]));
-      m[1]=direction<0?caretpos.prev(m[1]):caretpos.next(m[1]);
+      var caretpos=caretPos.create(this.props.text.substr(m.s));
+      m.l=direction<0?caretpos.prev(m.l):caretpos.next(m.l);
       this.forceUpdate();
     } else if (action==="toggle") {
 		  var m=args[0];
-		  if (!m[2].state) this.activateMarkup(m);
-		  else m[2].state=0;
+		  if (!m.state) this.activateMarkup(m);
+		  else m.state=0;
       var that=this;
       setTimeout(function(){//wait until render finish
-        that.refs.baseview.moveCaret(m[0]);  
+        that.refs.baseview.moveCaret(m.s);  
       },200);
     }
   }

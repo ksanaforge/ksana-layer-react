@@ -10,7 +10,7 @@ var markuputil=require("./markuputil");
 
 var getActive=function(markups) {
 	for (var i=0;i<markups.length;i++) {
-		if (markups[i][2].state) return i;
+		if (markups[i].state) return i;
 	}
 	return 0;
 }
@@ -28,29 +28,29 @@ var createMarkupHandle=function(markups,n,action,selected,editmode) {
 var createInsertText=function(markups,n,selected) {
 	var m=markups[n];
 	if (selected) {
-		return E("span",{style:{textDecoration:"underline"}},m[2].t);
-	} else if (m[2].state==1) {
-		return E("span",{},m[2].t);
+		return E("span",{style:{textDecoration:"underline"}},m.t);
+	} else if (m.state==1) {
+		return E("span",{},m.t);
 	}
 }
-var createPayload=function(i,markups,n,action,selected,editmode) {
+var createMarkup=function(i,markups,n,action,selected,editmode) {
 	var m=markups[n];
 	var handle=createMarkupHandle(markups,n,action,selected,editmode);
 
-	var payload=JSON.parse(JSON.stringify(m[2]));
+	var newmarkup=JSON.parse(JSON.stringify(m));
 	var insertText=createInsertText(markups,n,selected);
 
 	if (editmode) {
-		payload.type="revisionEditing";
+		newmarkup.type="revisionEditing";
 		insertText=null;
 	}
-	else if (selected) payload.type="revisionSelected";
-	else if (payload.state==1) payload.type="revisionActivated";
+	else if (selected) newmarkup.type="revisionSelected";
+	else if (newmarkup.state==1) newmarkup.type="revisionActivated";
 
-	if (!m[1]) payload.type=""; 
+	if (!m.l) newmarkup.type=""; 
 
-	payload.before=E("span",{key:i},handle,insertText);
-	return payload;
+	newmarkup.before=E("span",{key:i},handle,insertText);
+	return newmarkup;
 }
 var elementFromMarkup=function(markups,action,seloffset,selidx,editing) {
 	var grouped=markuputil.groupByOffset(markups),out=[];
@@ -58,14 +58,13 @@ var elementFromMarkup=function(markups,action,seloffset,selidx,editing) {
 		var markups=grouped[i],selected=false;
 		var n=getActive(markups);
 		var editmode=false;
-		if (markups[0][0]===seloffset) {
+		if (markups[0].s===seloffset) {
 			n=selidx;
 			selected=true;
 			editmode=editing;
 		}
 		var m=markups[n];
-		var payload=createPayload(i,markups,n,action,selected,editmode);
-		out.push([m[0],m[1], payload] );
+		out.push( createMarkup(i,markups,n,action,selected,editmode) );
     };
 	return out;
 }

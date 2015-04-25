@@ -33,8 +33,8 @@ var MultipleInterline=React.createClass({
 	,onClick:function(e) {
 		var idx=parseInt(e.target.dataset.idx)-1;
 		var markup=this.props.markups[idx];
-		if (markup[2].author==user.getName() && !markup[2].state ) {
-			this.props.action("edit",this.props.markups[0][0],idx);
+		if (markup.author==user.getName() && !markup[2].state ) {
+			this.props.action("edit",this.props.markups[0].s,idx);
 		} else {
 			this.props.action("toggle",markup);
 			this.leaveChoice();
@@ -42,7 +42,7 @@ var MultipleInterline=React.createClass({
 	}
 	,mouseenter:function() {
 		clearTimeout(this.leavetimer);
-		this.props.action("enter",this.props.markups[0][0],0);
+		this.props.action("enter",this.props.markups[0].s,0);
 		this.setState({extend:true,idx:0});
 	}
 	,leaveChoice:function() {
@@ -57,7 +57,7 @@ var MultipleInterline=React.createClass({
 		},500);
 	}
 	,sameWithActivated:function(m,activated){
-		return (m[0]===activated[0] && m[1]===activated[1] && m[2].t===activated[2].t);
+		return (m.s===activated.s && m.l===activated.l && m.t===activated.t);
 	}
 	,renderChoice:function() {
 		var that=this;
@@ -65,17 +65,17 @@ var MultipleInterline=React.createClass({
 		return E("span",{onMouseLeave:this.mouseleave,onMouseEnter:this.mouseenter},
 			this.props.markups.map(function(m,idx){
 				var state="";
-				var activate=m[2].state || (activated&&that.sameWithActivated(m,activated));
+				var activate=m.state || (activated&&that.sameWithActivated(m,activated));
 				return E("span",{onClick:that.onClick,style:interlinestyle.singleStyle(activate,idx==that.state.selected),
 					onMouseMove:that.mousemove,
-					key:idx,"data-offset":m[0],"data-idx":idx+1},m[2].author)	
+					key:idx,"data-offset":m.s,"data-idx":idx+1},m.author)	
 			})
 		);
 	}
 	,getActive:function() {
 		for (var i=0;i<this.props.markups.length;i++) {
 			var m=this.props.markups[i];
-			if (m[2].state) return m;
+			if (m.state) return m;
 		}
 		return null;
 	}

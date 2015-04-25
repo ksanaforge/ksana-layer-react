@@ -37,7 +37,7 @@ var SpanClass = React.createClass({
       var m=mid[i];
       var styles=this.props.markupStyles;
       var markup=this.props.markups[m];
-      var type=markup[2].type;
+      var type=markup.type;
       styles[type]&&out.push(styles[type]);
       styles[type+"_first"]&&out.push(styles[type+"_first"]);
       styles[type+"_last"]&&out.push(styles[type+"_last"]);
