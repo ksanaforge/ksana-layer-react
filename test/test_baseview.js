@@ -41,7 +41,9 @@ describe("test BaseView",function(){
 		var renderoutput=renderer.getRenderOutput();
 		var C=renderoutput.props.children;
 
-		assert.equal(C.length,13);
+		//console.log(C.map(function(c){return c.key+"_"+c.props.children}));
+		
+		assert.equal(C.length,11);
 		assert.equal(C[0].props.children,"aa")
 		assert.equal(C[0].props.start,0);
 		assert.equal(C[0].props.mid,null);
@@ -51,14 +53,14 @@ describe("test BaseView",function(){
 		assert.equal(C[2].props.start,2);
 		assert.deepEqual(C[2].props.mid,[0]);
 		
-		assert.equal(C[6].props.children,"bb");
-		assert.deepEqual(C[6].props.mid,[0,1]); //overlap
+		assert.equal(C[5].props.children,"bb");
+		assert.deepEqual(C[5].props.mid,[0,1]); //overlap
 		
-		assert.equal(C[10].props.children,"cc");
-		assert.deepEqual(C[10].props.mid,[1]);
+		assert.equal(C[8].props.children,"cc");
+		assert.deepEqual(C[8].props.mid,[1]);
 		
-		assert.equal(C[12].props.children,"cdd");
-		assert.equal(C[12].props.mid,null);
+		assert.equal(C[10].props.children,"cdd");
+		assert.equal(C[10].props.mid,null);
 	});
 
 });

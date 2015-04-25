@@ -19,8 +19,8 @@ describe("test Interlinemarkup",function(){
 		renderer.render(ele);
 		var renderoutput=renderer.getRenderOutput();
 
-		var c=TestUtils.renderIntoDocument(ele);
-		console.log(c.getDOMNode().innerHTML);
+		//var c=TestUtils.renderIntoDocument(ele);
+		//console.log(c.getDOMNode().innerHTML);
 	})
 
 });
