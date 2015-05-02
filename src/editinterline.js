@@ -72,7 +72,13 @@ var EditInterline=React.createClass({
 		return E("span",{style:{position:"relative"}}
 			,E("input",{ref:"input",onKeyPress:this.onKeyPress,onFocus:this.onFocus,onBlur:this.onblur,
 						defaultValue:text,size:size,style:inputStyle})
-			,E("div",{style:{position:"absolute",left:0,top:"0.6em"},size:2,onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
+			
+
+			//,E("div",{style:{position:"absolute",left:0,top:"-1.2em"}}
+			//	,E("span",{},"abc")
+			//  )
+
+			,E("div",{style:{position:"absolute",left:0,top:"0.6em"},onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
 			  ,E("span",{}
 			  	,E("a",{onClick:this.caretprev,style:interlinestyle.buttonStyle()},"←")
 			  	,E("a",{onClick:this.caretnext,style:interlinestyle.buttonStyle()},"→")

@@ -33,7 +33,7 @@ var MultipleInterline=React.createClass({
 	,onClick:function(e) {
 		var idx=parseInt(e.target.dataset.idx)-1;
 		var markup=this.props.markups[idx];
-		if (markup.author==user.getName() && !markup[2].state ) {
+		if (markup.author==user.getName() && !markup.state ) {
 			this.props.action("edit",this.props.markups[0].s,idx);
 		} else {
 			this.props.action("toggle",markup);
@@ -82,14 +82,15 @@ var MultipleInterline=React.createClass({
 	,renderBody:function() {
 		var m=this.getActive();
 		var caption="+"+this.props.markups.length;
-		if (m) caption=m[2].author.substr(0,1).toUpperCase();
+		if (m) caption=m.author.substr(0,1).toUpperCase();
 		
 		return this.state.extend?this.renderChoice()
 				:E("span",{onMouseEnter:this.mouseenter,onClick:this.clickMe,style:interlinestyle.multiStyle(m)},caption);
 	}
 	,render:function(){
 		return E("span",{style:{position:"relative"}},
-			E("div",{style:{position:"absolute",left:0,top:"0.6em"},size:2,onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
+			E("div",{style:{position:"absolute",left:0,top:"-1.2em"}},E("span",{},"upper"))
+			,E("div",{style:{position:"absolute",left:0,top:"0.6em"},onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
 			,this.renderBody()));
 	}
 });
