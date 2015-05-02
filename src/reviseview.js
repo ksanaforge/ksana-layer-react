@@ -85,6 +85,7 @@ var ReviseView=React.createClass({
 		return E(BaseView,
 				{showCaret:this.props.showCaret,index:this.props.index,
 					text:this.props.text,markups:this.state.markups,
+					style:this.props.style,
 					onSelect:this.onSelect,markupStyles:this.state.markupStyles,
 					onKeyDown:this.onkeydown,
 					onKeyPress:this.onkeypress,

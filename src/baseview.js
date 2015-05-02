@@ -127,8 +127,12 @@ var BaseView=React.createClass({
 		this.markSelection(e);
   	}
 	,render:function(){
+		var style=this.props.style||{};
+		style.lineHeight="180%"
+		style.outline = "0px solid transparent";
+
 		return E("div",
-			{style:{"lineHeight":"180%","outline": "0px solid transparent","color":"white"},
+			{style:style,
 			onKeyDown:this.props.onKeyDown||this.onkeydown,
 			onKeyUp:this.props.onKeyUp||this.onkeyup,
 			onKeyPress:this.props.onKeyPress||this.onkeypress,

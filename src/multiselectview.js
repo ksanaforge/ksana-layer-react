@@ -45,6 +45,7 @@ var MultiSelectView=React.createClass({
 		return E(BaseView,{showCaret:this.props.showCaret,index:this.props.index,
 			text:this.props.text,markups:this.state.markups,
 			onSelect:this.onSelect,markupStyles:this.props.markupStyles,
+			style:this.porps.style,
 			},
 
 			this.props.children);
