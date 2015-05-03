@@ -66,8 +66,13 @@ var restore=function(domnode,oldsel) {
     if (span.element.nodeType!==3 && span.element.childNodes[0].nodeType===3) {
     	span.element=span.element.childNodes[0];
     }
-    range.setStart(span.element ,span.offset);
-    range.setEnd( span.element,span.offset);
+    if (span.offset>span.element.length) {
+        range.setStart(span.element, 0);
+        range.setEnd( span.element, 0);
+    } else {
+        range.setStart(span.element ,span.offset);
+        range.setEnd( span.element,span.offset);        
+    }
     var sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);

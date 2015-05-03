@@ -63,7 +63,7 @@ var BaseView=React.createClass({
 		selection.restore(this.getDOMNode(),this.state.sel);
 	}
 	,componentWillReceiveProps:function(nextProps) {
-		this.spreaded=spreadMarkup(nextProps.markups);	
+		this.spreaded=spreadMarkup(nextProps.markups);
 	}
 	,propTypes:{
 		text:PT.string.isRequired
