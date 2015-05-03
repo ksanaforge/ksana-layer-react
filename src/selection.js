@@ -11,9 +11,8 @@ var getPos=function(rootele,node,off){
 
     if (!node) return {thechar:'',pos:-1};
 
-    if (node.data) thechar=node.data[off];
     pos=parseInt(node.dataset.start)+off;
-    return {thechar:thechar,pos:pos};
+    return pos;
 
     /*
     if (off>=node.length) {
@@ -82,10 +81,10 @@ var get=function(rootele) {
     var p1=sel.baseNode.parentElement,p2=sel.extentNode.parentElement;
     if (p1.nodeName!="SPAN"||p2.nodeName!="SPAN") return;
 
-    if (sel.extentNode && off2.pos>off.pos) {
+    if (sel.extentNode && off2>off) {
     	sel.empty();
 	}
-	return {start:off.pos,len:off2.pos-off.pos,thechar:off.thechar};
+	return {start:off,len:off2-off};
 }
 
 module.exports={get:get,restore:restore};

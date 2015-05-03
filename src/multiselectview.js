@@ -29,13 +29,13 @@ var MultiSelectView=React.createClass({
 		var markups=this.state.markups;
 
 		markups=markups.filter(function(m){
-			return m[2].type!=="selected";
+			return m.type!=="selected";
 		});
 
 		modifier.ctrlKey?selections.add(start,len):selections.set(start,len);
 
 		selections.get().map(function(sel){
-			if (sel[1]>0) markups.push({s:sel[0],l:sel[1],type:"selected"});
+			if (sel[0]>0) markups.push({s:sel[0],l:sel[1],type:"selected"});
 		});
 
 		this.setState({selections:selections,markups:markups});
@@ -45,7 +45,7 @@ var MultiSelectView=React.createClass({
 		return E(BaseView,{showCaret:this.props.showCaret,index:this.props.index,
 			text:this.props.text,markups:this.state.markups,
 			onSelect:this.onSelect,markupStyles:this.props.markupStyles,
-			style:this.porps.style,
+			style:this.props.style,
 			},
 
 			this.props.children);

@@ -22,7 +22,7 @@ var spreadMarkup=function(markups){
 		var m=markups[i];
 		for (var j=m.s;j<m.s+m.l+1;j++) {
 			if (!out[j]) out[j]=[];
-			if (!m.l || j<m.s+m.l) out[j].push(i);
+			if ( (!m.l &&  m.type!=="selected") || j<m.s+m.l ) out[j].push(i);
 		}
 	}
 	for (var i=0;i<out.length;i++) {
@@ -37,9 +37,9 @@ var BaseView=React.createClass({
 	,mixins:[keyboard_mixin]
 	,getInitialState:function() {
 		var markupStyles=JSON.parse(JSON.stringify(this.props.markupStyles||{}));
-		markupStyles.selected_first={"borderTopLeftRadius":"0.35em","borderBottomLeftRadius":"0.35em"};
+		//markupStyles.selected_first={"borderTopLeftRadius":"0.35em","borderBottomLeftRadius":"0.35em"};
 		markupStyles.selected={"backgroundColor":"highlight",color:"black"};
-		markupStyles.selected_last={"borderTopRightRadius":"0.35em","borderBottomRightRadius":"0.35em"};
+		//markupStyles.selected_last={"borderTopRightRadius":"0.35em","borderBottomRightRadius":"0.35em"};
 
 		markupStyles.revisionActivated={"display":"none"};
 		markupStyles.revisionSelected={"textDecoration":"line-through"};
@@ -120,8 +120,13 @@ var BaseView=React.createClass({
 		var sel=selection.get(this.getDOMNode());
 		if (isNaN(sel.start))return;
 		//console.log('mark',sel);
+		var text=this.props.text.substr(sel.start,sel.len||1);
+		if (text.charCodeAt(0)>=0xD800 ) { //surrogate
+			text=this.props.text.substr(sel.start,sel.len||2);
+		}
+
 		this.setState({sel:sel});
-		sel&&this.props.onSelect && this.props.onSelect(sel.start,sel.len,sel.thechar,{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey});
+		sel&&this.props.onSelect && this.props.onSelect(sel.start,sel.len,text,{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey});
 	}
 	,mouseUp:function(e) {
 		this.markSelection(e);
