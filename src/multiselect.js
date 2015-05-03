@@ -40,9 +40,11 @@ var create=function() {
 	var remove=function() {
 		selections=[];
 	}
-	var set=function(start,len) {
+	var set=function(sels) {
 		remove();
-		add(start,len);
+		for (var i=0;i<sels.length;i++) {
+			add(sels[i][0],sels[i][1]);
+		}
 	}
 	multiselect.add=add;
 	multiselect.get=get;
