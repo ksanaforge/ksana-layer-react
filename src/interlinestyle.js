@@ -17,7 +17,7 @@ var multiStyle=function(activemarkup) {
 			,borderRadius:"20%",cursor:"pointer",verticalAlign:"top",
 			backgroundColor:"drakgray",height:"0.5em",width:"0.5em"};
 
-	if (activemarkup&&activemarkup[2].state==1) {
+	if (activemarkup&&activemarkup.state==1) {
 		style.borderColor="green";
 	}
 	return style;	
@@ -26,4 +26,11 @@ var buttonStyle=function() {
 	var style={fontSize:"35%",borderStyle:"solid",borderColor:"gray",borderRadius:"25%",cursor:"pointer"};
 	return style;	
 }
-module.exports={singleStyle:singleStyle,multiStyle:multiStyle,buttonStyle:buttonStyle};
+var noteEditStyle=function(){
+	var style={fontSize:"100%",position:"absolute",outline:"none",borderRadius:"5px"};
+	return style;		
+}
+module.exports={handlerTop:"-1.2em",noteTop:"1.8em",noteEditTop:"2.2em",
+	singleStyle:singleStyle,
+	multiStyle:multiStyle,
+	buttonStyle:buttonStyle, noteStyle:noteEditStyle};

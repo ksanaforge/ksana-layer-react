@@ -1,10 +1,4 @@
-try {
-	var React=require("react-native");
-	var PureRenderMixin=null;
-} catch(e) {
-	var React=require("react/addons");
-	var PureRenderMixin = React.addons.PureRenderMixin;
-}
+var React=require("react/addons");
 var E=React.createElement;
 var PT=React.PropTypes;
 
@@ -19,31 +13,41 @@ var inputStyle={
     fontSize:"100%",
     fontFamily:"inherit",
     color: "inherit"
- } 
+} 
+var InterlineNote=require("./interlinenote");
 
 var EditInterline=React.createClass({
 	displayName:"EditInterline"
 	,setCaret:function() {
 		var that=this;
 		setTimeout(function(){
-			var input=that.refs.input.getDOMNode();
+			var input=that.refs.input.getDOMNode();	
+			if (that.state.noteediting) {
+				input=that.refs.note.getDOMNode();
+			}
+			
 			input.focus();
+			clearTimeout(this.blurtimer);
 			var val=input.value;
 			input.setSelectionRange(val.length,val.length);
 		},100);
+	}
+	,getInitialState:function() {
+		return {noteediting:false};
 	}
 	,componentDidMount:function() {
 		this.setCaret();
 	}
 	,componentDidUpdate:function() {
 		var input=this.refs.input.getDOMNode();
+		if (this.state.noteediting) input=this.refs.note.getDOMNode();
 		if (input!==document.activeElement)	this.setCaret();	
 	}
 	,adjustLen:function(direction) {
 		this.props.action("movecaret",this.props.markup,direction);
 	}
 	,onKeyPress:function(e) {
-		if (e.key=="Enter") {
+		if (e.key=="Enter" && !this.state.noteediting) {
 			var input=this.refs.input.getDOMNode();
 			this.props.action("settext",this.props.markup,input.value);	
 		}
@@ -51,12 +55,16 @@ var EditInterline=React.createClass({
 	,onFocus:function() {
 		clearTimeout(this.blurtimer);
 	}
-	,onblur:function() {
+	,onBlur:function() {
 		var that=this;
 		clearTimeout(this.blurtimer);
 		this.blurtimer=setTimeout(function(){
 			that.props.action("leave",that.props.markup);
 		},500);
+	}
+	,onNoteBlur:function() {
+		this.props.markup.note=this.refs.note.getDOMNode().value;
+		this.toggleNote();
 	}
 	,caretprev:function() {
 		this.adjustLen(-1);
@@ -64,26 +72,41 @@ var EditInterline=React.createClass({
 	,caretnext:function() {
 		this.adjustLen(1);
 	}
+	,toggleNote:function(){
+		this.setState({noteediting:!this.state.noteediting});
+		if (!this.state.noteediting) {
+			clearTimeout(this.blurtimer);
+		}
+	}
+	,renderControls:function() {
+		if (this.state.noteediting) {
+			return E("span",{style:{position:"absolute",top:interlinestyle.noteEditTop}},
+					E("textarea",
+					{rows:5,cols:20,ref:"note",onBlur:this.onNoteBlur,style:interlinestyle.noteEditStyle,
+					defaultValue:this.props.markup.note||""}
+			));
+		} else {
+			return ([
+			E("a",{key:"prev",onClick:this.caretprev,style:interlinestyle.buttonStyle()},"←")
+			,E("a",{key:"next",onClick:this.caretnext,style:interlinestyle.buttonStyle()},"→")
+			,E("a",{key:"btnnote",onClick:this.toggleNote,style:interlinestyle.buttonStyle()},"…")
+			,E(InterlineNote,{key:"note",note:this.props.markup.note||""})
+			]
+			);
+		}
+	}
 	,render:function() {
 		var text=this.props.markup.t;
 		var size=text.length;
 		if (size==0) size=1;
 
 		return E("span",{style:{position:"relative"}}
-			,E("input",{ref:"input",onKeyPress:this.onKeyPress,onFocus:this.onFocus,onBlur:this.onblur,
+			,E("input",{ref:"input",onKeyPress:this.onKeyPress,onFocus:this.onFocus,onBlur:this.onBlur,
 						defaultValue:text,size:size,style:inputStyle})
-			
-
-			//,E("div",{style:{position:"absolute",left:0,top:"-1.2em"}}
-			//	,E("span",{},"abc")
-			//  )
-
-			,E("div",{style:{position:"absolute",left:0,top:"0.6em"},onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
-			  ,E("span",{}
-			  	,E("a",{onClick:this.caretprev,style:interlinestyle.buttonStyle()},"←")
-			  	,E("a",{onClick:this.caretnext,style:interlinestyle.buttonStyle()},"→")
-			  )
-		));
+			  ,E("div",{style:{position:"absolute",left:0,top:interlinestyle.handlerTop},onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
+			  ,E("span",{},	this.renderControls())
+			)
+		);
 
 	}
 });

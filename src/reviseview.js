@@ -78,8 +78,12 @@ var ReviseView=React.createClass({
 		});
 		if (len>0) markups.push({s:start,l:len,type:"selected"});
 
-		this.setState({markups:markups});
-		this.props.onSelect&& this.props.onSelect(start,len,thechar,modifier,selection);
+		
+		var cancel=this.props.onSelect&& this.props.onSelect(start,len,thechar,modifier,selection);
+		if (!cancel) {
+			this.setState({sel:sel});
+			this.setState({markups:markups});
+		}
 	}	
 	,render:function(){
 		return E(BaseView,

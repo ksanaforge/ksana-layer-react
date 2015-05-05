@@ -1,3 +1,6 @@
+/**
+	Multiple markups in same text position
+*/
 try {
 	var React=require("react-native");
 	var PureRenderMixin=null;
@@ -15,7 +18,7 @@ var MultipleInterline=React.createClass({
 	displayName:"MultipleInterline"
 	,mixins:[PureRenderMixin]
 	,getInitialState:function() {
-		return {extend:false,selected:0};
+		return {extend:false,selected:-1};
 	}
 
 	,propTypes:{
@@ -46,7 +49,7 @@ var MultipleInterline=React.createClass({
 		this.setState({extend:true,idx:0});
 	}
 	,leaveChoice:function() {
-		this.setState({extend:false,selected:0});
+		this.setState({extend:false,selected:-1});
 		this.props.action("leave");
 	}
 	,mouseleave:function() {
@@ -72,6 +75,12 @@ var MultipleInterline=React.createClass({
 			})
 		);
 	}
+	,renderNote:function() {
+		var m=this.props.markups[this.state.selected];
+		if (m && m.note) {
+			return E("span",{style:{position:"absolute",top:"-1.2em"}},m.note);
+		}
+	}
 	,getActive:function() {
 		for (var i=0;i<this.props.markups.length;i++) {
 			var m=this.props.markups[i];
@@ -89,8 +98,8 @@ var MultipleInterline=React.createClass({
 	}
 	,render:function(){
 		return E("span",{style:{position:"relative"}},
-			E("div",{style:{position:"absolute",left:0,top:"-1.2em"}},E("span",{},"upper"))
-			,E("div",{style:{position:"absolute",left:0,top:"0.6em"},onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
+			this.renderNote()
+			,E("div",{style:{position:"absolute",left:0,top:interlinestyle.handlerTop},onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
 			,this.renderBody()));
 	}
 });

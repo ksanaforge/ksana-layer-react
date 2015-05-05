@@ -118,15 +118,15 @@ var BaseView=React.createClass({
 	,markSelection:function(e){
 		if (e.target.nodeName!="SPAN") return;
 		var sel=selection.get(this.getDOMNode());
-		if (isNaN(sel.start))return;
+		if (!sel || isNaN(sel.start))return;
 		//console.log('mark',sel);
 		var text=this.props.text.substr(sel.start,sel.len||1);
 		if (text.charCodeAt(0)>=0xD800 ) { //surrogate
 			text=this.props.text.substr(sel.start,sel.len||2);
 		}
 
-		this.setState({sel:sel});
-		sel&&this.props.onSelect && this.props.onSelect(sel.start,sel.len,text,{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey});
+		var cancel=sel&&this.props.onSelect && this.props.onSelect(sel.start,sel.len,text,{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey});
+		if (!cancel) this.setState({sel:sel});
 	}
 	,mouseUp:function(e) {
 		this.markSelection(e);
@@ -137,7 +137,9 @@ var BaseView=React.createClass({
 		style.outline = "0px solid transparent";
 
 		return E("div",
-			{style:style,
+			{
+			spellCheck:false,
+			style:style,
 			onKeyDown:this.props.onKeyDown||this.onkeydown,
 			onKeyUp:this.props.onKeyUp||this.onkeyup,
 			onKeyPress:this.props.onKeyPress||this.onkeypress,

@@ -1,47 +1,23 @@
+/**
+    Return text position at system caret 
+    @param {object} DOM node holding the text
+    @param {object} baseNode or extendNode node return by system getSelection
+    @param {number} offset from the selected node
+*/
 var getPos=function(rootele,node,off){
-    var pos=0, thechar='';
     if (!node) return;
-    while (node.parentElement!==rootele && node) {
-        node=node.parentElement;
-    }
+    while (node.parentElement!==rootele && node) node=node.parentElement;
+    while (!node.dataset.start&&node) node=node.nextSibling;
+    if (!node) return -1;
 
-    while (!node.dataset.start&&node) {
-        node=node.nextSibling;
-    }
-
-    if (!node) return {thechar:'',pos:-1};
-
-    pos=parseInt(node.dataset.start)+off;
+    var pos=parseInt(node.dataset.start)+off;
     return pos;
-
-    /*
-    if (off>=node.length) {
-    	if (node.parentNode.nextSibling) {
-            var now=node.parentNode;
-            var next=now.nextSibling;
-            var start=null;
-            while (next && now && !next.dataset['start']) {
-                start=next.dataset['start'];
-                if (!start) {
-                    now=now.parentNode;
-                    next=now.nextSibling;
-                }  else break;
-            }
-            if (!next) return;
-            thechar=next.innerText[0];
-		    pos=parseInt(start);
-    	} else { //at end of span
-    		thechar=node.parentNode.innerText[off-1];
-    		pos=parseInt(node.parentNode.dataset['start'])+off;
-    	}
-    } else {
-    	if (node.data) thechar=node.data[off];
-	    pos=parseInt(node.parentNode.dataset['start'])+off;
-    }
-    */
-    return {thechar:thechar,pos:pos};
 }
-// return the span containing the pos
+/**
+    Return the span and offset containing the pos (return by getPos)
+    @param {array} spans
+    @param {number} text position
+*/
 var posInSpan=function(children,pos) {
     var lasti;
 	for (var i=0;i<children.length;i++) {
@@ -56,6 +32,9 @@ var posInSpan=function(children,pos) {
 	laststart=parseInt(children[children.length-1].dataset.start);
 	return {idx:children.length-1,element:children[children.length-1], offset:pos-laststart };
 }
+/**
+    Set Caret to a saved selection
+*/
 var restore=function(domnode,oldsel) {
     if (!oldsel) return;
 	var span=posInSpan(domnode.childNodes,oldsel.start+oldsel.len)
@@ -77,7 +56,10 @@ var restore=function(domnode,oldsel) {
     sel.removeAllRanges();
     sel.addRange(range);
 }
-
+/**
+    Get the start and len of current selection
+    @param {object} root domnode holding the text
+*/
 var get=function(rootele) {
     var sel=window.getSelection();
     if (!sel.baseNode) return;

@@ -25,7 +25,7 @@ var RevisionView=React.createClass({
   	return {seloffset:-1,selidx:-1}
   }
   ,getDefaultProps:function() {
-    return {text:""};
+    return {text:"",markups:[]};
   }
   ,deactiveOverlapMarkup:function(start,len) {
     //set state to 0 for any overlap markup
@@ -56,7 +56,8 @@ var RevisionView=React.createClass({
   }
 
   ,onKeyPress:function(e) {
-    if (e.target.nodeName==="INPUT") return;
+    var nodeName=e.target.nodeName;
+    if (nodeName==="INPUT" || nodeName==="TEXTAREA") return;
     if (e.key===" ") {
       var sel=selection.get(this.getDOMNode());
       var start=sel.start,len=sel.len;
@@ -103,7 +104,11 @@ var RevisionView=React.createClass({
   ,render:function() {
     var M=elementFromMarkup(this.props.markups||[],this.action,this.state.seloffset,this.state.selidx,this.state.editing);
     return E(BaseView,{index:this.props.index,ref:"baseview",allowKeys:[" "],
-            showCaret:true,markups:M, onKeyPress:this.onKeyPress,onSelect:this.onselect, text:(this.props.text)}
+            showCaret:true,markups:M, 
+            onKeyPress:this.onKeyPress,
+            onSelect:this.onselect, 
+            style:this.props.style,
+            text:(this.props.text)}
     );
   }
 });

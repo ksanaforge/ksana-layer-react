@@ -8,15 +8,17 @@ try {
 var E=React.createElement;
 var PT=React.PropTypes;
 var BaseView=require("./baseview");
-var multiselect=require("./multiselect");
+var combinerange=require("./combinerange");
 var MultiSelectView=React.createClass({
 	displayName:"MultiSelectView"
-	,getInitialState:function() {
-		var selections=multiselect.create();
-		if (this.selections && this.selections.length) {
-			selections.set(this.selections);
+	,componentWillMount:function() {
+		this.ranges=combinerange.create();
+		if (this.props.selections && this.props.selections.length) {
+			this.ranges.set(this.props.selections);
 		}
-		return {markups:this.props.markups||[], selections:selections}
+	}
+	,getInitialState:function() {
+		return {markups:this.props.markups||[]};
 	}
 	,createMarkupFromSelection:function(sels) {
 		var markups=this.state.markups;
@@ -29,8 +31,8 @@ var MultiSelectView=React.createClass({
 	,componentWillReceiveProps:function(nextprops) {
 		this.setState({markups:this.props.markups||[]});
 		if (!nextprops.selections || !nextprops.selections.length) return ;
-		this.state.selections.set(nextprops.selections);
-		var markups=this.createMarkupFromSelection(this.state.selections.get());
+		this.ranges.set(nextprops.selections);
+		var markups=this.createMarkupFromSelection(this.ranges.get());
 		this.setState({markups:markups});
 	}
 	,getDefaultProps:function() {
@@ -45,11 +47,10 @@ var MultiSelectView=React.createClass({
 		,markupStyles:PT.object
 	}
 	,onSelect:function(start,len,selectedtext,modifier) {
-		var selections=this.state.selections;
-		modifier.ctrlKey?selections.add(start,len,selectedtext):selections.set([[start,len,selectedtext]]);
-		var markups=this.createMarkupFromSelection(selections.get());
+		modifier.ctrlKey?this.ranges.add(start,len,selectedtext):this.ranges.set([[start,len,selectedtext]]);
+		var markups=this.createMarkupFromSelection(this.ranges.get());
 		this.setState({markups:markups});
-		this.props.onSelect&& this.props.onSelect(start,len,selectedtext,modifier,selections.get());
+		this.props.onSelect&& this.props.onSelect(start,len,selectedtext,modifier,this.ranges.get());
 	}
 	,render:function() {
 		return E(BaseView,{showCaret:this.props.showCaret,index:this.props.index,

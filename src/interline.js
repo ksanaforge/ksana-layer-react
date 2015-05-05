@@ -9,6 +9,7 @@ var user=require("./user");
 var MultipleInterline=require("./multiinterline");
 var EditInterline=require("./editinterline");
 var interlinestyle=require("./interlinestyle");
+var InterlineNote=require("./interlinenote");
 
 var E=React.createElement;
 var PT=React.PropTypes;
@@ -24,9 +25,17 @@ var SingleInterline=React.createClass({
 		}
 	}
 	,mouseenter:function() {
+		clearTimeout(this.leavetimer);
 		this.props.action("enter",this.props.markup.s,this.props.idx);
 	}
-	,mouseleave:function() {
+	,mouseleave:function(){
+		var that=this;
+		clearTimeout(this.leavetimer);
+		this.leavetimer=setTimeout(function(){
+			that.leaveHover();
+		},500);			
+	}
+	,leaveHover:function() {
 		this.props.action("leave",this.props.markup);
 	}
 	,render:function(){
@@ -34,9 +43,11 @@ var SingleInterline=React.createClass({
 		if (!this.props.selected) {
 			author=author.substr(0,1).toUpperCase();
 		}
-		return E("span",{style:{position:"relative"}},
-			E("div",{style:{position:"absolute",left:0,top:"0.6em"},size:2,onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
-			,E("span",{onMouseEnter:this.mouseenter,onMouseLeave:this.mouseleave,
+		return E("span",{style:{position:"relative"},onMouseEnter:this.mouseenter,onMouseLeave:this.mouseleave},
+			E("div",{style:{position:"absolute",left:0,top:interlinestyle.handlerTop},
+				onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
+			,E(InterlineNote,{note:this.props.markup.note,show:this.props.selected})
+			,E("span",{
 				onClick:this.onClick,style:interlinestyle.singleStyle(this.props.markup.state,this.props.selected)},author)));
 	}
 });
