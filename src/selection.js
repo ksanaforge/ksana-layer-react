@@ -6,8 +6,8 @@
 */
 var getPos=function(rootele,node,off){
     if (!node) return;
-    while (node.parentElement!==rootele && node) node=node.parentElement;
-    while (!node.dataset.start&&node) node=node.nextSibling;
+    while (node && node.parentElement!==rootele) node=node.parentElement;
+    while (node && !node.dataset.start) node=node.nextSibling;
     if (!node) return -1;
 
     var pos=parseInt(node.dataset.start)+off;

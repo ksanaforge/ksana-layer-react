@@ -11,6 +11,7 @@ var BaseView=require("./baseview");
 var textrange=require("./textrange");
 var MultiSelectView=React.createClass({
 	displayName:"MultiSelectView"
+	,mixins:[PureRenderMixin]
 	,componentWillMount:function() {
 		this.ranges=textrange.create();
 		if (this.props.selections && this.props.selections.length) {
@@ -28,12 +29,12 @@ var MultiSelectView=React.createClass({
 		});
 		return markups;
 	}
-	,componentWillReceiveProps:function(nextprops) {
-		this.setState({markups:nextprops.markups||[]});
-		if (!nextprops.selections || !nextprops.selections.length) return ;
-		this.ranges.set(nextprops.selections);
-		var markups=this.createMarkupFromSelection(this.ranges.get());
-		this.setState({markups:markups});
+	,componentWillUpdate:function(nextProps,nextState) {
+		nextState.markups=nextProps.markups||[];
+		if (!nextProps.selections || !nextProps.selections.length) return true;
+
+		this.ranges.set(nextProps.selections);
+		nextState.markups=this.createMarkupFromSelection(this.ranges.get());
 	}
 	,getDefaultProps:function() {
 		return {markupStyles:{}};
@@ -49,7 +50,9 @@ var MultiSelectView=React.createClass({
 	,onSelect:function(start,len,selectedtext,modifier) {
 		modifier.ctrlKey?this.ranges.add(start,len,selectedtext):this.ranges.set([[start,len,selectedtext]]);
 		var markups=this.createMarkupFromSelection(this.ranges.get());
-		this.setState({markups:markups});
+		if (markups.length!==this.state.markups.length) {
+			this.setState({markups:markups});	
+		}
 		this.props.onSelect&& this.props.onSelect(start,len,selectedtext,modifier,this.ranges.get());
 	}
 	,render:function() {

@@ -58,8 +58,10 @@ var BaseView=React.createClass({
 	}
 	,componentDidUpdate:function() {
 		if (!this.selection) return;
+		var sel=selection.get(this.getDOMNode());
+		if (!sel || this.selection.start===sel.start)return;
 		selection.restore(this.getDOMNode(),this.selection);
-		this.selection=null;
+		//this.selection=null;
 	}
 	,componentWillReceiveProps:function(nextProps) {
 		this.spreaded=spreadMarkup(nextProps.markups);
