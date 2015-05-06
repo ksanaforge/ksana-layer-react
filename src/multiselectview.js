@@ -29,7 +29,7 @@ var MultiSelectView=React.createClass({
 		return markups;
 	}
 	,componentWillReceiveProps:function(nextprops) {
-		this.setState({markups:this.props.markups||[]});
+		this.setState({markups:nextprops.markups||[]});
 		if (!nextprops.selections || !nextprops.selections.length) return ;
 		this.ranges.set(nextprops.selections);
 		var markups=this.createMarkupFromSelection(this.ranges.get());

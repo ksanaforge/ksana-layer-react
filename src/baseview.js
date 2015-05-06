@@ -5,6 +5,7 @@ try {
 	var React=require("react/addons");
 	var PureRenderMixin=React.addons.PureRenderMixin;
 }
+var update=React.addons.update;
 var defaultSpan=require("./defaultspan");
 var E=React.createElement;
 var PT=React.PropTypes;
@@ -35,19 +36,15 @@ var BaseView=React.createClass({
 	mixins: [PureRenderMixin]
 	,displayName:"BaseView"
 	,mixins:[keyboard_mixin]
+	,selection:null
 	,getInitialState:function() {
-		var markupStyles=JSON.parse(JSON.stringify(this.props.markupStyles||{}));
-		//markupStyles.selected_first={"borderTopLeftRadius":"0.35em","borderBottomLeftRadius":"0.35em"};
-		markupStyles.selected={"backgroundColor":"highlight",color:"black"};
-		//markupStyles.selected_last={"borderTopRightRadius":"0.35em","borderBottomRightRadius":"0.35em"};
-
-		markupStyles.revisionActivated={"display":"none"};
-		markupStyles.revisionSelected={"textDecoration":"line-through"};
-		markupStyles.revisionEditing={"textDecoration":"line-through"};
-
 		var allowkeys=keyboard_mixin.arrowkeys();
+		this.markupStyles=this.props.markupStyles || {};
+		if (!this.markupStyles.selected) {
+			this.markupStyles=update(this.markupStyles,{$merge:{selected:{"backgroundColor":"highlight",color:"black"}}});
+		}
 		if (this.props.allowKeys) allowkeys=allowkeys.concat(this.props.allowKeys);
-		return { markupStyles:markupStyles,allowkeys:allowkeys}
+		return {allowkeys:allowkeys}
 	}
 	,getDefaultProps:function() {
 		return {span:defaultSpan,div:React.View||"div",markups:[],sel:{}};
@@ -56,11 +53,13 @@ var BaseView=React.createClass({
 		this.spreaded=spreadMarkup(this.props.markups)
 	}
 	,moveCaret:function(start) {
-		this.state.sel=null;
-		selection.restore(this.getDOMNode(),{start:start,len:0});
+		this.selection={start:start,len:0};
+		selection.restore(this.getDOMNode(),this.selection);
 	}
 	,componentDidUpdate:function() {
-		selection.restore(this.getDOMNode(),this.state.sel);
+		if (!this.selection) return;
+		selection.restore(this.getDOMNode(),this.selection);
+		this.selection=null;
 	}
 	,componentWillReceiveProps:function(nextProps) {
 		this.spreaded=spreadMarkup(nextProps.markups);
@@ -84,7 +83,7 @@ var BaseView=React.createClass({
 		if (before.length) out.push(E("span",{key:"before"+textstart},before));
 
 		out.push(E(this.props.span
-				,{index:this.props.index,markupStyles:this.state.markupStyles,key:out.length,
+				,{index:this.props.index,markupStyles:this.markupStyles,key:out.length,
 				  markups:this.props.markups,mid:mid,start:textstart}
 				,textnow ));
 		var after=(mid||[]).map(function(m){return markups[m].after||null});
@@ -126,7 +125,7 @@ var BaseView=React.createClass({
 		}
 
 		var cancel=sel&&this.props.onSelect && this.props.onSelect(sel.start,sel.len,text,{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey});
-		if (!cancel) this.setState({sel:sel});
+		if (!cancel) this.selection=sel;
 	}
 	,mouseUp:function(e) {
 		this.markSelection(e);

@@ -15,7 +15,11 @@ var elementFromMarkup=require("./elementfrommarkup");
 var BaseView=require("./baseview");
 var selection=require("./selection");
 var caretPos=require("./caretpos");
-
+var markupStyles={
+  revisionActivated:{"display":"none"}
+  ,revisionSelected:{"textDecoration":"line-through"}
+  ,revisionEditing:{"textDecoration":"line-through"}
+}
 var RevisionView=React.createClass({
   //mixins: [React.addons.PureRenderMixin]
   onselect:function(start,len,thechar) {
@@ -106,6 +110,7 @@ var RevisionView=React.createClass({
     return E(BaseView,{index:this.props.index,ref:"baseview",allowKeys:[" "],
             showCaret:true,markups:M, 
             onKeyPress:this.onKeyPress,
+            markupStyles:markupStyles,
             onSelect:this.onselect, 
             style:this.props.style,
             text:(this.props.text)}

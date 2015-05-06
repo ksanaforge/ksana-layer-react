@@ -14,15 +14,15 @@ var getActive=function(markups) {
 	}
 	return 0;
 }
-var createMultiMarkupHandle=function(markups,action,selected) {
+var createMultiMarkupHandler=function(markups,action,selected) {
 	return E(MultipleInterline,{action:action,markups:markups,selected:selected});
 }
-var createMarkupHandle=function(markups,n,action,selected,editmode) {
+var createMarkupHandler=function(markups,n,action,selected,editmode) {
 	var m=markups[n];
 	if (editmode) {
 		return E(EditInterline,{idx:n,action:action,markup:m});
 	}
-	else if (markups.length>1) return createMultiMarkupHandle(markups,action,selected);
+	else if (markups.length>1) return createMultiMarkupHandler(markups,action,selected);
 	return E(SimpleInterline,{idx:n,action:action,markup:m,selected:selected});
 }
 var createInsertText=function(markups,n,selected) {
@@ -35,7 +35,7 @@ var createInsertText=function(markups,n,selected) {
 }
 var createMarkup=function(i,markups,n,action,selected,editmode) {
 	var m=markups[n];
-	var handle=createMarkupHandle(markups,n,action,selected,editmode);
+	var handler=createMarkupHandler(markups,n,action,selected,editmode);
 
 	var newmarkup=JSON.parse(JSON.stringify(m));
 	var insertText=createInsertText(markups,n,selected);
@@ -49,7 +49,7 @@ var createMarkup=function(i,markups,n,action,selected,editmode) {
 
 	if (!m.l) newmarkup.type=""; 
 
-	newmarkup.before=E("span",{key:i},handle,insertText);
+	newmarkup.before=E("span",{key:i},handler,insertText);
 	return newmarkup;
 }
 var elementFromMarkup=function(markups,action,seloffset,selidx,editing) {
