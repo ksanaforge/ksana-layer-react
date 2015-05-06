@@ -2,7 +2,7 @@ var React=require("react/addons");
 var E=React.createElement;
 var PT=React.PropTypes;
 
-var interlinestyle=require("./interlinestyle");
+var styles=require("./styles");
 var user=require("./user");
 var inputStyle={
     backgroundColor: "transparent",
@@ -14,7 +14,7 @@ var inputStyle={
     fontFamily:"inherit",
     color: "inherit"
 } 
-var InterlineNote=require("./interlinenote");
+var Note=require("./note");
 
 var EditInterline=React.createClass({
 	displayName:"EditInterline"
@@ -80,17 +80,17 @@ var EditInterline=React.createClass({
 	}
 	,renderControls:function() {
 		if (this.state.noteediting) {
-			return E("span",{style:{position:"absolute",top:interlinestyle.noteEditTop}},
+			return E("span",{style:{position:"absolute",top:styles.noteEditTop}},
 					E("textarea",
-					{rows:5,cols:20,ref:"note",onBlur:this.onNoteBlur,style:interlinestyle.noteEditStyle,
+					{rows:5,cols:20,ref:"note",onBlur:this.onNoteBlur,style:styles.noteEditStyle,
 					defaultValue:this.props.markup.note||""}
 			));
 		} else {
 			return ([
-			E("a",{key:"prev",onClick:this.caretprev,style:interlinestyle.buttonStyle()},"←")
-			,E("a",{key:"next",onClick:this.caretnext,style:interlinestyle.buttonStyle()},"→")
-			,E("a",{key:"btnnote",onClick:this.toggleNote,style:interlinestyle.buttonStyle()},"…")
-			,E(InterlineNote,{key:"note",note:this.props.markup.note||""})
+			E("a",{key:"prev",onClick:this.caretprev,style:styles.buttonStyle()},"←")
+			,E("a",{key:"next",onClick:this.caretnext,style:styles.buttonStyle()},"→")
+			,E("a",{key:"btnnote",onClick:this.toggleNote,style:styles.buttonStyle()},"…")
+			,E(Note,{key:"note",note:this.props.markup.note||""})
 			]
 			);
 		}
@@ -103,7 +103,7 @@ var EditInterline=React.createClass({
 		return E("span",{style:{position:"relative"}}
 			,E("input",{ref:"input",onKeyPress:this.onKeyPress,onFocus:this.onFocus,onBlur:this.onBlur,
 						defaultValue:text,size:size,style:inputStyle})
-			  ,E("div",{style:{position:"absolute",left:0,top:interlinestyle.handlerTop},onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
+			  ,E("div",{style:{position:"absolute",left:0,top:styles.handlerTop},onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
 			  ,E("span",{},	this.renderControls())
 			)
 		);

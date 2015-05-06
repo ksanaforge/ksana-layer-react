@@ -68,10 +68,10 @@ var get=function(rootele) {
     var p1=sel.baseNode.parentElement,p2=sel.extentNode.parentElement;
     if (p1.nodeName!="SPAN"||p2.nodeName!="SPAN") return;
 
-    if (sel.extentNode && off2>off) {
-    	sel.empty();
-	}
-	return {start:off,len:off2-off};
+    //if (sel.extentNode && off2>off) {
+    //	sel.empty();
+	//}
+	return {start:off,len:off2-off, selection:sel};
 }
 
 module.exports={get:get,restore:restore};

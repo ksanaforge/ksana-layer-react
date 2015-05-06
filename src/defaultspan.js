@@ -1,3 +1,6 @@
+/*
+  Span's styles is created by merging styles of all markups covering the span.
+*/
 try {
   var React=require("react-native");
   var PureRenderMixin=null;
@@ -23,7 +26,7 @@ var SpanClass = React.createClass({
   ,propTypes:{
     mid:PT.array
     ,index:PT.number
-    ,markups:PT.array.isRequired
+    ,markups:PT.object.isRequired
     ,start:PT.number.isRequired
     ,markupStyles:PT.object
   }

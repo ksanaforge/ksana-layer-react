@@ -1,7 +1,7 @@
 var React=require("react/addons");
 var E=React.createElement;
 var PT=React.PropTypes;
-var interlinestyle=require("./interlinestyle");
+var styles=require("./styles");
 var InterlineNote=React.createClass({
 	getDefaultProps:function() {
 		return {show:true};
@@ -11,7 +11,7 @@ var InterlineNote=React.createClass({
 	}
 	,render :function() {
 		if (this.props.show) {
-			return E("span",{style:{position:"absolute",left:0,top:interlinestyle.noteTop}},this.props.note);
+			return E("span",{style:{position:"absolute",left:0,top:styles.noteTop}},this.props.note);
 		} else return E("span") ;
 	}
 });

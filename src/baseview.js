@@ -1,3 +1,9 @@
+/*
+		handle multiple selections, stop caret at valid position
+		break down overlap markup
+
+*/
+
 try {
 	var React=require("react-native");
 	var PureRenderMixin=null;
@@ -38,13 +44,14 @@ var BaseView=React.createClass({
 	,mixins:[keyboard_mixin]
 	,selection:null
 	,getInitialState:function() {
-		var allowkeys=keyboard_mixin.arrowkeys();
 		this.markupStyles=this.props.markupStyles || {};
 		if (!this.markupStyles.selected) {
 			this.markupStyles=update(this.markupStyles,{$merge:{selected:{"backgroundColor":"highlight",color:"black"}}});
 		}
-		if (this.props.allowKeys) allowkeys=allowkeys.concat(this.props.allowKeys);
-		return {allowkeys:allowkeys}
+
+		var allowkeys=KeyboardMixin.arrowkeys;
+		if (this.props.allowKeys) allowkeys=update(allowkeys,{$push:this.props.allowKeys});
+		return {allowkeys:allowkeys};
 	}
 	,getDefaultProps:function() {
 		return {span:defaultSpan,div:React.View||"div",markups:[],sel:{}};
@@ -67,6 +74,7 @@ var BaseView=React.createClass({
 		if (!this.selection) return;
 		var sel=selection.get(this.getDOMNode());
 		if (!sel || this.selection.start===sel.start)return;
+
 		selection.restore(this.getDOMNode(),this.selection);
 		//this.selection=null;
 	}
@@ -128,6 +136,7 @@ var BaseView=React.createClass({
 		var sel=selection.get(this.getDOMNode());
 		if (!sel || isNaN(sel.start))return;
 		//console.log('mark',sel);
+		sel.selection.empty();
 		var text=this.props.text.substr(sel.start,sel.len||1);
 		if (text.charCodeAt(0)>=0xD800 ) { //surrogate
 			text=this.props.text.substr(sel.start,sel.len||2);

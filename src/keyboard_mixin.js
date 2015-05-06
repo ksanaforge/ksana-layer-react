@@ -1,6 +1,6 @@
 
 var keyboard_mixin={
-	arrowkeys:function(){return ["ArrowRight","ArrowLeft","ArrowUp","ArrowDown","PageUp","PageDown","Home","End"]},
+	arrowkeys:["ArrowRight","ArrowLeft","ArrowUp","ArrowDown","PageUp","PageDown","Home","End"],
 	onkeydown:function(e) {
 		var nodename=e.target.nodeName;
 		if (nodename==="INPUT" || nodename==="TEXTAREA") return;

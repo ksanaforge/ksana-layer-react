@@ -30,7 +30,11 @@ var noteEditStyle=function(){
 	var style={fontSize:"100%",position:"absolute",outline:"none",borderRadius:"5px"};
 	return style;		
 }
+
+var selectedStyle={"backgroundColor":"highlight",color:"black"};
+
+
 module.exports={handlerTop:"-1.2em",noteTop:"1.8em",noteEditTop:"2.2em",
 	singleStyle:singleStyle,
 	multiStyle:multiStyle,
-	buttonStyle:buttonStyle, noteStyle:noteEditStyle};
+	buttonStyle:buttonStyle, noteStyle:noteEditStyle, selectedStyle: selectedStyle};

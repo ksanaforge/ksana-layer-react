@@ -64,7 +64,12 @@ var elementFromMarkup=function(markups,action,seloffset,selidx,editing) {
 			editmode=editing;
 		}
 		var m=markups[n];
-		out.push( createMarkup(i,markups,n,action,selected,editmode) );
+		if (m.type=="revision") {
+			out.push( createMarkup(i,markups,n,action,selected,editmode) );	
+		} else {
+			out.push(m);
+		}
+		
     };
 	return out;
 }

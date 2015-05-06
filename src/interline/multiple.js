@@ -11,7 +11,7 @@ try {
 var E=React.createElement;
 var PT=React.PropTypes;
 
-var interlinestyle=require("./interlinestyle");
+var styles=require("./styles");
 var user=require("./user");
 
 var MultipleInterline=React.createClass({
@@ -69,7 +69,7 @@ var MultipleInterline=React.createClass({
 			this.props.markups.map(function(m,idx){
 				var state="";
 				var activate=m.state || (activated&&that.sameWithActivated(m,activated));
-				return E("span",{onClick:that.onClick,style:interlinestyle.singleStyle(activate,idx==that.state.selected),
+				return E("span",{onClick:that.onClick,style:styles.singleStyle(activate,idx==that.state.selected),
 					onMouseMove:that.mousemove,
 					key:idx,"data-offset":m.s,"data-idx":idx+1},m.author)	
 			})
@@ -94,12 +94,12 @@ var MultipleInterline=React.createClass({
 		if (m) caption=m.author.substr(0,1).toUpperCase();
 		
 		return this.state.extend?this.renderChoice()
-				:E("span",{onMouseEnter:this.mouseenter,onClick:this.clickMe,style:interlinestyle.multiStyle(m)},caption);
+				:E("span",{onMouseEnter:this.mouseenter,onClick:this.clickMe,style:styles.multiStyle(m)},caption);
 	}
 	,render:function(){
 		return E("span",{style:{position:"relative"}},
 			this.renderNote()
-			,E("div",{style:{position:"absolute",left:0,top:interlinestyle.handlerTop},onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
+			,E("div",{style:{position:"absolute",left:0,top:styles.handlerTop},onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
 			,this.renderBody()));
 	}
 });

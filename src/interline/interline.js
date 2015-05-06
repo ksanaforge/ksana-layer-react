@@ -6,10 +6,10 @@ try {
 	var PureRenderMixin = React.addons.PureRenderMixin;
 }
 var user=require("./user");
-var MultipleInterline=require("./multiinterline");
-var EditInterline=require("./editinterline");
-var interlinestyle=require("./interlinestyle");
-var InterlineNote=require("./interlinenote");
+var MultipleInterline=require("./multiple");
+var RevisionInterline=require("./revision");
+var styles=require("./styles");
+var Note=require("./note");
 
 var E=React.createElement;
 var PT=React.PropTypes;
@@ -44,12 +44,12 @@ var SingleInterline=React.createClass({
 			author=author.substr(0,1).toUpperCase();
 		}
 		return E("span",{style:{position:"relative"},onMouseEnter:this.mouseenter,onMouseLeave:this.mouseleave},
-			E("div",{style:{position:"absolute",left:0,top:interlinestyle.handlerTop},
+			E("div",{style:{position:"absolute",left:0,top:styles.handlerTop},
 				onKeyDown:this.onKeyDown,onKeyPress:this.onKeyPress}
-			,E(InterlineNote,{note:this.props.markup.note,show:this.props.selected})
+			,E(Note,{note:this.props.markup.note,show:this.props.selected})
 			,E("span",{
-				onClick:this.onClick,style:interlinestyle.singleStyle(this.props.markup.state,this.props.selected)},author)));
+				onClick:this.onClick,style:styles.singleStyle(this.props.markup.state,this.props.selected)},author)));
 	}
 });
 
-module.exports={Single:SingleInterline,Multiple:MultipleInterline,Editing:EditInterline};
+module.exports={Single:SingleInterline,Multiple:MultipleInterline,Editing:RevisionInterline};
