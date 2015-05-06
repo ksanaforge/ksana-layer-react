@@ -8,11 +8,11 @@ try {
 var E=React.createElement;
 var PT=React.PropTypes;
 var BaseView=require("./baseview");
-var combinerange=require("./combinerange");
+var textrange=require("./textrange");
 var MultiSelectView=React.createClass({
 	displayName:"MultiSelectView"
 	,componentWillMount:function() {
-		this.ranges=combinerange.create();
+		this.ranges=textrange.create();
 		if (this.props.selections && this.props.selections.length) {
 			this.ranges.set(this.props.selections);
 		}

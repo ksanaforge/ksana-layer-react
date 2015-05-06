@@ -2,12 +2,12 @@
 	Combining multiple range
 */
 var create=function() {
-	var multirange={};
+	var textrange={};
 	var _ranges=[];
 
-	var removeOverlap=function(ranges,start,len) {
+	var removeOverlap=function(start,len) {
 		var overlap=[];
-		ranges=ranges.filter(function(r){
+		_ranges=_ranges.filter(function(r){
 			if (r[0]>start+len || r[0]+r[1]<start) return true;
 			else {
 				overlap.push(r);
@@ -21,8 +21,9 @@ var create=function() {
 		var text=[];
 		for (var i=0;i<ranges.length;i++) {
 			var r=ranges[i];
-			for (var j=sel[0];j<r[0]+r[1];j++) {
-				if (!text[j]) text[j]=r[2][j-r[0]];
+
+			for (var j=r[0];j<r[0]+r[1];j++) {
+				if (!text[j]) text[j]=r[2][j-r[0]]||"";
 			}
 			if (r[0]<start) start=r[0];
 			if (r[0]+r[1]>end) end=r[0]+r[1];
@@ -32,10 +33,13 @@ var create=function() {
 		return [start,end-start,t];
 	}
 	var add=function(start,len,text) {
-		var overlap=removeOverlap(_ranges,start,len);
+		var text=text||"";
+		var overlap=removeOverlap(start,len);
+		
 		if (overlap.length) {
 			overlap.push([start,len,text]);
-			_ranges.push( combine(overlap) );
+			var combined=combine(overlap);
+			_ranges.push( combined );
 		} else {
 			_ranges.push([start,len,text]);	
 		}
@@ -56,11 +60,11 @@ var create=function() {
 			add(r[0],r[1],r[2]);
 		}
 	}
-	multirange.add=add;
-	multirange.get=get;
-	multirange.remove=remove;
-	multirange.set=set;
+	textrange.add=add;
+	textrange.get=get;
+	textrange.remove=remove;
+	textrange.set=set;
 
-	return multirange;
+	return textrange;
 }
 module.exports={create:create}
