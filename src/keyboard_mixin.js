@@ -5,10 +5,8 @@ var keyboard_mixin={
 		var nodename=e.target.nodeName;
 		if (nodename==="INPUT" || nodename==="TEXTAREA") return;
 		var allowkeys=this.state.allowkeys||[];
-		if (allowkeys.indexOf(e.key)>-1 || (e.ctrlKey && e.keyCode===67)) return;
-		if (e.keyCode==77) {
-			this.markSelection&&this.markSelection(e);
-		}
+		if (allowkeys.indexOf(e.key)>-1 || (e.ctrlKey && e.keyCode===67)) return; //allow ctrl+c
+
 		e.preventDefault();
 	}
 }

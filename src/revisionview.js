@@ -7,11 +7,11 @@ try {
 }
 var E=React.createElement;
 var PT=React.PropTypes;
-var user=require("./user");
 
-var Interline=require("./interline");
-var markuputil=require("./markuputil");
-var elementFromMarkup=require("./elementfrommarkup");
+var Interline=require("./interline/interline");
+var elementFromMarkup=require("./interline/elementfrommarkup");
+
+var markuputil=require("./interline/markuputil");
 var BaseView=require("./baseview");
 var selection=require("./selection");
 var caretPos=require("./caretpos");
@@ -106,14 +106,18 @@ var RevisionView=React.createClass({
     }
   }
   ,render:function() {
-    var M=elementFromMarkup(this.props.markups||[],this.action,this.state.seloffset,this.state.selidx,this.state.editing);
-    return E(BaseView,{index:this.props.index,ref:"baseview",allowKeys:[" "],
-            showCaret:true,markups:M, 
-            onKeyPress:this.onKeyPress,
-            markupStyles:markupStyles,
-            onSelect:this.onselect, 
-            style:this.props.style,
-            text:(this.props.text)}
+    var M=elementFromMarkup(this.props.markups,this.action,this.state.seloffset
+      ,this.state.selidx,this.state.editing);
+    return E(BaseView,{
+            index:this.props.index
+            ,ref:"baseview"
+            ,allowKeys:[" "]
+            ,showCaret:true,markups:M
+            ,onKeyPress:this.onKeyPress
+            ,markupStyles:markupStyles
+            ,onSelect:this.onselect
+            ,style:this.props.style
+            ,text:(this.props.text)}
     );
   }
 });

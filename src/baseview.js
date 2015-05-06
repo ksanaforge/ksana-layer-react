@@ -50,6 +50,13 @@ var BaseView=React.createClass({
 		return {span:defaultSpan,div:React.View||"div",markups:[],sel:{}};
 	}
 	,componentWillMount:function() {
+		this.style=this.props.style||{};
+		if (!this.style.lineHeight||!this.style.outline) {
+			this.style=update(this.style,{$merge:{
+				outline : "0px solid transparent", lineHeight:"180%"
+			}});
+		}
+
 		this.spreaded=spreadMarkup(this.props.markups)
 	}
 	,moveCaret:function(start) {
@@ -131,16 +138,11 @@ var BaseView=React.createClass({
 	}
 	,mouseUp:function(e) {
 		this.markSelection(e);
-  	}
+  }
 	,render:function(){
-		var style=this.props.style||{};
-		style.lineHeight="180%"
-		style.outline = "0px solid transparent";
-
-		return E("div",
-			{
+		return E("div",{
 			spellCheck:false,
-			style:style,
+			style:this.style,
 			onKeyDown:this.props.onKeyDown||this.onkeydown,
 			onKeyUp:this.props.onKeyUp||this.onkeyup,
 			onKeyPress:this.props.onKeyPress||this.onkeypress,
