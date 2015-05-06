@@ -67,4 +67,20 @@ var create=function() {
 
 	return textrange;
 }
-module.exports={create:create}
+var markupInRange=function(markups,ranges) {
+	if (!ranges || !ranges.length) return [];
+	if (typeof ranges[0]==="number") ranges=[ranges];
+	if (ranges.length==0) return [];
+	var out=[];
+	for (var j=0;j<markups.length;j++) {
+		var m=markups[j];
+		for (var i=0;i<ranges.length;i++) {
+			var r=ranges[i];
+			if (m.s>=r[0] && m.s+m.l<=r[0]+r[1] && out.indexOf(m)===-1) {
+				out.push(m);
+			}
+		};
+	};
+	return out;
+}
+module.exports={create:create, markupInRange:markupInRange };

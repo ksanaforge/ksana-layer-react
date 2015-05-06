@@ -1,9 +1,9 @@
 var assert=require("assert");
-var ranges=require("..").textrange;
+var textrange=require("..").textrange;
 
 
-describe("test ranges",function(){
-	var selections=ranges.create();
+describe("test textrange",function(){
+	var selections=textrange.create();
 	it("add selection",function(){
 		selections.add(3,5,"");
 		selections.add(10,5,"");
@@ -76,5 +76,40 @@ describe("test ranges",function(){
 		selections.add(5,1,"5");
 		assert.deepEqual(selections.get(),[[1,5,"12345"]]);
 	});
+
+});
+
+//2015/5/6, for clear markup in range
+describe("test markup in range",function(){
+
+	it("single markup , no selection",function(){
+		var markups=[{s:2,l:1,id:'a'}];
+		var ranges=[];
+		var o=textrange.markupInRange(markups,ranges);
+		assert.equal(o.length,0);
+	});
+	
+	it("single markup , single selection",function(){
+		var markups=[{s:2,l:1,id:'abc'}];
+		var ranges=[2,2];
+		var o=textrange.markupInRange(markups,ranges);
+		assert.equal( o.length,1 );
+		assert.equal( o[0].id , 'abc');
+	});
+
+	it("2 markups , one match, single selection",function(){
+		var markups=[{s:2,l:1,id:'a2'},{s:10,l:1,id:'a1'}]; 
+		var ranges=[2,2];
+		var o=textrange.markupInRange(markups,ranges);
+		assert.equal( o.length,1 );
+		assert.equal( o[0].id , 'a2');
+	});
+
+	it("2 markups , all match, two selections",function(){
+		var markups=[{s:2,l:1,id:'a2'},{s:10,l:1,id:'a1'}]; 
+		var ranges=[[2,2],[10,2]];
+		var o=textrange.markupInRange(markups,ranges);
+		assert.equal( o.length,2 );
+	});	
 
 });
