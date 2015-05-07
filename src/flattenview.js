@@ -1,6 +1,6 @@
 /*
 	Core markup display component,
-	"flatten" text, markups (with styles) to single layer.
+	"flatten" text, tags (with styles) to single layer.
 */
 try {
 	var React=require("react-native");
@@ -17,52 +17,57 @@ var defaultSpan=require("./defaultspan");
 var PT=React.PropTypes;
 var styles=require("./interline/styles");
 var FlattenView=React.createClass({
-	mixins:[PureRenderMixin]
+	displayName:"FlattenView"
+	,mixins:[PureRenderMixin]
 	,propTypes:{
 		text:React.PropTypes.string.isRequired
-		,markups:PT.object
-		,markupStyles:PT.object
-		,span:PT.node 
+		,tags:PT.array
+		,styles:PT.object
+		,span:PT.func
 		,style:PT.object
 		,allowKeys:PT.array
 		,onMouseUp:PT.func,onKeyDown:PT.func ,onKeyUp:PT.func	,onKeyPress:PT.func
 	}
 	,getDefaultProps:function() {
-		return {markups:{},markupStyles:{},span:defaultSpan};
+		return {tags:{},styles:{},span:defaultSpan};
 	}
-	,markupAtPos:[] // hold covering markups given a text position
-	,componentWillMount:function() {
-		this.style=this.props.style||{};
+	,tagAtPos:[] // hold covering tags given a text position
+	,mergeStyle:function(style) {
+		this.style=style||{};
 		if (!this.style.lineHeight||!this.style.outline) {
 			this.style=update(this.style,{$merge:{
 				outline : "0px solid transparent", lineHeight:"180%"
 			}});
-		}
-		this.markupStyles=this.props.markupStyles;
-		!this.markupStyles._selected_ && 
-		(this.markupStyles=update(this.markupStyles,{$merge:{_selected_:styles.selected_style}}));
-		this.markupAtPos=spreadMarkup(this.props.markups);
+		}		
+	}
+	,componentWillMount:function() {
+		this.mergeStyle();
+		this.styles=this.props.styles;
+		!this.styles._selected_ && 
+		(this.styles=update(this.styles,{$merge:{_selected_:styles.selected_style}}));
+		this.tagAtPos=spreadMarkup(this.props.tags);
 	}
 	,componentWillReceiveProps:function(nextProps) {
-		this.markupAtPos=spreadMarkup(nextProps.markups);
+		this.mergeStyle(nextProps.style);
+		this.tagAtPos=spreadMarkup(nextProps.tags);
 	}
 	,renderSpan:function(out,start,end,spantext,mid) {
-		var before=[],after=[], markups=this.props.markups;
+		var before=[],after=[], tags=this.props.tags;
 		(mid||[]).map(function(m){ 
-			if (markups[m].before&& start===markups[m].s) { 
-				before.push(markups[m].before);
+			if (tags[m].before&& start===tags[m].s) { 
+				before.push(tags[m].before);
 			}
 		});
 		before.length && out.push(E(React.Text||"span",{key:"b"+start},before));
 
 		out.push(E(this.props.span,{index:this.props.index,
-					markupStyles:this.markupStyles,key:'s'+start, markups:markups,mid:mid,start:start}
+					styles:this.styles,key:'s'+start, tags:tags,mid:mid,start:start}
 				,spantext )
 		);
 
 		(mid||[]).map(function(m){ 
-			if (markups[m].after && end===markups[m].s+markups[m].l) {
-				after.push(markups[m].after);
+			if (tags[m].after && end===tags[m].s+tags[m].l) {
+				after.push(tags[m].after);
 			} 
 		});
 		
@@ -80,13 +85,13 @@ var FlattenView=React.createClass({
 
 		while (caretpos.get()<this.props.text.length) {
 			var i=caretpos.get();
-			if (!sameArray(this.markupAtPos[i],previous)) {
+			if (!sameArray(this.tagAtPos[i],previous)) {
 				spantext && (out=this.renderSpan(out,start,i,spantext,previous));
 				start=i;
 				spantext="";
 			}
-			previous=(this.markupAtPos[i]&&this.markupAtPos[i].length)?JSON.parse(JSON.stringify(this.markupAtPos[i])):null; 
-			if (i>this.markupAtPos.length) break;
+			previous=(this.tagAtPos[i]&&this.tagAtPos[i].length)?JSON.parse(JSON.stringify(this.tagAtPos[i])):null; 
+			if (i>this.tagAtPos.length) break;
 			spantext += caretpos.nextToken();
 		}
 		spantext=this.props.text.substr(start);

@@ -37,11 +37,11 @@ var spreadMarkup=function(markups){
 	}
 	return out;
 }
-var keyboard_mixin=require("./keyboard_mixin");
+var KeyboardMixin=require("./keyboard_mixin");
 var BaseView=React.createClass({
 	mixins: [PureRenderMixin]
 	,displayName:"BaseView"
-	,mixins:[keyboard_mixin]
+	,mixins:[KeyboardMixin]
 	,selection:null
 	,getInitialState:function() {
 		this.markupStyles=this.props.markupStyles || {};
@@ -56,15 +56,23 @@ var BaseView=React.createClass({
 	,getDefaultProps:function() {
 		return {span:defaultSpan,div:React.View||"div",markups:[],sel:{}};
 	}
-	,componentWillMount:function() {
+	,mergeStyle:function(){
 		this.style=this.props.style||{};
 		if (!this.style.lineHeight||!this.style.outline) {
 			this.style=update(this.style,{$merge:{
 				outline : "0px solid transparent", lineHeight:"180%"
 			}});
 		}
-
+	}
+	,componentWillMount:function() {
+		console.log("will mount")
+		this.mergeStyle();
 		this.spreaded=spreadMarkup(this.props.markups)
+	}
+	,componentWillReceiveProps:function(nextProps) {
+		console.log("will receive")
+		this.mergeStyle();
+		this.spreaded=spreadMarkup(nextProps.markups);
 	}
 	,moveCaret:function(start) {
 		this.selection={start:start,len:0};
@@ -77,9 +85,6 @@ var BaseView=React.createClass({
 
 		selection.restore(this.getDOMNode(),this.selection);
 		//this.selection=null;
-	}
-	,componentWillReceiveProps:function(nextProps) {
-		this.spreaded=spreadMarkup(nextProps.markups);
 	}
 	,propTypes:{
 		text:PT.string.isRequired

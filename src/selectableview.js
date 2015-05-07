@@ -33,13 +33,19 @@ var SelectableView=React.createClass({
 		//turn contentEditable on for caret, cannot set in render as React will give warning
 		if (this.props.showCaret) this.getDOMNode().contentEditable=true;
 	}
-	,componentWillMount:function() {
-		this.style=this.props.style||{};
+	,mergeStyle:function(style) {
+		this.style=style||{};
 		if (!this.style.lineHeight||!this.style.outline) {
 			this.style=update(this.style,{$merge:{
 				outline : "0px solid transparent", lineHeight:"180%"
 			}});
-		}
+		}		
+	}
+	,componentWillMount:function() {
+		this.mergeStyle(this.props.style);
+	}
+	,componentWillReceiveProps:function(nextProps) {
+		this.mergeStyle(nextProps.style);
 	}
 	,markSelection:function(e) {
 		if (e.target.nodeName!="SPAN") return;
@@ -54,8 +60,8 @@ var SelectableView=React.createClass({
 	,render:function(){
 		return E(FlattenView,{
 							text:this.props.text
-							,markups:this.props.markups
-							,markupStyles:this.props.markupStyles
+							,tags:this.props.tags
+							,styles:this.props.styles
 							,onMouseUp:this.onMouseUp
 							,onKeyDown:this.props.onKeyDown||this.onkeydown
 							,onKeyUp:this.props.onKeyUp||this.onkeyup
