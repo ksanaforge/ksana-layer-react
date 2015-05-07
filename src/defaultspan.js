@@ -25,7 +25,7 @@ var mergeStyles=function(styles) {
 var SpanClass = React.createClass({
   displayName:"defaultSpan"
   ,propTypes:{
-    mid:PT.array
+    tid:PT.array
     ,index:PT.number
     ,tags:PT.array.isRequired
     ,start:PT.number.isRequired
@@ -34,11 +34,11 @@ var SpanClass = React.createClass({
   ,getInitialState:function() {
     return {span:React.Text||"span"}
   }
-  ,getTagStyle:function(mid) {
-    if (!mid) return {};
+  ,getTagStyle:function(tid) {
+    if (!tid) return {};
     var out=[];
-    for (var i=0;i<mid.length;i++){
-      var m=mid[i];
+    for (var i=0;i<tid.length;i++){
+      var m=tid[i];
       var styles=this.props.styles;
       var tag=this.props.tags[m];
       var type=tag.className;
@@ -48,11 +48,11 @@ var SpanClass = React.createClass({
     };
     return out;
   }
-  ,getTagType:function(mid){
-    if (!mid) return [];
+  ,getTagType:function(tid){
+    if (!tid) return [];
     var out=[];
-    for (var i=0;i<mid.length;i++){
-      var m=mid[i];
+    for (var i=0;i<tid.length;i++){
+      var m=tid[i];
       var styles=this.props.styles;
       var tag=this.props.tags[m];
       var type=tag.className;
@@ -61,12 +61,12 @@ var SpanClass = React.createClass({
     return out;
   }
   ,render:function() {
-    var styles=this.getTagStyle(this.props.mid);
+    var styles=this.getTagStyle(this.props.tid);
     var style=mergeStyles(styles);
     var props={"data-index":this.props.index,
-      "data-mid":this.props.mid,style:style,onClick:this.click,"data-start":this.props.start}
+      "data-tid":this.props.tid,style:style,onClick:this.click,"data-start":this.props.start}
     
-    props.className=this.getTagType(this.props.mid).join(" ");  //pass className as it's  
+    props.className=this.getTagType(this.props.tid).join(" ");  //pass className as it's  
     if (style) props.style=style;
 
     return E(this.state.span,props,this.props.children);

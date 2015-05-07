@@ -51,9 +51,9 @@ var FlattenView=React.createClass({
 		this.mergeStyle(nextProps.style);
 		this.tagAtPos=spreadMarkup(nextProps.tags);
 	}
-	,renderSpan:function(out,start,end,spantext,mid) {
+	,renderSpan:function(out,start,end,spantext,tid) {
 		var before=[],after=[], tags=this.props.tags;
-		(mid||[]).map(function(m){ 
+		(tid||[]).map(function(m){ 
 			if (tags[m].before&& start===tags[m].s) { 
 				before.push(tags[m].before);
 			}
@@ -61,11 +61,11 @@ var FlattenView=React.createClass({
 		before.length && out.push(E(React.Text||"span",{key:"b"+start},before));
 
 		out.push(E(this.props.span,{index:this.props.index,
-					styles:this.styles,key:'s'+start, tags:tags,mid:mid,start:start}
+					styles:this.styles,key:'s'+start, tags:tags,tid:tid,start:start}
 				,spantext )
 		);
 
-		(mid||[]).map(function(m){ 
+		(tid||[]).map(function(m){ 
 			if (tags[m].after && end===tags[m].s+tags[m].l) {
 				after.push(tags[m].after);
 			} 
