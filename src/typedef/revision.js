@@ -7,9 +7,7 @@ try {
 }
 var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 
-
 var IL=require("./interline");
-
 
 var AuthorButton=React.createClass({
 	mixins:[PureRenderMixin]
