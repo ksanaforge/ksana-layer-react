@@ -23,13 +23,9 @@ var AuthorButton=React.createClass({
 		return {style:{}};
 	}
 	,onMouseLeave:function(e) {
-		this.style.borderColor="gray";
-		this.forceUpdate();
 		this.props.action("leave",this.props.mid);
 	}
 	,onMouseEnter:function(e) {
-		this.style.borderColor="yellow";
-		this.forceUpdate();
 		this.props.action("enter",this.props.mid);
 	}
 	,render:function(){
@@ -42,7 +38,7 @@ var AuthorButton=React.createClass({
 var Note=React.createClass({
 	mixins:[PureRenderMixin]
 	,getInitialState:function() {
-		return {style:{}};
+		return {style:{fontSize:"75%"}};
 	}
 	,onMouseLeave:function(e) {
 		this.setState({style:update(this.state.style,{$merge:{color:"inherit",cursor:"default"}})});
@@ -64,18 +60,25 @@ var RevisionType=React.createClass({
 		,mid:PT.string.isRequired
 		,context:PT.object.isRequired
 	}
-	,componentWillUpdate:function(nextProps) {
+	,computeStyle:function(props) {
 		this.style={display:"none"};
-		if (nextProps.hovering) this.style={textDecoration:"underline",display:"inline"};
-		else if (nextProps.activated) this.style={display:"inline"};
+		if (props.hovering) this.style={textDecoration:"underline",display:"inline"};
+		else if (props.activated) this.style={display:"inline"};
+	}
+	,componentWillUpdate:function(nextProps) {
+		this.computeStyle(nextProps);
+	}
+	,componentWillMount:function() {
+		this.computeStyle(this.props);
 	}
 	,render:function() {
 		var action=this.props.context.action;
-		var author=E(AuthorButton,{action:action,mid:this.props.mid},this.props.markup.author);
-		var note=this.props.hovering?E(Note,{action:action,mid:this.props.mid},this.props.markup.note):null;
+		var author=null;
+		if (this.props.alone) author=E(AuthorButton,{action:action,mid:this.props.mid},this.props.markup.author);
 
-		return E(IL.Container,{},
-				 E(IL.Super, {}, author)
+		var note=this.props.hovering?E(Note,{action:action,mid:this.props.mid},this.props.markup.note):null;
+		return E(IL.Container,{}
+				,E(IL.Super, {}, author)
 				,E(IL.Embed, {style:this.style}, this.props.markup.t)
 				,E(IL.Sub  , {}, note )
 			);

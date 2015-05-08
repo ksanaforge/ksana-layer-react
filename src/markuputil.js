@@ -1,19 +1,15 @@
 //var user=require("./user");
+/**
+	input : { markupid:{markup}, markupid:{markup} }
+	return { offset: { markupid:{markup} , markupid:{markup}] }	
+*/
 var groupByOffset=function(markups) {
-	var i=0,lastoffset=-1,m;
-	var out=[];
-	var same=[];
-	while(i<markups.length) {
-		var m=markups[i];
-		if (m.s!==lastoffset && lastoffset>=0) {
-			out.push(same);
-			same=[];
-		}
-		same.push(m);
-		lastoffset=m.s;
-		i++;
+	var out={};
+	for (var id in markups) {
+		var m=markups[id];
+		if (!out[m.s]) out[m.s]={};
+		out[m.s][id]=m;
 	}
-	if (same.length) out.push(same);
 	return out;
 }
 

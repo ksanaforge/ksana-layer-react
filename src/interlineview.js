@@ -25,7 +25,8 @@ var markup2tag=require("./markup2tag");
 var InterlineView=React.createClass({
 	mixins:[PureRenderMixin]
 	,getInitialState:function() {
-		return {tags:[],editing:-1,hovering:-1};
+		//markupEnabled : { mid: true , mid: false }; //otherwise it is not initialized
+		return {tags:[],editing:-1,hovering:-1,markupEnabled:{}};
 	}
 	,componentWillUpdate:function(nextProps,nextState) {
 		this.markup2tag(nextProps,nextState);
@@ -35,11 +36,14 @@ var InterlineView=React.createClass({
 	}
 	,markup2tag:function(nextProps,nextState) {
 		var status={editing:nextState.editing,hovering:nextState.hovering
-			,action:this.action};
+			,action:this.action,markupEnabled:nextState.markupEnabled,action:this.action};
+
 		nextState.tags=markup2tag(nextProps.markups,status);
+		nextState.markupEnabled=status.markupEnabled; //markup2tag might change markupEnabled
 	}
 	,action:function(act,p1,p2) {
 		if(act=="enter") {
+			console.log("entering",p1)
  			this.setState({hovering:p1})
 		} else if (act=="leave") {
 			this.setState({hovering:null})
