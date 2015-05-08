@@ -17,9 +17,8 @@ try {
 	var React=require("react/addons");
 	var PureRenderMixin=React.addons.PureRenderMixin;
 }
-var update=React.addons.update;
-var E=React.createElement;
-var PT=React.PropTypes;
+var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
+
 
 var SelectableView=require("./selectableview");
 var markup2tag=require("./markup2tag");
@@ -44,17 +43,8 @@ var InterlineView=React.createClass({
 		context:PT.object  //pass to interline
 	}
 	,render:function(){
-		return E(SelectableView,{
-							text:this.props.text
-							,tags:this.state.tags
-							,style:this.props.style
-							,styles:this.props.styles
-							,onMouseUp:this.onMouseUp
-							,onKeyDown:this.props.onKeyDown||this.onkeydown
-							,onKeyUp:this.props.onKeyUp||this.onkeyup
-							,onKeyPress:this.props.onKeyPress||this.onkeypress
-							}
-					);
+		var props=update(this.props,{$merge:{tags:this.state.tags}});
+		return E(SelectableView,props);
 	}
 
 });

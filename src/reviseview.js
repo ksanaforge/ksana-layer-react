@@ -5,12 +5,13 @@ try {
 	var React=require("react/addons");
 	var PureRenderMixin = React.addons.PureRenderMixin;
 }
+var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
+
+
 var BaseView=require("./baseview");
 var keyboard_mixin=require("./keyboard_mixin");
 var selection=require("./selection");
 
-var E=React.createElement;
-var PT=React.PropTypes;
 var Input=React.createClass({
 	componentDidMount:function() {
 		var n=this.getDOMNode();

@@ -9,12 +9,12 @@ try {
 	var React=require("react/addons");
 	var PureRenderMixin=React.addons.PureRenderMixin;
 }
-var update=React.addons.update;
-var E=React.createElement;
+var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
+
+
 var spreadMarkup=require("./interline/markuputil").spreadMarkup;
 var caretPos=require("./caretpos");
 var defaultSpan=require("./defaultspan");
-var PT=React.PropTypes;
 var styles=require("./interline/styles");
 var FlattenView=React.createClass({
 	displayName:"FlattenView"

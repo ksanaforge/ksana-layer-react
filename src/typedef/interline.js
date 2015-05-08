@@ -5,10 +5,7 @@ try {
 	var React=require("react/addons");
 	var PureRenderMixin=React.addons.PureRenderMixin;
 }
-
-var update=React.addons.update;
-var E=React.createElement;
-var PT=React.PropTypes;
+var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 
 var Embed=React.createClass({
 	render:function() {

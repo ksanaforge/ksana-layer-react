@@ -8,9 +8,8 @@ try {
   var React=require("react/addons");
   var PureRenderMixin = React.addons.PureRenderMixin;
 }
+var E=React.createElement,PT=React.PropTypes;
 
-var E=React.createElement;
-var PT=React.PropTypes;
 
 var mergeStyles=function(styles) {
   if (!styles.length) return null;

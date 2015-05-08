@@ -8,9 +8,10 @@ try {
 	var React=require("react/addons");
 	var PureRenderMixin=React.addons.PureRenderMixin;
 }
+var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
+
+
 var KeyboardMixin=require("./keyboard_mixin");
-var update=React.addons.update;
-var E=React.createElement;
 var selection=require("./selection");
 var FlattenView=require("./flattenview");
 
@@ -44,16 +45,14 @@ var SelectableView=React.createClass({
 		this.markSelection(e);
 	}
 	,render:function(){
-		return E(FlattenView,{
-							text:this.props.text
-							,tags:this.props.tags
-							,styles:this.props.styles
-							,onMouseUp:this.onMouseUp
-							,onKeyDown:this.props.onKeyDown||this.onkeydown
-							,onKeyUp:this.props.onKeyUp||this.onkeyup
-							,onKeyPress:this.props.onKeyPress||this.onkeypress
-							,style:this.props.style}
-					);
+		var props=update(this.props,{$merge:{
+			onMouseUp:this.onMouseUp
+			,onKeyDown:this.props.onKeyDown||this.onkeydown
+			,onKeyUp:this.props.onKeyUp||this.onkeyup
+			,onKeyPress:this.props.onKeyPress||this.onkeypress
+		}});
+		
+		return E(FlattenView,props);
 	}
 });
 module.exports=SelectableView;
