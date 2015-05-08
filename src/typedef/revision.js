@@ -8,6 +8,7 @@ try {
 var update=React.addons.update;
 var E=React.createElement;
 var PT=React.PropTypes;
+var IL=require("./interline");
 
 var RevisionType=React.createClass({
 	mixins:[PureRenderMixin]
@@ -16,7 +17,11 @@ var RevisionType=React.createClass({
 		,context:PT.object.isRequired
 	}
 	,render:function() {
-		return E("span",{},this.props.markup.t);
+		return E(IL.Container,{},
+				 E(IL.Super,{},"super")
+				,E(IL.Embed,{},this.props.markup.t)
+				,E(IL.Sub,{},"sub")
+			);
 	}
 });
 

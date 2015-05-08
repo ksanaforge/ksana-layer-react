@@ -1,2 +1,2 @@
 var revision=require("./revision");
-module.exports={"revision":revision};
+module.exports={"rev":revision};
