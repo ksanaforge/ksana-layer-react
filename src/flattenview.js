@@ -15,7 +15,7 @@ var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 var spreadMarkup=require("./markuputil").spreadMarkup;
 var caretPos=require("./caretpos");
 var defaultSpan=require("./defaultspan");
-var styles=require("./interline/styles");
+var styles=require("./styles");
 var FlattenView=React.createClass({
 	displayName:"FlattenView"
 	,mixins:[PureRenderMixin]
@@ -43,8 +43,16 @@ var FlattenView=React.createClass({
 	,componentWillMount:function() {
 		this.mergeStyle();
 		this.styles=this.props.styles;
+
 		!this.styles._selected_ && 
 		(this.styles=update(this.styles,{$merge:{_selected_:styles.selected_style}}));
+
+		this.styles=update(this.styles,{$merge:{
+			  revActivated:{"display":"none"}
+			  ,revHovering:{"textDecoration":"line-through"}
+			  ,revEditing:{"textDecoration":"line-through"}
+		}});
+
 		this.tagAtPos=spreadMarkup(this.props.tags);
 	}
 	,componentWillReceiveProps:function(nextProps) {

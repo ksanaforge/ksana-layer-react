@@ -19,7 +19,6 @@ try {
 }
 var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 
-
 var SelectableView=require("./selectableview");
 var markup2tag=require("./markup2tag");
 
@@ -28,19 +27,26 @@ var InterlineView=React.createClass({
 	,getInitialState:function() {
 		return {tags:[],editing:-1,hovering:-1};
 	}
-	,markup2tag:function() {
-		var status={editing:this.state.editing,hovering:this.state.hovering};
-		this.setState({tags:markup2tag(this.props.markups,status)});
+	,componentWillUpdate:function(nextProps,nextState) {
+		this.markup2tag(nextProps,nextState);
 	}
-	,componentWillMount:function() {
-		this.markup2tag();
+	,componentDidMount:function() {
+		this.forceUpdate();
 	}
-	,componentWillReceiveProps:function(nextprops) {
-		this.markup2tag();
+	,markup2tag:function(nextProps,nextState) {
+		var status={editing:nextState.editing,hovering:nextState.hovering
+			,action:this.action};
+		nextState.tags=markup2tag(nextProps.markups,status);
+	}
+	,action:function(act,p1,p2) {
+		if(act=="enter") {
+ 			this.setState({hovering:p1})
+		} else if (act=="leave") {
+			this.setState({hovering:null})
+		}
 	}
 	,propTypes:function() {
-		markups:PT.object  //markup from firebase ,
-		context:PT.object  //pass to interline
+		markups:PT.object  //markup from firebase
 	}
 	,render:function(){
 		var props=update(this.props,{$merge:{tags:this.state.tags}});

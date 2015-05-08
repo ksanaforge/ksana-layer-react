@@ -7,18 +7,23 @@ var markup2tag=function(markups,context) {
 
 	for (var id in markups) {
 		var m=markups[id];
-		var tag={s:m.s, l:m.l, id:id, context:context, className:m.type};
+		var hovering=context.hovering===id;
+		var editing=context.editing===id;
+		var type=m.type;
+		if (type=="rev") {
+			if (hovering) type="revHovering";
+			else if (editing) type="revEditing";
+		}
+		var tag={s:m.s, l:m.l, id:id, context:context, className:type};
+
 		var cls=typedef[m.type];
 		if (cls) {
-			var ele=E(cls , {key:id,markup:m, context:context} );
+			var ele=E(cls, {key:id,mid:id,markup:m, context:context, hovering:hovering, editing:editing} );
 			tag.before=ele;
 		}
 		tags.push(tag);
 	}
 	return tags;
 }
-
-
-
 
 module.exports=markup2tag;

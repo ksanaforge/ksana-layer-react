@@ -23,15 +23,13 @@ var mergeStyles=function(styles) {
 }
 var SpanClass = React.createClass({
   displayName:"defaultSpan"
+  ,mixins:[PureRenderMixin]
   ,propTypes:{
     tid:PT.array
     ,index:PT.number
     ,tags:PT.array.isRequired
     ,start:PT.number.isRequired
     ,tagStyles:PT.object
-  }
-  ,getInitialState:function() {
-    return {span:React.Text||"span"}
   }
   ,getTagStyle:function(tid) {
     if (!tid) return {};
@@ -62,13 +60,16 @@ var SpanClass = React.createClass({
   ,render:function() {
     var styles=this.getTagStyle(this.props.tid);
     var style=mergeStyles(styles);
-    var props={"data-index":this.props.index,
-      "data-tid":this.props.tid,style:style,onClick:this.click,"data-start":this.props.start}
+    var span=React.Text||"span";
     
+    var props={"data-tid":this.props.tid,style:style,"data-start":this.props.start};    
     props.className=this.getTagType(this.props.tid).join(" ");  //pass className as it's  
-    if (style) props.style=style;
-
-    return E(this.state.span,props,this.props.children);
+    if (style) {
+      //work around, react doensn't apply style, don't why
+      return E(span,{},E(span,{style:style},this.props.children));
+    }
+    
+    return E(span,props,this.props.children);
   }
 });
 module.exports=SpanClass;
