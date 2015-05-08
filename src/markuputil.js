@@ -1,4 +1,4 @@
-var user=require("./user");
+//var user=require("./user");
 var groupByOffset=function(markups) {
 	var i=0,lastoffset=-1,m;
 	var out=[];
@@ -20,12 +20,14 @@ var groupByOffset=function(markups) {
 var nmarkupAtPos=function(markups,offset) {
     return markups.reduce(function(prev,m){return (m.s===offset)?prev+1:prev },0);
 }
+/*
 var newMarkup=function(markups,offset) {
     var n=nmarkupAtPos(markups,offset);
     var newmarkup={s:offset,l:0,t:'',author:user.getName(),type:"revision"};
     markups.splice(n,0,newmarkup);
     return n;
 }
+*/
 
 // create minimum spans for overlap markup.
 // each span holds an array of markups id in props.mid
@@ -52,4 +54,4 @@ var spreadMarkup=function(markups){
 }
 
 module.exports={groupByOffset:groupByOffset,nmarkupAtPos:nmarkupAtPos,
-	spreadMarkup:spreadMarkup,newMarkup:newMarkup};
+	spreadMarkup:spreadMarkup};

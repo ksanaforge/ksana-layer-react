@@ -12,7 +12,7 @@ try {
 var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 
 
-var spreadMarkup=require("./interline/markuputil").spreadMarkup;
+var spreadMarkup=require("./markuputil").spreadMarkup;
 var caretPos=require("./caretpos");
 var defaultSpan=require("./defaultspan");
 var styles=require("./interline/styles");
@@ -99,9 +99,8 @@ var FlattenView=React.createClass({
 		return out;
 	}
 	,render:function() {
-		return E(React.View||"div",{ spellCheck:false, style:this.style, onMouseUp:this.props.onMouseUp
-						,onKeyDown:this.props.onKeyDown, onKeyUp:this.props.onKeyUp ,onKeyPress:this.props.onKeyPress }
-					,this.renderChildren());
-				}
+		var props=update(this.props, {$merge:{spellCheck:false, style:this.style}});
+		return E(React.View||"div",props,this.renderChildren());
+	}
 });
 module.exports=FlattenView;
