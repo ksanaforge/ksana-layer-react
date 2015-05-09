@@ -7,9 +7,9 @@ try {
 }
 var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 
-var IL=require("./interline");
-var RevisionNote=require("./revisionnote");
-var RevisionEditMode=require("./revisioneditmode");
+var IL=require("../interline");
+var RevisionNote=require("./note");
+var RevisionEditMode=require("./editmode");
 var redlinethrough=require("./redlinethrough");
 var authorButtonStyle={
 			borderStyle:"solid",borderColor:"gray",fontSize:"50%",color:"silver",borderWidth:2

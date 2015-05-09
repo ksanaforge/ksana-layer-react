@@ -7,10 +7,10 @@ try {
 }
 var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 
-var IL=require("./interline");
-var RevisionNote=require("./revisionnote");
-var RevisionEdit=require("./revisionedit");
-var RevisionEditControl=require("./revisioneditcontrol");
+var IL=require("../interline");
+var RevisionNote=require("./note");
+var RevisionEdit=require("./edit");
+var RevisionEditControl=require("./editcontrol");
 var caretPos=require("../caretpos");
 
 var RevisionEditMode=React.createClass({
