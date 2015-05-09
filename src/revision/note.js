@@ -7,7 +7,8 @@ try {
 }
 var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 
-var textareaStyle={fontSize:"100%",position:"absolute",outline:"none",borderRadius:"5px"};
+var textareaStyle={top:"0.6em",lineHeight:"100%",fontSize:"75%",position:"absolute",outline:"none",borderRadius:"5px"};
+var staticStyle={fontSize:"75%",cursor:"pointer"};
 var RevisionNote=React.createClass({
 	displayName:"RevisionNote"
 	,mixins:[PureRenderMixin]
@@ -20,9 +21,6 @@ var RevisionNote=React.createClass({
 	,onBlur:function(){
 		this.props.action("setNote",this.refs.note.getDOMNode().value);
 		this.props.action("leaveNote");
-	}
-	,getInitialState:function() {
-		return {style:{fontSize:"75%"}};
 	}
 	,componentDidUpdate:function() {
 		if (!this.props.editing) return;
@@ -37,11 +35,11 @@ var RevisionNote=React.createClass({
 	,render:function(){
 		if (this.props.editing) {
 			return E("textarea",
-				{rows:5,cols:20,ref:"note",onBlur:this.onBlur,style:textareaStyle,
+				{rows:4,cols:20,ref:"note",onBlur:this.onBlur,style:textareaStyle,
 				defaultValue:this.props.note||""}
 			);
 		} else{
-			return E("span",{style:this.state.style,onClick:this.onClick},this.props.children);	
+			return E("span",{style:staticStyle,onClick:this.onClick},this.props.children);	
 		}
 	}
 });
