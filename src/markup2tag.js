@@ -36,10 +36,10 @@ var markup2tag=function(markups,context) {
 	var gbo=markuputil.groupByOffset(markups);
 	defaultActiveMarkups(gbo,context.markupActivated);
 	var out=[];
-	var createTag=function(mid,alone,cls) {
+	var createTag=function(mid,cls,showSuper) {
 			var m=markups[mid], cls=cls||m.type;
 			var before=E(typedef[m.type],
-							{ mid:mid,alone:alone,hovering:context.hovering==mid,
+							{ mid:mid,showSuper:showSuper,hovering:context.hovering==mid,
 								markup:m,context,context,key:mid,
 								activated:context.markupActivated[mid]
 							}
@@ -51,24 +51,24 @@ var markup2tag=function(markups,context) {
 
 		var hovering=markups[context.hovering]?context.hovering:null; //this group has hovering markup
 		var editing=markups[context.editing]?context.editing:null;    //this group has editing markup
-		var alone=true;
 		var markupcount=Object.keys(markups).length;
+		var showSuper=true;
 		if (markupcount>1 && allDisabled(markups,context.markupActivated) ) {
+			showSuper=false;
 			out.push(createMarkupSelector(start,context,markups));
-			alone=false;
 		}
 
 		if (editing) {
 			var cls=markups[editing].type==="rev"?"revEditing":markups[editing].type;
-			out.push(createTag(editing, alone,cls));
+			out.push(createTag(editing,cls,showSuper));
 		} else if (hovering) {
 			var cls=markups[hovering].type==="rev"?"revHovering":markups[hovering].type;
-			out.push(createTag(hovering, alone, cls));
+			out.push(createTag(hovering, cls,showSuper));
 		} else {
 			for (var mid in markups) {
 				var cls=markups[mid].type;
-				if (cls=="rev" && context.markupActivated[mid]) cls="revActivated";
-				out.push(createTag(mid,alone,cls));
+				if (cls==="rev" && context.markupActivated[mid]) cls="revActivated";
+				out.push(createTag(mid,cls, showSuper && (context.markupActivated[mid] || markupcount===1)));
 			}
 		}
 	}

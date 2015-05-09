@@ -73,10 +73,11 @@ var Revision=React.createClass({
 		,mid:PT.string.isRequired
 		,context:PT.object.isRequired
 		,activated:PT.bool
+		,showSuper:PT.bool
 	}
 	,renderAuthor:function() {
 		var action=this.props.context.action;
-		return this.props.alone?E(AuthorButton,
+		return this.props.showSuper?E(AuthorButton,
 			{action:action,mid:this.props.mid,activated:this.props.activated,editable:this.props.editable||false},
 			this.props.markup.author)
 		:null;

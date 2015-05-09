@@ -18,14 +18,19 @@ var MarkupSelector=React.createClass({
 		markups:PT.object.isRequired
 		,context:PT.object.isRequired
 	}
+	,onClick:function(e) {
+		var mid=e.target.dataset.mid;
+		var act=this.props.activated?"deactivate":"activate";
+		this.props.context.action(act,mid);
+	}
 	,renderHandlers:function() {
 		var out=[];
 		for (var mid in this.props.markups) {
 			var m=this.props.markups[mid];
 			var hovering=this.props.context.hovering===mid;
 			var style=hovering?handlerStyle_hover:handlerStyle;
-			out.push(E("span",{"data-mid":mid,onMouseEnter:this.onMouseEnter
-				,onMouseLeave:this.onMouseLeave, key:mid,style:style},m.author));
+			out.push(E("span",{"data-mid":mid,onMouseEnter:this.onMouseEnter,onMouseLeave:this.onMouseLeave,
+			onClick:this.onClick, key:mid,style:style},m.author));
 		}
 		return out;
 	}

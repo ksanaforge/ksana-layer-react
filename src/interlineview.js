@@ -46,13 +46,15 @@ var InterlineView=React.createClass({
 		var markupActivated=this.deactivateOverlapMarkup(m.s,m.l);
 		var activate={};
 		activate[mid]=true;
-		this.setState({markupActivated: update(markupActivated,{$merge:activate})});
+		var ma=update(markupActivated,{$merge:activate});
+		this.setState({editing:null,hovering:null,markupActivated:ma});
   }
   ,deactivateMarkup:function(mid) {
 		var markupActivated=this.state.markupActivated;
 		var deactive={};
 		deactive[mid]=false;
-		this.setState({markupActivated: update(markupActivated,{$merge:deactive})});
+		var ma=update(markupActivated,{$merge:deactive});
+		this.setState({editing:null,hovering:null,markupActivated:ma});
   }
   ,deactivateOverlapMarkup:function(start,len) {
 		//set state to 0 for any overlap markup
@@ -75,6 +77,8 @@ var InterlineView=React.createClass({
 			this.activateMarkup(p1);
 		} else if (act==="deactivate") {
 			this.deactivateMarkup(p1)
+		} else if (act==="toggleEdit") { //
+
 		}
 	}
 	,propTypes:function() {
