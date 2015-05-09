@@ -24,9 +24,13 @@ var markup2tag=require("./markup2tag");
 
 var InterlineView=React.createClass({
 	mixins:[PureRenderMixin]
+	,propTypes:{
+		markups:PT.object.isRequired  //markup from firebase
+		,user:PT.string
+	}
 	,getInitialState:function() {
 		//markupActivated : { mid: true , mid: false }; //otherwise it is not initialized
-		return {tags:[],editing:-1,hovering:-1,markupActivated:{}};
+		return {tags:[],editing:null,hovering:null,markupActivated:{}};
 	}
 	,componentWillUpdate:function(nextProps,nextState) {
 		this.markup2tag(nextProps,nextState);
@@ -48,6 +52,13 @@ var InterlineView=React.createClass({
 		activate[mid]=true;
 		var ma=update(markupActivated,{$merge:activate});
 		this.setState({editing:null,hovering:null,markupActivated:ma});
+  }
+  ,activateOrEditMarkup:function(mid) {
+  	if (this.props.markups[mid].author===this.props.user) {
+  		this.setState({editing:mid,hovering:null});
+  	} else {
+  		this.activateMarkup(mid);
+  	}
   }
   ,deactivateMarkup:function(mid) {
 		var markupActivated=this.state.markupActivated;
@@ -77,12 +88,9 @@ var InterlineView=React.createClass({
 			this.activateMarkup(p1);
 		} else if (act==="deactivate") {
 			this.deactivateMarkup(p1)
-		} else if (act==="toggleEdit") { //
-
+		} else if (act==="activate_edit") { //
+			this.activateOrEditMarkup(p1);
 		}
-	}
-	,propTypes:function() {
-		markups:PT.object  //markup from firebase
 	}
 	,render:function(){
 		var props=update(this.props,{$merge:{tags:this.state.tags}});

@@ -1,9 +1,8 @@
 var React=require("react");
 var E=React.createElement;
-var typedef=require("./typedef/index");
+var typedef=require("./typedef");
 var markuputil=require("./markuputil");
 var MarkupSelector=require("./markupselector");
-
 
 /**
 	put no conflict markup in object markupActivated
@@ -28,7 +27,7 @@ var allDisabled=function(markups,markupActivated) {
 
 var createMarkupSelector=function(start,context,markups) {
 	var selector=E(MarkupSelector,{markups:markups,context:context,key:"selector"} );
-	return {s:start,l:1,before:selector};
+	return {s:start,l:0,before:selector};
 }
 
 
@@ -36,39 +35,36 @@ var markup2tag=function(markups,context) {
 	var gbo=markuputil.groupByOffset(markups);
 	defaultActiveMarkups(gbo,context.markupActivated);
 	var out=[];
-	var createTag=function(mid,cls,showSuper) {
+	var createTag=function(mid,showSuper) {
 			var m=markups[mid], cls=cls||m.type;
-			var before=E(typedef[m.type],
-							{ mid:mid,showSuper:showSuper,hovering:context.hovering==mid,
+			var Component=typedef[m.type].Component;
+			var getStyle=typedef[m.type].getStyle||function(){return {}};
+			console.log("style",context.hovering,getStyle(mid,context),mid)
+			var before=E(Component,
+							{ mid:mid,showSuper:showSuper,
+								hovering:context.hovering===mid,
+								editing:context.editing===mid,
 								markup:m,context,context,key:mid,
 								activated:context.markupActivated[mid]
 							}
 					);
-			return {s:start, l:m.l, mid:mid, before: before, className:cls};
+			return {s:start, l:m.l, mid:mid, before: before, style:getStyle(mid,context)};
 	}
 	for (var i in gbo) {
 		var start=parseInt(i), markups=gbo[i];
-
 		var hovering=markups[context.hovering]?context.hovering:null; //this group has hovering markup
 		var editing=markups[context.editing]?context.editing:null;    //this group has editing markup
 		var markupcount=Object.keys(markups).length;
 		var showSuper=true;
-		if (markupcount>1 && allDisabled(markups,context.markupActivated) ) {
+		if (markupcount>1 && allDisabled(markups,context.markupActivated)) {
 			showSuper=false;
 			out.push(createMarkupSelector(start,context,markups));
 		}
-
-		if (editing) {
-			var cls=markups[editing].type==="rev"?"revEditing":markups[editing].type;
-			out.push(createTag(editing,cls,showSuper));
-		} else if (hovering) {
-			var cls=markups[hovering].type==="rev"?"revHovering":markups[hovering].type;
-			out.push(createTag(hovering, cls,showSuper));
+		if (editing||hovering) {
+			out.push(createTag(editing||hovering,showSuper));
 		} else {
 			for (var mid in markups) {
-				var cls=markups[mid].type;
-				if (cls==="rev" && context.markupActivated[mid]) cls="revActivated";
-				out.push(createTag(mid,cls, showSuper && (context.markupActivated[mid] || markupcount===1)));
+				out.push(createTag(mid, showSuper && (context.markupActivated[mid]||markupcount===1)));
 			}
 		}
 	}

@@ -47,12 +47,6 @@ var FlattenView=React.createClass({
 		!this.styles._selected_ && 
 		(this.styles=update(this.styles,{$merge:{_selected_:styles.selected_style}}));
 
-		this.styles=update(this.styles,{$merge:{
-			  revActivated:{"display":"none"}
-			  ,revHovering:{"textDecoration":"line-through"}
-			  ,revEditing:{"textDecoration":"line-through"}
-		}});
-
 		this.tagAtPos=spreadMarkup(this.props.tags);
 	}
 	,componentWillReceiveProps:function(nextProps) {

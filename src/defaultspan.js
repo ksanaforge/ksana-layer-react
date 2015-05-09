@@ -38,10 +38,11 @@ var SpanClass = React.createClass({
       var m=tid[i];
       var styles=this.props.styles;
       var tag=this.props.tags[m];
+      tag.style&&out.push(tag.style);
       var type=tag.className;
       styles[type]&&out.push(styles[type]);
       styles[type+"_first"]&&out.push(styles[type+"_first"]);
-      styles[type+"_last"]&&out.push(styles[type+"_last"]);
+      styles[type+"_last"]&&out.push(styles[type+"_last"]);        
     };
     return out;
   }

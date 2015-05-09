@@ -27,13 +27,18 @@ var AuthorButton=React.createClass({
 		return {style:{}};
 	}
 	,onMouseLeave:function(e) {
-		this.props.action("leave",this.props.mid);
+		clearTimeout(this.leavetimer);
+		var that=this;
+		this.leavetimer=setTimeout(function(){
+			that.props.action("leave",that.props.mid);
+		},500);
 	}
 	,onClick:function(e) {
-		var act=this.props.activated?"deactivate":"activate";
+		var act=this.props.activated?"deactivate":"activate_edit";
 		this.props.action(act,this.props.mid);
 	}
 	,onMouseEnter:function(e) {
+		clearTimeout(this.leavetimer);
 		this.props.action("enter",this.props.mid);
 	}
 	,render:function(){
@@ -54,9 +59,14 @@ var Note=React.createClass({
 		return {style:{fontSize:"75%"}};
 	}
 	,onMouseLeave:function(e) {
-		this.setState({style:update(this.state.style,{$merge:{color:"inherit",cursor:"default"}})});
+		clearTimeout(this.leavetimer);
+		var that=this;
+		this.leavetimer=setTimeout(function(){
+			that.setState({style:update(that.state.style,{$merge:{color:"inherit",cursor:"default"}})});	
+		},500);
 	}
 	,onMouseEnter:function(e) {
+		clearTimeout(this.leavetimer);
 		this.setState({style:update(this.state.style,{$merge:{color:"red",cursor:"pointer"}})});
 	}
 	,render:function(){
@@ -88,19 +98,27 @@ var Revision=React.createClass({
 			{action:action,mid:this.props.mid,activated:this.props.activated},
 		this.props.markup.note):null;
 	}
-	,getStyle:function() {
+	,getNewTextStyle:function() {
 		var style={display:"none"};
 		if (this.props.hovering) style={textDecoration:"underline",display:"inline"};
 		else if (this.props.activated) style={display:"inline"};
 		return style;
 	}
 	,render:function() {
+
 		return E(IL.Container,{}
 			,E(IL.Super, {}, this.renderAuthor() )
-			,E(IL.Embed, {style:this.getStyle() }, this.props.markup.t)
+			,E(IL.Embed, {style:this.getNewTextStyle() }, this.props.markup.t)
 			,E(IL.Sub  , {}, this.renderNote() )
 		);
 	}
 });
 
-module.exports=Revision;
+var getStyle=function(mid,context) {
+	var style={};
+	if (context.hovering===mid) style={"textDecoration":"line-through"};
+	else if (context.editing===mid) style={"textDecoration":"line-through"};
+	else if (context.markupActivated[mid]) style={"display":"none"};				
+	return style;
+}
+module.exports={Component:Revision, getStyle:getStyle } ;

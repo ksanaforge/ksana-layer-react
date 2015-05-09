@@ -20,7 +20,7 @@ var MarkupSelector=React.createClass({
 	}
 	,onClick:function(e) {
 		var mid=e.target.dataset.mid;
-		var act=this.props.activated?"deactivate":"activate";
+		var act=this.props.activated?"deactivate":"activate_edit";
 		this.props.context.action(act,mid);
 	}
 	,renderHandlers:function() {
@@ -41,10 +41,7 @@ var MarkupSelector=React.createClass({
 	}
 	,onMouseLeave:function() {
 		var action=this.props.context.action;
-		clearTimeout(this.leavetimer);
-		this.leavetimer=setTimeout(function(){
-			action("leave");
-		},500);
+		action("leave");//have to leave immediately as parent might be destroyed
 	}
 	,renderHandler:function() {
 		if (this.props.markups[this.props.context.hovering]) {
