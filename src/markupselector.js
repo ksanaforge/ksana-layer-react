@@ -6,7 +6,7 @@ try {
 	var PureRenderMixin=React.addons.PureRenderMixin;
 }
 var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
-var IL=require("./typedef/interline");
+var IL=require("./interline");
 var handlerStyle={borderStyle:"solid",borderColor:"gray",fontSize:"50%",color:"silver",borderWidth:2
 			,borderRadius:"20%",cursor:"pointer",verticalAlign:"top",
 			backgroundColor:"drakgray",height:"0.5em",width:"0.5em"};

@@ -18,6 +18,7 @@ var RevisionNote=React.createClass({
 		,note:PT.string.isRequired
 	}
 	,onBlur:function(){
+		this.props.action("setNote",this.refs.note.getDOMNode().value);
 		this.props.action("leaveNote");
 	}
 	,getInitialState:function() {
