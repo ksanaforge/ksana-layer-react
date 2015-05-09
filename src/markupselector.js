@@ -7,10 +7,10 @@ try {
 }
 var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 var IL=require("./typedef/interline");
-var handlerStyle={borderStyle:"solid",borderColor:"gray",fontSize:"50%",color:"silver",borderWidth:1
+var handlerStyle={borderStyle:"solid",borderColor:"gray",fontSize:"50%",color:"silver",borderWidth:2
 			,borderRadius:"20%",cursor:"pointer",verticalAlign:"top",
 			backgroundColor:"drakgray",height:"0.5em",width:"0.5em"};
-var handlerStyle_hover=update(handlerStyle,{$merge:{borderColor:"red"}});
+var handlerStyle_hover=update(handlerStyle,{$merge:{borderColor:"brown"}});
 
 var MarkupSelector=React.createClass({
 	mixins:[PureRenderMixin]

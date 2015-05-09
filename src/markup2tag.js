@@ -39,7 +39,7 @@ var markup2tag=function(markups,context) {
 			var m=markups[mid], cls=cls||m.type;
 			var Component=typedef[m.type].Component;
 			var getStyle=typedef[m.type].getStyle||function(){return {}};
-			console.log("style",context.hovering,getStyle(mid,context),mid)
+			//console.log("style",context.hovering,getStyle(mid,context),mid)
 			var before=E(Component,
 							{ mid:mid,showSuper:showSuper,
 								hovering:context.hovering===mid,
@@ -56,8 +56,9 @@ var markup2tag=function(markups,context) {
 		var editing=markups[context.editing]?context.editing:null;    //this group has editing markup
 		var markupcount=Object.keys(markups).length;
 		var showSuper=true;
-		if (markupcount>1 && allDisabled(markups,context.markupActivated)) {
+		if (!context.editing && markupcount>1 && allDisabled(markups,context.markupActivated )) {
 			showSuper=false;
+			console.log("show multi")
 			out.push(createMarkupSelector(start,context,markups));
 		}
 		if (editing||hovering) {

@@ -83,7 +83,7 @@ var InterlineView=React.createClass({
 		if(act==="enter") {
  			this.setState({hovering:p1})
 		} else if (act==="leave") {
-			this.setState({hovering:null})
+			this.setState({hovering:null,editing:null})
 		} else if (act==="activate") {
 			this.activateMarkup(p1);
 		} else if (act==="deactivate") {
