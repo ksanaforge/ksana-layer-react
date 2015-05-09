@@ -25,8 +25,8 @@ var markup2tag=require("./markup2tag");
 var InterlineView=React.createClass({
 	mixins:[PureRenderMixin]
 	,getInitialState:function() {
-		//markupEnabled : { mid: true , mid: false }; //otherwise it is not initialized
-		return {tags:[],editing:-1,hovering:-1,markupEnabled:{}};
+		//markupActivated : { mid: true , mid: false }; //otherwise it is not initialized
+		return {tags:[],editing:-1,hovering:-1,markupActivated:{}};
 	}
 	,componentWillUpdate:function(nextProps,nextState) {
 		this.markup2tag(nextProps,nextState);
@@ -36,17 +36,45 @@ var InterlineView=React.createClass({
 	}
 	,markup2tag:function(nextProps,nextState) {
 		var status={editing:nextState.editing,hovering:nextState.hovering
-			,action:this.action,markupEnabled:nextState.markupEnabled,action:this.action};
+			,action:this.action,markupActivated:nextState.markupActivated,action:this.action};
 
 		nextState.tags=markup2tag(nextProps.markups,status);
-		nextState.markupEnabled=status.markupEnabled; //markup2tag might change markupEnabled
+		nextState.markupActivated=status.markupActivated; //markup2tag might change markupActivated
 	}
+  ,activateMarkup:function(mid) {
+  	var m=this.props.markups[mid];
+		var markupActivated=this.deactivateOverlapMarkup(m.s,m.l);
+		var activate={};
+		activate[mid]=true;
+		this.setState({markupActivated: update(markupActivated,{$merge:activate})});
+  }
+  ,deactivateMarkup:function(mid) {
+		var markupActivated=this.state.markupActivated;
+		var deactive={};
+		deactive[mid]=false;
+		this.setState({markupActivated: update(markupActivated,{$merge:deactive})});
+  }
+  ,deactivateOverlapMarkup:function(start,len) {
+		//set state to 0 for any overlap markup
+		var deactive={};
+		for (var mid in this.props.markups) {
+			var m=this.props.markups[mid];
+			if (!(start>=m.s+m.l || start+len<=m.s) ) {
+				if (this.state.markupActivated[mid]) deactive[mid]=false;
+		  }
+			if (start===m.s && this.state.markupActivated[mid]) deactive[mid]=false;
+		};
+		return update(this.state.markupActivated,{$merge:deactive});
+  }
 	,action:function(act,p1,p2) {
-		if(act=="enter") {
-			console.log("entering",p1)
+		if(act==="enter") {
  			this.setState({hovering:p1})
-		} else if (act=="leave") {
+		} else if (act==="leave") {
 			this.setState({hovering:null})
+		} else if (act==="activate") {
+			this.activateMarkup(p1);
+		} else if (act==="deactivate") {
+			this.deactivateMarkup(p1)
 		}
 	}
 	,propTypes:function() {

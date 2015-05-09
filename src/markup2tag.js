@@ -6,22 +6,22 @@ var MarkupSelector=require("./markupselector");
 
 
 /**
-	put no conflict markup in object markupEnabled
+	put no conflict markup in object markupActivated
 */
-var enableMarkups=function(gbo,markupEnabled) {
+var defaultActiveMarkups=function(gbo,markupActivated) {
 	for (var start in gbo){
 		var markupcount= Object.keys(gbo[start]).length;
 		for (var mid in gbo[start]){
-			if (typeof markupEnabled[mid]==="undefined") {
-				markupEnabled[mid]= markupcount===1? true:false;
+			if (typeof markupActivated[mid]==="undefined") {
+				markupActivated[mid]= markupcount===1? true:false;
 			}
 		}
 	}
 }
 
-var allDisabled=function(markups,markupEnabled) {
+var allDisabled=function(markups,markupActivated) {
 	for (var mid in markups) {
-		if (markupEnabled[mid]) return false;
+		if (markupActivated[mid]) return false;
 	}
 	return true;
 }
@@ -34,12 +34,15 @@ var createMarkupSelector=function(start,context,markups) {
 
 var markup2tag=function(markups,context) {
 	var gbo=markuputil.groupByOffset(markups);
-	enableMarkups(gbo,context.markupEnabled);
+	defaultActiveMarkups(gbo,context.markupActivated);
 	var out=[];
 	var createTag=function(mid,alone,cls) {
 			var m=markups[mid], cls=cls||m.type;
 			var before=E(typedef[m.type],
-							{alone:alone,hovering:context.hovering==mid,markup:m,context,context,key:mid,mid:mid}
+							{ mid:mid,alone:alone,hovering:context.hovering==mid,
+								markup:m,context,context,key:mid,
+								activated:context.markupActivated[mid]
+							}
 					);
 			return {s:start, l:m.l, mid:mid, before: before, className:cls};
 	}
@@ -50,19 +53,22 @@ var markup2tag=function(markups,context) {
 		var editing=markups[context.editing]?context.editing:null;    //this group has editing markup
 		var alone=true;
 		var markupcount=Object.keys(markups).length;
-		if (markupcount>1 && allDisabled(markups,context.markupEnabled) ) {
+		if (markupcount>1 && allDisabled(markups,context.markupActivated) ) {
 			out.push(createMarkupSelector(start,context,markups));
 			alone=false;
 		}
 
 		if (editing) {
-			out.push(createTag(editing, alone,markups[editing].type==="rev"?"revEditing":markups[editing].type));
+			var cls=markups[editing].type==="rev"?"revEditing":markups[editing].type;
+			out.push(createTag(editing, alone,cls));
 		} else if (hovering) {
-			out.push(createTag(hovering, alone,markups[hovering].type==="rev"?"revHovering":markups[hovering].type));
+			var cls=markups[hovering].type==="rev"?"revHovering":markups[hovering].type;
+			out.push(createTag(hovering, alone, cls));
 		} else {
 			for (var mid in markups) {
-				if (!context.markupEnabled[mid]) continue;
-				out.push(createTag(mid,alone));
+				var cls=markups[mid].type;
+				if (cls=="rev" && context.markupActivated[mid]) cls="revActivated";
+				out.push(createTag(mid,alone,cls));
 			}
 		}
 	}

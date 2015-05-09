@@ -9,34 +9,47 @@ var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 
 var IL=require("./interline");
 
+var authorButtonStyle={
+			borderStyle:"solid",borderColor:"gray",fontSize:"50%",color:"silver",borderWidth:2
+			,borderRadius:"20%",cursor:"pointer",verticalAlign:"top",
+			backgroundColor:"drakgray",height:"0.5em",width:"0.5em"};
+
 var AuthorButton=React.createClass({
 	mixins:[PureRenderMixin]
 	,propTypes:{
 		action:PT.func.isRequired
+		,mid:PT.string.isRequired
+		,activated:PT.bool.isRequired
+		,editable:PT.bool.isRequired
 	}
-	,style:{
-			borderStyle:"solid",borderColor:"gray",fontSize:"50%",color:"silver",borderWidth:1
-			,borderRadius:"20%",cursor:"pointer",verticalAlign:"top",
-			backgroundColor:"drakgray",height:"0.5em",width:"0.5em"
-	}
+	,activatedStyle: update(authorButtonStyle,{$merge:{borderColor:"green"}})
 	,getInitialState:function() {
 		return {style:{}};
 	}
 	,onMouseLeave:function(e) {
 		this.props.action("leave",this.props.mid);
 	}
+	,onClick:function(e) {
+		var act=this.props.activated?"deactivate":"activate";
+		this.props.action(act,this.props.mid);
+	}
 	,onMouseEnter:function(e) {
 		this.props.action("enter",this.props.mid);
 	}
 	,render:function(){
-		return E("span",{style:this.style,
-			onMouseEnter:this.onMouseEnter,onMouseLeave:this.onMouseLeave},
+		return E("span",{style:this.props.activated?this.activatedStyle:authorButtonStyle,
+			onMouseEnter:this.onMouseEnter,onMouseLeave:this.onMouseLeave,onClick:this.onClick},
 			this.props.children);
 	}
 });
 
 var Note=React.createClass({
 	mixins:[PureRenderMixin]
+	,propTypes:{
+		action:PT.func.isRequired
+		,mid:PT.string.isRequired
+		,activated:PT.bool.isRequired
+	}
 	,getInitialState:function() {
 		return {style:{fontSize:"75%"}};
 	}
@@ -52,37 +65,41 @@ var Note=React.createClass({
 	}
 });
 
-var RevisionType=React.createClass({
+var Revision=React.createClass({
 	mixins:[PureRenderMixin]
 	,style:{display:"none"}
 	,propTypes:{
 		markup:PT.object.isRequired
 		,mid:PT.string.isRequired
 		,context:PT.object.isRequired
+		,activated:PT.bool
 	}
-	,computeStyle:function(props) {
-		this.style={display:"none"};
-		if (props.hovering) this.style={textDecoration:"underline",display:"inline"};
-		else if (props.activated) this.style={display:"inline"};
+	,renderAuthor:function() {
+		var action=this.props.context.action;
+		return this.props.alone?E(AuthorButton,
+			{action:action,mid:this.props.mid,activated:this.props.activated,editable:this.props.editable||false},
+			this.props.markup.author)
+		:null;
 	}
-	,componentWillUpdate:function(nextProps) {
-		this.computeStyle(nextProps);
+	,renderNote:function() {
+		var action=this.props.context.action;
+		return this.props.hovering?E(Note,
+			{action:action,mid:this.props.mid,activated:this.props.activated},
+		this.props.markup.note):null;
 	}
-	,componentWillMount:function() {
-		this.computeStyle(this.props);
+	,getStyle:function() {
+		var style={display:"none"};
+		if (this.props.hovering) style={textDecoration:"underline",display:"inline"};
+		else if (this.props.activated) style={display:"inline"};
+		return style;
 	}
 	,render:function() {
-		var action=this.props.context.action;
-		var author=null;
-		if (this.props.alone) author=E(AuthorButton,{action:action,mid:this.props.mid},this.props.markup.author);
-
-		var note=this.props.hovering?E(Note,{action:action,mid:this.props.mid},this.props.markup.note):null;
 		return E(IL.Container,{}
-				,E(IL.Super, {}, author)
-				,E(IL.Embed, {style:this.style}, this.props.markup.t)
-				,E(IL.Sub  , {}, note )
-			);
+			,E(IL.Super, {}, this.renderAuthor() )
+			,E(IL.Embed, {style:this.getStyle() }, this.props.markup.t)
+			,E(IL.Sub  , {}, this.renderNote() )
+		);
 	}
 });
 
-module.exports=RevisionType;
+module.exports=Revision;
