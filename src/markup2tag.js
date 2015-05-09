@@ -48,7 +48,7 @@ var markup2tag=function(markups,context) {
 								activated:context.markupActivated[mid]
 							}
 					);
-			return {s:start, l:m.l, mid:mid, before: before, style:getStyle(mid,context)};
+			return {s:start, l:m.l, mid:mid, before: before, style:getStyle(m,mid,context)};
 	}
 	for (var i in gbo) {
 		var start=parseInt(i), markups=gbo[i];
@@ -58,7 +58,6 @@ var markup2tag=function(markups,context) {
 		var showSuper=true;
 		if (!context.editing && markupcount>1 && allDisabled(markups,context.markupActivated )) {
 			showSuper=false;
-			console.log("show multi")
 			out.push(createMarkupSelector(start,context,markups));
 		}
 		if (editing||hovering) {

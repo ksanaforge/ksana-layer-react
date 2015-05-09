@@ -9,7 +9,7 @@ var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 
 var IL=require("./interline");
 var RevisionNote=require("./revisionnote");
-var RevisionEditMode=require("./revisionedit");
+var RevisionEditMode=require("./revisioneditmode");
 var redlinethrough=require("./redlinethrough");
 var authorButtonStyle={
 			borderStyle:"solid",borderColor:"gray",fontSize:"50%",color:"silver",borderWidth:2
@@ -68,7 +68,8 @@ var Revision=React.createClass({
 	,renderNote:function() {
 		if(this.props.hovering) {
 			return E(RevisionNote,
-				{action:this.props.context.action,mid:this.props.mid,activated:this.props.activated},
+				{editing:false,action:this.props.context.action,note:this.props.markup.note,
+				 mid:this.props.mid},
 				this.props.markup.note);
 		};
 	}
@@ -76,7 +77,6 @@ var Revision=React.createClass({
 		var style={display:"none"};
 		if (this.props.hovering) style={borderBottom:"solid 0.1em green",display:"inline"};
 		else if (this.props.activated) style={display:"inline"};
-		console.log(style)
 		return style;
 	}
 	,render:function() {
@@ -91,12 +91,14 @@ var Revision=React.createClass({
 		}
 	}
 });
-var linethroughstyle={background:"url("+redlinethrough+") no-repeat center"};
-var getOldTextStyle=function(mid,context) {
+//var linethroughstyle={background:"url("+redlinethrough+") no-repeat center"};
+var linethroughstyle={textDecoration:"line-through"};
+var getOldTextStyle=function(markup,mid,context) {
 	var style={};
 	if (context.hovering===mid) style=linethroughstyle;
 	else if (context.editing===mid) style=linethroughstyle;
-	else if (context.markupActivated[mid]) style={display:"none"};				
+	else if (context.markupActivated[mid]) style={display:"none"};
+	if (markup.l==0) style={};
 	return style;
 }
 module.exports={Component:Revision, getStyle:getOldTextStyle } ;

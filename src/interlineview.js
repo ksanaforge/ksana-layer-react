@@ -40,6 +40,7 @@ var InterlineView=React.createClass({
 	}
 	,markup2tag:function(nextProps,nextState) {
 		var status={editing:nextState.editing,hovering:nextState.hovering
+			,text:this.props.text
 			,action:this.action,markupActivated:nextState.markupActivated,action:this.action};
 
 		nextState.tags=markup2tag(nextProps.markups,status);
@@ -79,17 +80,26 @@ var InterlineView=React.createClass({
 		};
 		return update(this.state.markupActivated,{$merge:deactive});
   }
-	,action:function(act,p1,p2) {
+  ,setMarkup:function(mid,key,value) {
+  	var m=this.props.markups[mid];
+  	var obj={};
+  	obj[key]=value;
+  	this.props.markups[mid]=update(m,{$merge:obj});
+  	this.forceUpdate();
+  }
+	,action:function(act,p1,p2,p3) {
 		if(act==="enter") {
  			this.setState({hovering:p1})
 		} else if (act==="leave") {
-			this.setState({hovering:null,editing:null})
+			this.setState({hovering:null,editing:null});
 		} else if (act==="activate") {
 			this.activateMarkup(p1);
 		} else if (act==="deactivate") {
 			this.deactivateMarkup(p1)
 		} else if (act==="activate_edit") { //
 			this.activateOrEditMarkup(p1);
+		} else if (act==="setMarkup") {
+			this.setMarkup(p1,p2,p3);
 		}
 	}
 	,render:function(){
