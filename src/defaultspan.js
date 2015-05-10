@@ -67,7 +67,7 @@ var SpanClass = React.createClass({
     props.className=this.getTagType(this.props.tid).join(" ");  //pass className as it's  
     if (style) {
       //work around, react doensn't apply style, don't why
-      return E(span,{},E(span,props,this.props.children));
+      return E(span,props,E(span,{},this.props.children));
     }
     
     return E(span,props,this.props.children);
