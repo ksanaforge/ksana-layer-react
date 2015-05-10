@@ -65,6 +65,7 @@ var SelectableView=React.createClass({
 		var seltags=this.tagFromSel(this.ranges.get());
 		this.setState({tags:seltags});
 		this.props.onSelect&& this.props.onSelect(start,len,selectedtext,modifier,this.ranges.get());
+		console.log("onselect",this.ranges.get())
 	}
 	,onMouseUp:function(e) {
 		if (e.target.nodeName!="SPAN") return;

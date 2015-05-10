@@ -40,7 +40,7 @@ var FlattenView=React.createClass({
 		}		
 	}
 	,componentWillMount:function() {
-		this.mergeStyle();
+		this.mergeStyle(this.props.style);
 		this.tagAtPos=spreadMarkup(this.props.tags);
 	}
 	,componentWillReceiveProps:function(nextProps) {
