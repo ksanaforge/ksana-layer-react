@@ -15,7 +15,6 @@ var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 var spreadMarkup=require("./markuputil").spreadMarkup;
 var caretPos=require("./caretpos");
 var defaultSpan=require("./defaultspan");
-var styles=require("./styles");
 var FlattenView=React.createClass({
 	displayName:"FlattenView"
 	,mixins:[PureRenderMixin]
@@ -42,11 +41,6 @@ var FlattenView=React.createClass({
 	}
 	,componentWillMount:function() {
 		this.mergeStyle();
-		this.styles=this.props.styles;
-
-		!this.styles._selected_ && 
-		(this.styles=update(this.styles,{$merge:{_selected_:styles.selected_style}}));
-
 		this.tagAtPos=spreadMarkup(this.props.tags);
 	}
 	,componentWillReceiveProps:function(nextProps) {
@@ -63,7 +57,7 @@ var FlattenView=React.createClass({
 		before.length && out.push(E(React.Text||"span",{key:"b"+start},before));
 
 		out.push(E(this.props.span,{index:this.props.index,
-					styles:this.styles,key:'s'+start, tags:tags,tid:tid,start:start}
+					styles:this.props.styles,key:'s'+start, tags:tags,tid:tid,start:start}
 				,spantext )
 		);
 
