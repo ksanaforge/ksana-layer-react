@@ -22,7 +22,7 @@ var SelectableView=React.createClass({
 	,propTypes:{
 		selectable: PT.oneOf(['no', 'single', 'multiple'])
 		,showCaret:PT.bool
-		,onSelect2: PT.func
+		,onSelectText: PT.func
 		,tags:PT.array
 	}
 	,componentWillMount:function() {
@@ -69,8 +69,7 @@ var SelectableView=React.createClass({
 		}
 		var seltags=this.tagFromSel(this.ranges.get());
 		this.setState({tags:seltags});
-		this.props.onSelect2&& this.props.onSelect2(start,len,selectedtext,modifier,this.ranges.get());
-		console.log("onselect",this.ranges.get())
+		this.props.onSelectText&& this.props.onSelectText(start,len,selectedtext,modifier,this.ranges.get());
 	}
 	,onMouseUp:function(e) {
 		if (e.target.nodeName!="SPAN") return;
