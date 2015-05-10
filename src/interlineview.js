@@ -40,7 +40,7 @@ var InterlineView=React.createClass({
 	}
 	,markup2tag:function(nextProps,nextState) {
 		var status={editing:nextState.editing,hovering:nextState.hovering
-			,text:this.props.text
+			,text:nextProps.text
 			,action:this.action,markupActivated:nextState.markupActivated,action:this.action};
 
 		nextState.tags=markup2tag(nextProps.markups,status);
@@ -104,6 +104,7 @@ var InterlineView=React.createClass({
 	}
 	,render:function(){
 		var props=update(this.props,{$merge:{tags:this.state.tags}});
+		delete props.markups;//hide markups from flattenview
 		return E(SelectableView,props);
 	}
 

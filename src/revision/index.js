@@ -91,7 +91,7 @@ var Revision=React.createClass({
 		}
 	}
 });
-var linethroughstyle={background:"url("+redlinethrough+") repeat-x center"};
+var linethroughstyle={background:"url("+redlinethrough+") repeat center"};
 //var linethroughstyle={textDecoration:"line-through"};
 var getOldTextStyle=function(markup,mid,context) {
 	var style={};

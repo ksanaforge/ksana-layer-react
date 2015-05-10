@@ -40,7 +40,7 @@ var SelectableView=React.createClass({
 		return {showCaret:true,selectable:"multiple",tags:[]};
 	}
 	,componentWillReceiveProps:function(nextProps) {
-		if (nextProps.selectable!=="multiple") this.setState({tags:this.props.tags});
+		this.setState({tags:nextProps.tags});
 	}
 	,componentDidMount:function() {
 		//turn contentEditable on for caret, cannot set in render as React will give warning
