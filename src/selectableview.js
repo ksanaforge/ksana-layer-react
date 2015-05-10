@@ -22,7 +22,7 @@ var SelectableView=React.createClass({
 	,propTypes:{
 		selectable: PT.oneOf(['no', 'single', 'multiple'])
 		,showCaret:PT.bool
-		,onSelect: PT.func
+		,onSelect2: PT.func
 		,tags:PT.array
 	}
 	,componentWillMount:function() {
@@ -40,7 +40,12 @@ var SelectableView=React.createClass({
 		return {showCaret:true,selectable:"multiple",tags:[]};
 	}
 	,componentWillReceiveProps:function(nextProps) {
-		this.setState({tags:nextProps.tags});
+		var seltags=nextProps.tags;
+		if (this.props.selectable!=="no") {
+			seltags=this.tagFromSel(this.ranges.get());	
+		}
+		
+		this.setState({tags:seltags});
 	}
 	,componentDidMount:function() {
 		//turn contentEditable on for caret, cannot set in render as React will give warning
@@ -64,7 +69,7 @@ var SelectableView=React.createClass({
 		}
 		var seltags=this.tagFromSel(this.ranges.get());
 		this.setState({tags:seltags});
-		this.props.onSelect&& this.props.onSelect(start,len,selectedtext,modifier,this.ranges.get());
+		this.props.onSelect2&& this.props.onSelect2(start,len,selectedtext,modifier,this.ranges.get());
 		console.log("onselect",this.ranges.get())
 	}
 	,onMouseUp:function(e) {
