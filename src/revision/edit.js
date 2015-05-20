@@ -28,6 +28,7 @@ var RevisionEdit=React.createClass({
 	,setCaret:function() {
 		var that=this;
 		setTimeout(function(){
+			if (!that.refs.input) return;//input destroyed
 			var input=that.refs.input.getDOMNode();	
 			input.focus();
 			clearTimeout(this.blurtimer);

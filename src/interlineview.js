@@ -39,6 +39,9 @@ var InterlineView=React.createClass({
 		return {tags:[],editing:null,hovering:null,markupActivated:{},allowKeys:allowKeys};
 	}
 	,onKeyPress:function(e) {
+		var nn=e.target.nodeName;
+		if (nn==="INPUT" || nn==="TEXTAREA") return;
+
 		if (this.state.allowKeys.indexOf(e.key)>-1) {
 			if (this.props.onKeyPress) this.props.onKeyPress(e);
 		} else {
