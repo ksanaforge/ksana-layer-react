@@ -42,7 +42,7 @@ var SelectableView=React.createClass({
 	,componentWillReceiveProps:function(nextProps) {
 		var seltags=nextProps.tags;
 		if (this.props.selectable!=="no") {
-			seltags=this.tagFromSel(this.ranges.get());	
+			seltags=this.tagFromSel(seltags,this.ranges.get());	
 		}
 		
 		this.setState({tags:seltags});
@@ -51,8 +51,7 @@ var SelectableView=React.createClass({
 		//turn contentEditable on for caret, cannot set in render as React will give warning
 		if (this.props.showCaret) this.getDOMNode().contentEditable=true;
 	}
-	,tagFromSel:function(sels) {
-		var tags=this.state.tags;
+	,tagFromSel:function(tags,sels) {
 		tags=tags.filter(function(m){ return m.type!=="_selected_";});
 		sels.map(function(sel){
 			if (sel[1]>0) tags.push({s:sel[0],l:sel[1],type:"_selected_",style:selectedTextStyle});
@@ -67,7 +66,7 @@ var SelectableView=React.createClass({
 		} else {
 			this.ranges.set([[start,len,selectedtext]]);	
 		}
-		var seltags=this.tagFromSel(this.ranges.get());
+		var seltags=this.tagFromSel(this.state.tags,this.ranges.get());
 		this.setState({tags:seltags});
 		this.props.onSelectText&& this.props.onSelectText(start,len,selectedtext,modifier,this.ranges.get());
 	}

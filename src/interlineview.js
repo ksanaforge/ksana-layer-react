@@ -21,16 +21,29 @@ var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 
 var SelectableView=require("./selectableview");
 var markup2tag=require("./markup2tag");
-
+var keyboard_mixin=require("./keyboard_mixin");
 var InterlineView=React.createClass({
 	mixins:[PureRenderMixin]
 	,propTypes:{
 		markups:PT.object.isRequired  //markup from firebase
 		,user:PT.string
+		,allowkeys:PT.array
+		,onKeyPress:PT.func
 	}
 	,getInitialState:function() {
+		var allowKeys=keyboard_mixin.arrowkeys;
+		if (this.props.allowKeys && this.props.allowKeys.length) {
+			allowKeys=allowKeys.concat(this.props.allowKeys);
+		}
 		//markupActivated : { mid: true , mid: false }; //otherwise it is not initialized
-		return {tags:[],editing:null,hovering:null,markupActivated:{}};
+		return {tags:[],editing:null,hovering:null,markupActivated:{},allowKeys:allowKeys};
+	}
+	,onKeyPress:function(e) {
+		if (this.state.allowKeys.indexOf(e.key)>-1) {
+			if (this.props.onKeyPress) this.props.onKeyPress(e);
+		} else {
+			e.preventDefault();
+		}
 	}
 	,componentWillUpdate:function(nextProps,nextState) {
 		this.markup2tag(nextProps,nextState);
@@ -48,13 +61,21 @@ var InterlineView=React.createClass({
 	}
   ,activateMarkup:function(mid) {
   	var m=this.props.markups[mid];
+  	if (!m)return;
 		var markupActivated=this.deactivateOverlapMarkup(m.s,m.l);
 		var activate={};
 		activate[mid]=true;
 		var ma=update(markupActivated,{$merge:activate});
 		this.setState({editing:null,hovering:null,markupActivated:ma});
   }
-  ,activateOrEditMarkup:function(mid) {
+  ,componentWillReceiveProps:function(nextProps) {
+  	if (nextProps.editing!==this.props.editing) {
+  		this.activateOrEditMarkup(nextProps.editing,nextProps);
+  	}
+  }
+  ,activateOrEditMarkup:function(mid,props) {
+  	if (!props) props=this.props;
+  	if (!mid || !this.props.markups[mid]) return;
   	if (this.props.markups[mid].author===this.props.user) {
   		this.setState({editing:mid,hovering:null});
   	} else {
@@ -91,6 +112,9 @@ var InterlineView=React.createClass({
 		if(act==="enter") {
  			this.setState({hovering:p1})
 		} else if (act==="leave") {
+			if (this.state.editing) {
+				this.props.onDoneEdit&&this.props.onDoneEdit(this.state.editing);
+			}
 			this.setState({hovering:null,editing:null});
 		} else if (act==="activate") {
 			this.activateMarkup(p1);
@@ -103,7 +127,9 @@ var InterlineView=React.createClass({
 		}
 	}
 	,render:function(){
-		var props=update(this.props,{$merge:{tags:this.state.tags,selectable:"no"}});
+		var props=update(this.props,{$merge:{tags:this.state.tags,selectable:this.props.selectable,
+			allowKeys:this.state.allowKeys,
+			onKeyPress:this.onKeyPress}});
 		delete props.markups;//hide markups from flattenview
 		return E(SelectableView,props);
 	}
