@@ -33,13 +33,14 @@ var RevisionNote=React.createClass({
 		this.props.action("editNote");
 	}
 	,render:function(){
+
 		if (this.props.editing) {
 			return E("textarea",
 				{rows:4,cols:20,ref:"note",onBlur:this.onBlur,style:textareaStyle,
-				defaultValue:this.props.note||""}
+				defaultValue:this.props.note}
 			);
 		} else{
-			return E("span",{style:staticStyle,onClick:this.onClick},this.props.children);	
+			return E("span",{style:staticStyle,onClick:this.onClick},this.props.note||"...");	
 		}
 	}
 });

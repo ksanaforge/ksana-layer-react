@@ -56,7 +56,7 @@ var RevisionEditMode=React.createClass({
 	}
 	,renderNote:function() {
 		return E(RevisionNote,
-				{note:this.props.markup.note||"…",action:this.action,editing:this.state.editNote
+				{note:this.props.markup.note,action:this.action,editing:this.state.editNote
 					,mid:this.props.mid,activated:this.props.activated},
 				this.props.markup.note);
 	}
