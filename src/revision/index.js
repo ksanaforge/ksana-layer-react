@@ -62,7 +62,7 @@ var Revision=React.createClass({
 			return E(AuthorButton,
 				{action:this.props.context.action,mid:this.props.mid
 				,activated:this.props.activated,editable:this.props.editable||false},
-				this.props.markup.author)
+				this.props.markup.username||this.props.markup.author)
 		};
 	}
 	,renderNote:function() {
