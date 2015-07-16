@@ -84,12 +84,18 @@ var SelectableView=React.createClass({
 		var cancel=sel&&this.markSelection(sel.start,sel.len,text,{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey});
 		if (!cancel) this.selection=sel;
 	}
+	,onFocus:function(e){
+	}
+	,onBlur:function(e){
+	}	
 	,render:function(){
 		var props=update(this.props,{$merge:{
 			onMouseUp:this.onMouseUp
 			,onKeyDown:this.props.onKeyDown||this.onkeydown
 			,onKeyUp:this.props.onKeyUp||this.onkeyup
 			,onKeyPress:this.props.onKeyPress||this.onkeypress
+			,onFocus:this.props.onFocus||this.onFocus
+			,onBlur:this.props.onBlur||this.onBlur			
 			,tags:this.state.tags
 		}});
 		

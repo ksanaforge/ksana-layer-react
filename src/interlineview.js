@@ -130,8 +130,11 @@ var InterlineView=React.createClass({
 		}
 	}
 	,render:function(){
-		var props=update(this.props,{$merge:{tags:this.state.tags,selectable:this.props.selectable,
+		var props=update(this.props,{$merge:{tags:this.state.tags,
+			selectable:this.props.selectable,
 			allowKeys:this.state.allowKeys,
+			onFocus:this.props.onFocus,
+			onBlur:this.props.onBlur,
 			onKeyPress:this.onKeyPress}});
 		delete props.markups;//hide markups from flattenview
 		return E(SelectableView,props);

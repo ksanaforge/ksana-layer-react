@@ -30,7 +30,7 @@ var MarkupSelector=React.createClass({
 			var hovering=this.props.context.hovering===mid;
 			var style=hovering?handlerStyle_hover:handlerStyle;
 			out.push(E("span",{"data-mid":mid,onMouseEnter:this.onMouseEnter,onMouseLeave:this.onMouseLeave,
-			onClick:this.onClick, key:mid,style:style},m.author));
+			onClick:this.onClick, key:mid,style:style},m.username||m.author));
 		}
 		return out;
 	}

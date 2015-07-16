@@ -44,7 +44,7 @@ var markup2tag=function(markups,context) {
 							{ mid:mid,showSuper:showSuper,
 								hovering:context.hovering===mid,
 								editing:context.editing===mid,
-								markup:m,context,context,key:mid,
+								markup:m,context:context,key:mid,
 								activated:context.markupActivated[mid]
 							}
 					);
