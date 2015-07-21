@@ -24,6 +24,8 @@ var SelectableView=React.createClass({
 		,showCaret:PT.bool
 		,onSelectText: PT.func
 		,tags:PT.array
+		,selections:PT.array
+		,allowKeys:PT.array
 	}
 	,updateSelection:function() {
 		var seltags=this.tagFromSel(this.state.tags,this.ranges.get());
