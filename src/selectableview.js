@@ -25,10 +25,15 @@ var SelectableView=React.createClass({
 		,onSelectText: PT.func
 		,tags:PT.array
 	}
+	,updateSelection:function() {
+		var seltags=this.tagFromSel(this.state.tags,this.ranges.get());
+		this.setState({tags:seltags});		
+	}
 	,componentWillMount:function() {
 		this.ranges=textrange.create();
 		if (this.props.selections && this.props.selections.length) {
 			this.ranges.set(this.props.selections);
+			this.updateSelection();
 		}
 	}
 	,getInitialState:function(){
@@ -71,9 +76,7 @@ var SelectableView=React.createClass({
 		} else {
 			this.ranges.set([[start,len,selectedtext]]);	
 		}
-		var seltags=this.tagFromSel(this.state.tags,this.ranges.get());
-		this.setState({tags:seltags});
-
+		this.updateSelection();
 	}
 	,onMouseUp:function(e) {
 		if (e.target.nodeName!="SPAN") return;
