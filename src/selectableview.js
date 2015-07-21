@@ -58,17 +58,22 @@ var SelectableView=React.createClass({
 		});
 		return tags;
 	}
-	,markSelection:function(start,len,selectedtext,modifier){
+	,markSelection:function(start,len,selectedtext,params){
 		var selectable=this.props.selectable;
 		if (selectable==="no") return;
-		if (modifier.ctrlKey&&selectable==="multiple") {
+		if(this.props.onSelectText){
+			var cancel=this.props.onSelectText(start,len,selectedtext,params,this.ranges.get());
+			if (cancel) return;
+		}
+
+		if (params.ctrlKey&&selectable==="multiple") {
 			this.ranges.add(start,len,selectedtext)	
 		} else {
 			this.ranges.set([[start,len,selectedtext]]);	
 		}
 		var seltags=this.tagFromSel(this.state.tags,this.ranges.get());
 		this.setState({tags:seltags});
-		this.props.onSelectText&& this.props.onSelectText(start,len,selectedtext,modifier,this.ranges.get());
+
 	}
 	,onMouseUp:function(e) {
 		if (e.target.nodeName!="SPAN") return;
@@ -81,7 +86,8 @@ var SelectableView=React.createClass({
 			text=this.props.text.substr(sel.start,sel.len||2);
 		}
 
-		var cancel=sel&&this.markSelection(sel.start,sel.len,text,{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey});
+		var cancel=sel&&this.markSelection(sel.start,sel.len,text,
+			{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey,sender:this.props.id});
 		if (!cancel) this.selection=sel;
 	}
 	,onFocus:function(e){
