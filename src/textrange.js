@@ -32,10 +32,25 @@ var create=function() {
 		for (var i=start;i<end;i++) t+=text[i];
 		return [start,end-start,t];
 	}
+
+	var find=function(start,length) {
+		for (var i=0;i<_ranges.length;i++) {
+			var r=_ranges[i];
+			if (r[0]===start && r[1]===length)return i;
+		}
+		return -1;
+	}
 	var add=function(start,len,text) {
 		var text=text||"";
-		var overlap=removeOverlap(start,len);
+
+		var same=find(start,len);
+		if (same>-1) {
+			_ranges.splice(same,1);
+			return ;
+		}
 		
+		var overlap=removeOverlap(start,len);
+
 		if (overlap.length) {
 			overlap.push([start,len,text]);
 			var combined=combine(overlap);
