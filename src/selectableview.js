@@ -69,8 +69,10 @@ var SelectableView=React.createClass({
 		var selectable=this.props.selectable;
 		if (selectable==="no") return;
 		if(this.props.onSelectText){
-			var cancel=this.props.onSelectText(start,len,selectedtext,params,this.ranges.get());
-			if (cancel) return;
+			if (this.ranges.find(start,len)===-1) {//newly added selected
+				var cancel=this.props.onSelectText(start,len,selectedtext,params,this.ranges.get());
+				if (cancel) return;
+			}
 		}
 
 		if (params.ctrlKey&&selectable==="multiple") {

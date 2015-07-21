@@ -79,6 +79,7 @@ var create=function() {
 	textrange.get=get;
 	textrange.remove=remove;
 	textrange.set=set;
+	textrange.find=find;
 
 	return textrange;
 }
