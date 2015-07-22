@@ -25,7 +25,8 @@ var FlattenView=React.createClass({
 		,span:PT.func
 		,style:PT.object
 		,allowKeys:PT.array
-		,onMouseUp:PT.func,onKeyDown:PT.func ,onKeyUp:PT.func	,onKeyPress:PT.func
+		,onEnterTag:PT.func
+		,onLeaveTag:PT.func
 	}
 	,getDefaultProps:function() {
 		return {tags:{},styles:{},span:defaultSpan};
@@ -47,6 +48,9 @@ var FlattenView=React.createClass({
 		this.mergeStyle(nextProps.style);
 		this.tagAtPos=spreadMarkup(nextProps.tags);
 	}
+	,mousemove:function(e) {
+		console.log(e)
+	}
 	,renderSpan:function(out,start,end,spantext,tid) {
 		var before=[],after=[], tags=this.props.tags;
 		(tid||[]).map(function(m){ 
@@ -56,9 +60,10 @@ var FlattenView=React.createClass({
 		});
 		before.length && out.push(E(React.Text||"span",{key:"b"+start},before));
 
-		out.push(E(this.props.span,{index:this.props.index,
-					styles:this.props.styles,key:'s'+start, tags:tags,tid:tid,start:start}
-				,spantext )
+		out.push(E(this.props.span,{index:this.props.index
+					,onEnterTag:this.props.onEnterTag,onLeaveTag:this.props.onLeaveTag
+					,styles:this.props.styles,key:'s'+start, tags:tags,tid:tid,start:start}
+				,spantext+"~" )
 		);
 
 		(tid||[]).map(function(m){ 

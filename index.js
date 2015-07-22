@@ -1,6 +1,7 @@
 var FlattenView=require("./src/flattenview");
 var SelectableView=require("./src/selectableview");
 var InterlineView=require("./src/interlineview");
+var LinkView=require("./src/linkview");
 
 var textrange=require("./src/textrange");
 
@@ -12,5 +13,8 @@ var textrange=require("./src/textrange");
 
 //var RevisionView=require("./src/revisionview");
 
-module.exports={FlattenView:FlattenView,SelectableView:SelectableView,InterlineView:InterlineView,
-	textrange:textrange};
+module.exports={FlattenView:FlattenView
+	,SelectableView:SelectableView
+	,InterlineView:InterlineView
+	,LinkView:LinkView
+	,textrange:textrange};

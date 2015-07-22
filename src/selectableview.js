@@ -26,6 +26,8 @@ var SelectableView=React.createClass({
 		,tags:PT.array
 		,selections:PT.array
 		,allowKeys:PT.array
+		,onMouseUp:PT.func
+		,onSpanEnter:PT.func,onSpanLeave:PT.func
 	}
 	,updateSelection:function() {
 		var seltags=this.tagFromSel(this.state.tags,this.ranges.get());
@@ -104,6 +106,8 @@ var SelectableView=React.createClass({
 	,render:function(){
 		var props=update(this.props,{$merge:{
 			onMouseUp:this.onMouseUp
+			,onSpanEnter:this.props.onSpanEnter
+			,onSpanLeave:this.props.onSpanLeave
 			,onKeyDown:this.props.onKeyDown||this.onkeydown
 			,onKeyUp:this.props.onKeyUp||this.onkeyup
 			,onKeyPress:this.props.onKeyPress||this.onkeypress

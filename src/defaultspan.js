@@ -30,6 +30,8 @@ var SpanClass = React.createClass({
     ,tags:PT.array.isRequired
     ,start:PT.number.isRequired
     ,tagStyles:PT.object
+    ,onLeaveTag:PT.func
+    ,onEnterTag:PT.func
   }
   ,getTagStyle:function(tid) {
     if (!tid) return {};
@@ -58,12 +60,29 @@ var SpanClass = React.createClass({
     }
     return out;
   }
+  ,getTid:function(e) {
+    var node=e.target;
+    while (node&&typeof node.dataset["start"]=="undefined") {
+      node=node.parentNode;
+    }
+    var tid=node.dataset["tid"];
+    return tid;
+  }
+  ,onMouseEnter:function(e) {
+    var tid=this.getTid(e);
+    if(this.props.onEnterTag && tid) this.props.onEnterTag(tid);
+  }
+  ,onMouseLeave:function(e) {
+    var tid=this.getTid(e);
+    if(this.props.onLeaveTag && tid) this.props.onLeaveTag(tid);
+  }
   ,render:function() {
     var styles=this.getTagStyle(this.props.tid);
     var style=mergeStyles(styles);
     var span=React.Text||"span";
     
-    var props={"data-tid":this.props.tid,style:style,"data-start":this.props.start};    
+    var props={"data-tid":this.props.tid,style:style,"data-start":this.props.start
+    ,onMouseEnter:this.onMouseEnter,onMouseLeave:this.onMouseLeave};    
     props.className=this.getTagType(this.props.tid).join(" ");  //pass className as it's  
     if (style) {
       //work around, react doensn't apply style, don't why
