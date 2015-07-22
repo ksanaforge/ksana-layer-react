@@ -106,6 +106,7 @@ var SelectableView=React.createClass({
 	,render:function(){
 		var props=update(this.props,{$merge:{
 			onMouseUp:this.onMouseUp
+			,onClick:this.props.onClick
 			,onSpanEnter:this.props.onSpanEnter
 			,onSpanLeave:this.props.onSpanLeave
 			,onKeyDown:this.props.onKeyDown||this.onkeydown

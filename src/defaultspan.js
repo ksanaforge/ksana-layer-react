@@ -70,11 +70,11 @@ var SpanClass = React.createClass({
   }
   ,onMouseEnter:function(e) {
     var tid=this.getTid(e);
-    if(this.props.onEnterTag && tid) this.props.onEnterTag(tid);
+    if(this.props.onEnterTag && tid) this.props.onEnterTag(e,tid);
   }
   ,onMouseLeave:function(e) {
     var tid=this.getTid(e);
-    if(this.props.onLeaveTag && tid) this.props.onLeaveTag(tid);
+    if(this.props.onLeaveTag && tid) this.props.onLeaveTag(e,tid);
   }
   ,render:function() {
     var styles=this.getTagStyle(this.props.tid);

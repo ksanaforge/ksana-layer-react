@@ -63,7 +63,7 @@ var FlattenView=React.createClass({
 		out.push(E(this.props.span,{index:this.props.index
 					,onEnterTag:this.props.onEnterTag,onLeaveTag:this.props.onLeaveTag
 					,styles:this.props.styles,key:'s'+start, tags:tags,tid:tid,start:start}
-				,spantext+"~" )
+				,spantext)
 		);
 
 		(tid||[]).map(function(m){ 

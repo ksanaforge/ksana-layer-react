@@ -57,14 +57,20 @@ var InterlineView=React.createClass({
 		}
 		return {tags:[],editing:null,hovering:null,markupActivated:{},allowKeys:allowKeys};
 	}
-	,findLink:function() {
-
+	,onClick:function(e,reactid) {
+		if (this.hoveringTag && this.props.onClickTag) {
+			this.props.onClickTag(e,reactid,this.hoveringTag);
+		}
 	}
 	,onLeaveTag:function(e) {
-		console.log("tag leave",e)
+		this.hovering=null;
+		this.hoveringTag=null;
+		e.target.style.cursor="";
 	}
-	,onEnterTag:function(e) {
-		console.log("tag enter",e)
+	,onEnterTag:function(e,tid) {
+		this.hovering=e.target;
+		this.hoveringTag=this.props.links[tid];
+		e.target.style.cursor="pointer";
 	}
 	,render:function(){
 		var props=update(this.props,{$merge:{tags:this.state.tags,
@@ -74,6 +80,7 @@ var InterlineView=React.createClass({
 			onLeaveTag:this.onLeaveTag,
 			onFocus:this.props.onFocus,
 			onBlur:this.props.onBlur,
+			onClick:this.onClick,
 			selections:this.props.selections,
 			onKeyPress:this.onKeyPress}});
 		delete props.markups;//hide markups from flattenview
