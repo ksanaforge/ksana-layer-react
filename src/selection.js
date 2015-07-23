@@ -67,10 +67,15 @@ var get=function(rootele) {
     var off=getPos(rootele,sel.anchorNode,sel.anchorOffset);
     var off2=getPos(rootele,sel.focusNode,sel.focusOffset);
 
-    var p1=sel.baseNode.parentElement,p2=sel.extentNode.parentElement;
+    var p1=sel.anchorNode.parentElement,p2=sel.focusNode.parentElement;
     if (p1.nodeName!="SPAN"||p2.nodeName!="SPAN") return;
 
-	return {start:off,len:off2-off, selection:sel};
+    var start=off,len=off2-off;
+    if (len<0) {
+        start=off2;
+        len=off-off2;
+    }
+	return {start:start,len:len, selection:sel};
 }
 
 module.exports={get:get,restore:restore};
