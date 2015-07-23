@@ -12,6 +12,14 @@ var groupByOffset=function(markups) {
 	return out;
 }
 
+var	hasOverlap=function(start,len,markups){
+	for (var i in markups) {
+		var m=markups[i];
+		if (!(m[0]>start+len || m[0]+m[1]<start)) return true;
+	}
+	return false;
+}
+
 var nmarkupAtPos=function(markups,offset) {
     return markups.reduce(function(prev,m){return (m.s===offset)?prev+1:prev },0);
 }
@@ -41,4 +49,4 @@ var spreadMarkup=function(markups){
 }
 
 module.exports={groupByOffset:groupByOffset,nmarkupAtPos:nmarkupAtPos,
-	spreadMarkup:spreadMarkup};
+	spreadMarkup:spreadMarkup,hasOverlap:hasOverlap};

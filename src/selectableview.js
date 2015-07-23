@@ -89,17 +89,20 @@ var SelectableView=React.createClass({
 	}
 	,removeBlankInselection:function(sel,text) {
 		if (text.trim()==="") return;
-		var s=0;
-		while (text.charCodeAt(0)<0x33) {
+		var s=0,c=text.charCodeAt(0);
+		while (c<0x33 || (c>=0xf0b && c<=0xf0e)) {
 			sel.start++;
 			sel.len--;
 			text=text.substr(1);
+			c=text.charCodeAt(0);
 		}
 
 		var e=e=text.length-1;
-		while (text.charCodeAt(text.length-1)<0x33) {
+		c=text.charCodeAt(text.length-1);
+		while (c<0x33 || (c>=0xf0b && c<=0xf0e)) {
 			sel.len--;
 			text=text.substr(0,text.length-2);
+			c=text.charCodeAt(text.length-1);
 		}
 		return text;
 	}
