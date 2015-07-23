@@ -65,11 +65,17 @@ var create=function() {
 	var get=function() {
 		return _ranges;
 	}
-	var remove=function() {
+	var removeAll=function() {
 		_ranges=[];
 	}
+	var remove=function(start,len,text) {
+		var idx=find(start,len);
+		if (idx>-1) {
+			_ranges.splice(idx,1);
+		}
+	}
 	var set=function(ranges) {
-		remove();
+		removeAll();
 		for (var i=0;i<ranges.length;i++) {
 			var r=ranges[i];
 			add(r[0],r[1],r[2]);
@@ -77,6 +83,7 @@ var create=function() {
 	}
 	textrange.add=add;
 	textrange.get=get;
+	textrange.removeAll=removeAll;
 	textrange.remove=remove;
 	textrange.set=set;
 	textrange.find=find;

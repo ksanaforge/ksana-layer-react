@@ -29,14 +29,14 @@ var SelectableView=React.createClass({
 		,onMouseUp:PT.func
 		,onSpanEnter:PT.func,onSpanLeave:PT.func
 	}
-	,updateSelection:function() {
-		var seltags=this.tagFromSel(this.state.tags,this.ranges.get());
-		this.setState({tags:seltags});		
+	,updateSelection:function(tags) {
+		var seltags=this.tagFromSel(tags||this.state.tags,this.ranges.get());
+		this.setState({tags:seltags});
 	}
-	,setSelections:function(props) {
+	,setSelections:function(props,tags) {
 		if (props.selections && props.selections.length) {
 			this.ranges.set(props.selections);
-			this.updateSelection();
+			return this.updateSelection(tags);
 		}
 	}
 	,componentWillMount:function() {
@@ -55,16 +55,16 @@ var SelectableView=React.createClass({
 		var seltags=nextProps.tags;
 		if (this.props.selectable!=="no") {
 			seltags=this.tagFromSel(seltags,this.ranges.get());	
+			this.setState({tags:seltags});
 		}
-		this.setSelections(nextProps);
-
-		this.setState({tags:seltags});
+		this.setSelections(nextProps,seltags);
 	}
 	,componentDidMount:function() {
 		//turn contentEditable on for caret, cannot set in render as React will give warning
 		if (this.props.showCaret) this.getDOMNode().contentEditable=true;
 	}
 	,tagFromSel:function(tags,sels) {
+		if (!tags)return;
 		tags=tags.filter(function(m){ return m.type!=="_selected_";});
 		sels.map(function(sel){
 			if (sel[1]>0) tags.push({s:sel[0],l:sel[1],type:"_selected_",style:selectedTextStyle});
@@ -74,19 +74,21 @@ var SelectableView=React.createClass({
 	,markSelection:function(start,len,selectedtext,params){
 		var selectable=this.props.selectable;
 		if (selectable==="no") return;
-		if(this.props.onSelectText){
-			if (this.ranges.find(start,len)===-1) {//newly added selected
-				var cancel=this.props.onSelectText(start,len,selectedtext,params,this.ranges.get());
-				if (cancel) return;
-			}
-		}
 
 		if (params.ctrlKey&&selectable==="multiple") {
 			this.ranges.add(start,len,selectedtext)	
 		} else {
 			this.ranges.set([[start,len,selectedtext]]);	
 		}
-		this.updateSelection();
+
+		if(this.props.onSelectText){
+			var cancel=this.props.onSelectText(start,len,selectedtext,params,this.ranges.get());
+			if (cancel) {
+					this.ranges.remove(start,len,selectedtext);
+			};
+		}
+
+		this.updateSelection(this.state.tags);
 	}
 	,onDoubleClick:function(e) {
 		this.onMouseUp(e);

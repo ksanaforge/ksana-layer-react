@@ -29,7 +29,7 @@ var FlattenView=React.createClass({
 		,onLeaveTag:PT.func
 	}
 	,getDefaultProps:function() {
-		return {tags:{},styles:{},span:defaultSpan};
+		return {tags:[],styles:{},span:defaultSpan};
 	}
 	,tagAtPos:[] // hold covering tags given a text position
 	,mergeStyle:function(style) {
@@ -47,9 +47,6 @@ var FlattenView=React.createClass({
 	,componentWillReceiveProps:function(nextProps) {
 		this.mergeStyle(nextProps.style);
 		this.tagAtPos=spreadMarkup(nextProps.tags);
-	}
-	,mousemove:function(e) {
-		console.log(e)
 	}
 	,renderSpan:function(out,start,end,spantext,tid) {
 		var before=[],after=[], tags=this.props.tags;
