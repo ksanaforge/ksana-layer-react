@@ -37,18 +37,18 @@ var InterlineView=React.createClass({
 	,componentDidMount:function() {
 		this.forceUpdate();
 	}
-	,combinetag:function(nextProps,nextState) {
+	,combinetag:function(props,state) {
 		var tags=[];
-		for (var i=0;i<this.props.links.length;i++) {
-			var H=this.props.links[i];
+		for (var i=0;i<props.links.length;i++) {
+			var H=props.links[i];
 			tags.push({s:H[0], l:H[1],style:styles.link, mid:"l"+i});
 		}
-		for (var i=0;i<this.props.highlights.length;i++) {
-			var H=this.props.highlights[i];
+		for (var i=0;i<props.highlights.length;i++) {
+			var H=props.highlights[i];
 			tags.push({s:H[0], l:H[1], style:styles.highlight, mid:"t"+i});	
 		}
 
-		nextState.tags=tags;
+		state.tags=tags;
 	}	
 	,getInitialState:function() {
 		var allowKeys=keyboard_mixin.arrowkeys;
