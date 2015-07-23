@@ -33,12 +33,15 @@ var SelectableView=React.createClass({
 		var seltags=this.tagFromSel(this.state.tags,this.ranges.get());
 		this.setState({tags:seltags});		
 	}
-	,componentWillMount:function() {
-		this.ranges=textrange.create();
-		if (this.props.selections && this.props.selections.length) {
-			this.ranges.set(this.props.selections);
+	,setSelections:function(props) {
+		if (props.selections && props.selections.length) {
+			this.ranges.set(props.selections);
 			this.updateSelection();
 		}
+	}
+	,componentWillMount:function() {
+		this.ranges=textrange.create();
+		this.setSelections(this.props);
 	}
 	,getInitialState:function(){
 		var allowkeys=KeyboardMixin.arrowkeys;
@@ -53,7 +56,8 @@ var SelectableView=React.createClass({
 		if (this.props.selectable!=="no") {
 			seltags=this.tagFromSel(seltags,this.ranges.get());	
 		}
-		
+		this.setSelections(nextProps);
+
 		this.setState({tags:seltags});
 	}
 	,componentDidMount:function() {
