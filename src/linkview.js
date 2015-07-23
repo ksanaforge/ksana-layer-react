@@ -20,7 +20,7 @@ var styles={
 var InterlineView=React.createClass({
 	mixins:[PureRenderMixin]
 	,propTypes:{
-		links:PT.array
+		links:PT.object
 		,highlights:PT.array
 		,selections:PT.array
 		,user:PT.string
@@ -29,7 +29,7 @@ var InterlineView=React.createClass({
 		,onHoverLink:PT.func
 	}
 	,getDefaultProps:function() {
-		return {links:[],highlights:[],selections:[],user:"anonymous"};
+		return {links:{},highlights:[],selections:[],user:"anonymous"};
 	}
 	,componentWillUpdate:function(nextProps,nextState) {
 		this.combinetag(nextProps,nextState);
@@ -39,9 +39,10 @@ var InterlineView=React.createClass({
 	}
 	,combinetag:function(props,state) {
 		var tags=[];
-		for (var i=0;i<props.links.length;i++) {
-			var H=props.links[i];
-			tags.push({s:H[0], l:H[1],style:styles.link, mid:"l"+i});
+		for (var key in props.links) {
+			props.links[key].forEach(function(H){
+				tags.push({s:H[0], l:H[1],style:styles.link, mid:key});
+			});
 		}
 		for (var i=0;i<props.highlights.length;i++) {
 			var H=props.highlights[i];

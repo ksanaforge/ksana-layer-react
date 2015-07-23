@@ -4,7 +4,7 @@ var InterlineView=require("./src/interlineview");
 var LinkView=require("./src/linkview");
 
 var textrange=require("./src/textrange");
-
+var markuputil=require("./src/markuputil");
 
 //var BaseView=require("./src/baseview");
 //var MultiSelectView=require("./src/multiselectview");
@@ -17,4 +17,6 @@ module.exports={FlattenView:FlattenView
 	,SelectableView:SelectableView
 	,InterlineView:InterlineView
 	,LinkView:LinkView
-	,textrange:textrange};
+	,textrange:textrange
+  ,markuputil:markuputil
+};
