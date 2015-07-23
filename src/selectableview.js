@@ -34,7 +34,7 @@ var SelectableView=React.createClass({
 		this.setState({tags:seltags});
 	}
 	,setSelections:function(props,tags) {
-		if (props.selections && props.selections.length) {
+		if (props.selections) {
 			this.ranges.set(props.selections);
 			return this.updateSelection(tags);
 		}
