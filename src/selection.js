@@ -63,14 +63,13 @@ var restore=function(domnode,oldsel) {
 var get=function(rootele) {
     var sel=window.getSelection();
     if (!sel.baseNode) return;
-    var off=getPos(rootele,sel.baseNode,sel.baseOffset);
-    var off2=getPos(rootele,sel.extentNode,sel.extentOffset);
+
+    var off=getPos(rootele,sel.anchorNode,sel.anchorOffset);
+    var off2=getPos(rootele,sel.focusNode,sel.focusOffset);
+
     var p1=sel.baseNode.parentElement,p2=sel.extentNode.parentElement;
     if (p1.nodeName!="SPAN"||p2.nodeName!="SPAN") return;
 
-    //if (sel.extentNode && off2>off) {
-    //	sel.empty();
-	//}
 	return {start:off,len:off2-off, selection:sel};
 }
 

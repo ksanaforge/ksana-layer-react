@@ -84,6 +84,25 @@ var SelectableView=React.createClass({
 		}
 		this.updateSelection();
 	}
+	,onDoubleClick:function(e) {
+		this.onMouseUp(e);
+	}
+	,removeBlankInselection:function(sel,text) {
+		if (text.trim()==="") return;
+		var s=0;
+		while (text.charCodeAt(0)<0x33) {
+			sel.start++;
+			sel.len--;
+			text=text.substr(1);
+		}
+
+		var e=e=text.length-1;
+		while (text.charCodeAt(text.length-1)<0x33) {
+			sel.len--;
+			text=text.substr(0,text.length-2);
+		}
+		return text;
+	}
 	,onMouseUp:function(e) {
 		if (e.target.nodeName!="SPAN") return;
 		var sel=selection.get(this.getDOMNode());
@@ -94,7 +113,7 @@ var SelectableView=React.createClass({
 		if (text.charCodeAt(0)>=0xD800 ) { //surrogate
 			text=this.props.text.substr(sel.start,sel.len||2);
 		}
-
+		text=this.removeBlankInselection(sel,text);
 		var cancel=sel&&this.markSelection(sel.start,sel.len,text,
 			{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey,sender:this.props.id});
 		if (!cancel) this.selection=sel;
@@ -112,6 +131,7 @@ var SelectableView=React.createClass({
 			,onKeyDown:this.props.onKeyDown||this.onkeydown
 			,onKeyUp:this.props.onKeyUp||this.onkeyup
 			,onKeyPress:this.props.onKeyPress||this.onkeypress
+			,onDoubleClick:this.onDoubleClick
 			,onFocus:this.props.onFocus||this.onFocus
 			,onBlur:this.props.onBlur||this.onBlur			
 			,tags:this.state.tags
