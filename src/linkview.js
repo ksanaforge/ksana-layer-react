@@ -62,14 +62,23 @@ var InterlineView=React.createClass({
 			this.props.onClickTag(e,reactid,this.hoveringTag);
 		}
 	}
-	,onLeaveTag:function(e) {
+	,onLeaveTag:function(e,tid) {
 		this.hovering=null;
 		this.hoveringTag=null;
+		var leavingTag=null;
+		if (this.state.tags[tid]) leavingTag=this.state.tags[tid].mid;
 		e.target.style.cursor="";
+		if (this.props.onLeaveTag) {
+			this.props.onLeaveTag(e,tid,leavingTag);
+		}
 	}
 	,onEnterTag:function(e,tid) {
 		this.hovering=e.target;
-		this.hoveringTag=this.props.links[tid];
+		this.hoveringTag=null;	
+		if (this.state.tags[tid]) this.hoveringTag=this.state.tags[tid].mid;
+		if (this.props.onEnterTag) {
+			this.props.onEnterTag(e,tid,this.hoveringTag);
+		}
 		e.target.style.cursor="pointer";
 	}
 	,render:function(){
