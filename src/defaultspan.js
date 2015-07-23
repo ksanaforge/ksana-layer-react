@@ -12,7 +12,7 @@ var E=React.createElement,PT=React.PropTypes;
 
 
 var mergeStyles=function(styles) {
-  if (!styles.length) return null;
+  if (!styles.length) return {}; //should return {} instead of null , otherwise react don't apply style
   var out={};
   for (var i=0;i<styles.length;i++) {
     for (var key in styles[i]) {
@@ -84,10 +84,6 @@ var SpanClass = React.createClass({
     var props={"data-tid":this.props.tid,style:style,"data-start":this.props.start
     ,onMouseEnter:this.onMouseEnter,onMouseLeave:this.onMouseLeave};    
     props.className=this.getTagType(this.props.tid).join(" ");  //pass className as it's  
-    if (style) {
-      //work around, react doensn't apply style, don't why
-      return E(span,props,E(span,{},this.props.children));
-    }
     
     return E(span,props,this.props.children);
   }

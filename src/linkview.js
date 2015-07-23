@@ -46,7 +46,7 @@ var InterlineView=React.createClass({
 		}
 		for (var i=0;i<props.highlights.length;i++) {
 			var H=props.highlights[i];
-			tags.push({s:H[0], l:H[1], style:styles.highlight, mid:"t"+i});	
+			tags.push({s:H[0], l:H[1], style:styles.highlight, mid:"hover_"+i});	
 		}
 		state.tags=tags;
 	}	
