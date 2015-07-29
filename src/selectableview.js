@@ -132,13 +132,13 @@ var SelectableView=React.createClass({
 	}
 	,setCaretPos:function(domnode,offset) {
 		var range = document.createRange();
+		if (offset>domnode.length)return;
 		range.setStart(domnode,offset);
 		range.setEnd(domnode,offset);
-		
-		var sel = window.getSelection();
+		 
+		var sel = window.getSelection(); 
 		sel.removeAllRanges();
-		sel.addRange(range);    
-    
+		sel.addRange(range); 
 	}
 	,restoreCaret:function(p) {
 		var nodes=this.getDOMNode().childNodes;
@@ -147,8 +147,8 @@ var SelectableView=React.createClass({
 
 		for (var i=0;i<nodes.length;i++) {
 			if (start>p || i===nodes.length-1) {
-				var offset=p-start;
-				this.setCaretPos(node.childNodes[0],offset);
+				var offset=p-parseInt(nodes[i].dataset.start);
+				this.setCaretPos(nodes[i].childNodes[0],offset);
 				return;
 			}
 			node=nodes[i];
