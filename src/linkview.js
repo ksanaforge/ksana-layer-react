@@ -14,7 +14,7 @@ var SelectableView=require("./selectableview");
 var keyboard_mixin=require("./keyboard_mixin");
 var styles={
 	link:{borderBottom:"2px solid #0000ff"}
-	,highlight:{background:"yellow"}
+	,highlight:{background:"yellow",borderRadius:".5em",borderBottom:""}
 }
 
 var InterlineView=React.createClass({

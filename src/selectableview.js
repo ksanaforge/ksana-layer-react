@@ -126,6 +126,39 @@ var SelectableView=React.createClass({
 		var cancel=sel&&this.markSelection(sel.start,sel.len,text,
 			{ctrlKey:e.ctrlKey,shiftKey:e.shiftKey,sender:this.props.id});
 		if (!cancel) this.selection=sel;
+		if (sel.len==0) {
+			this.caretPos=sel.start;
+		}
+	}
+	,setCaretPos:function(domnode,offset) {
+		var range = document.createRange();
+		range.setStart(domnode,offset);
+		range.setEnd(domnode,offset);
+		
+		var sel = window.getSelection();
+		sel.removeAllRanges();
+		sel.addRange(range);    
+    
+	}
+	,restoreCaret:function(p) {
+		var nodes=this.getDOMNode().childNodes;
+		var node=nodes[0];
+		var start=parseInt(node.dataset.start);
+
+		for (var i=0;i<nodes.length;i++) {
+			if (start>p || i===nodes.length-1) {
+				var offset=p-start;
+				this.setCaretPos(node.childNodes[0],offset);
+				return;
+			}
+			node=nodes[i];
+			start=parseInt(node.dataset.start);
+		}
+	}
+	,componentDidUpdate:function() {
+		if (!this.caretPos) return;
+		this.restoreCaret(this.caretPos);
+		this.caretPos=0;
 	}
 	,onFocus:function(e){
 	}
