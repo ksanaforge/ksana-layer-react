@@ -132,7 +132,7 @@ var SelectableView=React.createClass({
 	}
 	,setCaretPos:function(domnode,offset) {
 		var range = document.createRange();
-		if (offset>domnode.length)return;
+		if (offset<0 || offset>domnode.length)return;
 		range.setStart(domnode,offset);
 		range.setEnd(domnode,offset);
 		 
