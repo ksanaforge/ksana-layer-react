@@ -142,17 +142,14 @@ var SelectableView=React.createClass({
 	}
 	,restoreCaret:function(p) {
 		var nodes=this.getDOMNode().childNodes;
-		var node=nodes[0];
-		var start=parseInt(node.dataset.start);
 
-		for (var i=0;i<nodes.length;i++) {
-			if (start>p || i===nodes.length-1) {
-				var offset=p-parseInt(nodes[i].dataset.start);
+		for (var i=nodes.length-1;i>0;i--) {
+			var start=parseInt(nodes[i].dataset.start);
+			if (start<=p) {
+				offset=p-start;
 				this.setCaretPos(nodes[i].childNodes[0],offset);
 				return;
 			}
-			node=nodes[i];
-			start=parseInt(node.dataset.start);
 		}
 	}
 	,componentDidUpdate:function() {
