@@ -107,7 +107,7 @@ var SelectableView=React.createClass({
 		c=text.charCodeAt(text.length-1);
 		while (c<0x33 || (c>=0xf0b && c<=0xf0e)) {
 			sel.len--;
-			text=text.substr(0,text.length-2);
+			text=text.substr(0,text.length-1);
 			c=text.charCodeAt(text.length-1);
 		}
 		return text;
