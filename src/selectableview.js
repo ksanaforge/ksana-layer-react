@@ -143,6 +143,10 @@ var SelectableView=React.createClass({
 	,restoreCaret:function(p) {
 		var nodes=this.getDOMNode().childNodes;
 
+		if (nodes.length===1) {
+			this.setCaretPos(nodes[0].childNodes[0],p);
+			return;
+		}
 		for (var i=nodes.length-1;i>0;i--) {
 			var start=parseInt(nodes[i].dataset.start);
 			if (start<=p) {
