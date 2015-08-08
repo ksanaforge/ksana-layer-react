@@ -2,7 +2,7 @@ var FlattenView=require("./src/flattenview");
 var SelectableView=require("./src/selectableview");
 var InterlineView=require("./src/interlineview");
 var LinkView=require("./src/linkview");
-
+var MultiLinkView=require("./src/multilinkview");
 var textrange=require("./src/textrange");
 var markuputil=require("./src/markuputil");
 
@@ -17,6 +17,7 @@ module.exports={FlattenView:FlattenView
 	,SelectableView:SelectableView
 	,InterlineView:InterlineView
 	,LinkView:LinkView
+	,MultiLinkView:MultiLinkView
 	,textrange:textrange
   ,markuputil:markuputil
 };

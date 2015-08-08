@@ -9,10 +9,13 @@ var MarkupSelector=require("./markupselector");
 */
 var defaultActiveMarkups=function(gbo,markupActivated) {
 	for (var start in gbo){
-		var markupcount= Object.keys(gbo[start]).length;
 		for (var mid in gbo[start]){
 			if (typeof markupActivated[mid]==="undefined") {
-				markupActivated[mid]= markupcount===1? true:false;
+				var m=gbo[start][mid], T=typedef[m.type];
+				if (T.defaultActivate) {
+					markupActivated[mid]=T.defaultActivate(m,gbo[start]);
+				}
+				//markupActivated[mid]= markupcount===1? true:false;
 			}
 		}
 	}
@@ -26,7 +29,12 @@ var allDisabled=function(markups,markupActivated) {
 }
 
 var createMarkupSelector=function(start,context,markups) {
-	var selector=E(MarkupSelector,{markups:markups,context:context,key:"selector"} );
+	var getHandleCaption=function(markup) {
+		var T=typedef[markup.type];
+		return T.getHandleCaption?T.getHandleCaption(markup):"";
+	}
+	var selector=E(MarkupSelector,
+		{markups:markups,context:context,key:"selector",getHandleCaption:getHandleCaption} );
 	return {s:start,l:0,before:selector};
 }
 
@@ -45,7 +53,8 @@ var markup2tag=function(markups,context) {
 								hovering:context.hovering===mid,
 								editing:context.editing===mid,
 								markup:m,context:context,key:mid,
-								activated:context.markupActivated[mid]
+								activated:context.markupActivated[mid],
+								styles:context.styles
 							}
 					);
 			return {s:start, l:m.l, mid:mid, before: before, style:getStyle(m,mid,context)};

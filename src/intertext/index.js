@@ -8,15 +8,13 @@ try {
 var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 
 var IL=require("../interline");
-var RevisionNote=require("./note");
-var RevisionEditMode=require("./editmode");
-var redlinethrough=require("./redlinethrough");
-var authorButtonStyle={
+
+var handleStyle={
 			borderStyle:"solid",borderColor:"gray",fontSize:"50%",color:"silver",borderWidth:2
 			,borderRadius:"20%",cursor:"pointer",verticalAlign:"top",
 			backgroundColor:"drakgray",height:"0.5em",width:"0.5em"};
 
-var AuthorButton=React.createClass({
+var HandleButton=React.createClass({
 	mixins:[PureRenderMixin]
 	,propTypes:{
 		action:PT.func.isRequired
@@ -24,7 +22,7 @@ var AuthorButton=React.createClass({
 		,activated:PT.bool.isRequired
 		,editable:PT.bool.isRequired
 	}
-	,activatedStyle: update(authorButtonStyle,{$merge:{borderColor:"green"}})
+	,activatedStyle: update(handleStyle,{$merge:{borderColor:"green"}})
 	,getInitialState:function() {
 		return {style:{}};
 	}
@@ -39,15 +37,15 @@ var AuthorButton=React.createClass({
 		this.props.action("enter",this.props.mid);
 	}
 	,render:function(){
-		return E("span",{style:this.props.activated?this.activatedStyle:authorButtonStyle,
+		return E("span",{style:this.props.activated?this.activatedStyle:handleStyle,
 			onMouseEnter:this.onMouseEnter,onMouseLeave:this.onMouseLeave,onClick:this.onClick},
 			this.props.children);
 	}
 });
 
 
-var Revision=React.createClass({
-	displayName:"Revision"
+var InterText=React.createClass({
+	displayName:"InterText"
 	,mixins:[PureRenderMixin]
 	,style:{display:"none"}
 	,propTypes:{
@@ -56,13 +54,14 @@ var Revision=React.createClass({
 		,context:PT.object.isRequired
 		,activated:PT.bool
 		,showSuper:PT.bool
+		,styles:PT.object
 	}
-	,renderAuthor:function() {
+	,renderHandle:function() {
 		if (this.props.showSuper) {
-			return E(AuthorButton,
+			return E(HandleButton,
 				{action:this.props.context.action,mid:this.props.mid
-				,activated:this.props.activated,editable:this.props.editable||false},
-				this.props.markup.username||this.props.markup.author)
+				,activated:!!this.props.activated,editable:this.props.editable||false},
+				this.props.markup.caption)
 		};
 	}
 	,renderNote:function() {
@@ -73,10 +72,11 @@ var Revision=React.createClass({
 				this.props.markup.note);
 		};
 	}
-	,getNewTextStyle:function() {
-		var style={display:"none"};
-		if (this.props.hovering) style={borderBottom:"solid 0.1em green",display:"inline"};
-		else if (this.props.activated) style={display:"inline"};
+	,getTextStyle:function() {
+		var style={};
+		if (this.props.hovering) {
+			style=this.props.styles[this.props.markup.className];
+		}
 		return style;
 	}
 	,render:function() {
@@ -84,28 +84,30 @@ var Revision=React.createClass({
 			return E(RevisionEditMode,this.props);
 		} else {
 		 return E(IL.Container,{}
-			,E(IL.Super, {}, this.renderAuthor() )
-			,E(IL.Embed, {style:this.getNewTextStyle() }, this.props.markup.t)
-			,E(IL.Sub  , {}, this.renderNote() )
+			,E(IL.Super, {}, this.renderHandle() )
+			,E(IL.Embed, {}, this.props.markup.t)
+//			,E(IL.Sub  , {}, this.renderNote() )
+
 			);
 		}
 	}
 });
-var linethroughstyle={background:"url("+redlinethrough+") repeat center"};
+var underlinestyle={borderBottom:"solid 0.1em green",display:"inline"};
 //var linethroughstyle={textDecoration:"line-through"};
 var getOldTextStyle=function(markup,mid,context) {
 	var style={};
-	if (context.hovering===mid) style=linethroughstyle;
-	else if (context.editing===mid) style=linethroughstyle;
-	else if (context.markupActivated[mid]) style={display:"none"};
+	if (context.hovering===mid) {
+		style=context.styles[markup.className];
+	}
+
+// else if (context.editing===mid) style=linethroughstyle;
+//	else if (context.markupActivated[mid]) style={display:"none"};
+
 	if (markup.l==0) style={};
 	return style;
 }
-var defaultActivate=function(markup,group) {
-	return Object.keys(group).length===1;
-}
 var getHandleCaption=function(markup) {
-	return markup.username||markup.author||"anonymous";
+	return markup.caption;
 }
-module.exports={Component:Revision, getStyle:getOldTextStyle , defaultActivate:defaultActivate
-,getHandleCaption:getHandleCaption} ;
+
+module.exports={Component:InterText, getStyle:getOldTextStyle ,getHandleCaption:getHandleCaption} ;

@@ -22,7 +22,7 @@ var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 var SelectableView=require("./selectableview");
 var markup2tag=require("./markup2tag");
 var keyboard_mixin=require("./keyboard_mixin");
-var InterlineView=React.createClass({
+var MultiLinkView=React.createClass({
 	mixins:[PureRenderMixin]
 	,propTypes:{
 		markups:PT.object.isRequired  //markup from firebase
@@ -57,8 +57,7 @@ var InterlineView=React.createClass({
 	,markup2tag:function(nextProps,nextState) {
 		var status={editing:nextState.editing,hovering:nextState.hovering
 			,text:nextProps.text
-			,action:this.action,markupActivated:nextState.markupActivated,action:this.action
-			,styles:this.props.styles};
+			,action:this.action,markupActivated:nextState.markupActivated,action:this.action};
 
 		nextState.tags=markup2tag(nextProps.markups,status);
 		nextState.markupActivated=status.markupActivated; //markup2tag might change markupActivated
@@ -143,4 +142,4 @@ var InterlineView=React.createClass({
 
 });
 
-module.exports=InterlineView;
+module.exports=MultiLinkView;

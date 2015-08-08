@@ -1,2 +1,3 @@
 var revision=require("./revision");
-module.exports={"rev":revision};
+var intertext=require("./intertext");
+module.exports={"rev":revision,intertext:intertext};

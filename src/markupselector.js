@@ -17,6 +17,7 @@ var MarkupSelector=React.createClass({
 	,propTypes:{
 		markups:PT.object.isRequired
 		,context:PT.object.isRequired
+		,getHandleCaption:PT.func.isRequired
 	}
 	,onClick:function(e) {
 		var mid=e.target.dataset.mid;
@@ -30,7 +31,7 @@ var MarkupSelector=React.createClass({
 			var hovering=this.props.context.hovering===mid;
 			var style=hovering?handlerStyle_hover:handlerStyle;
 			out.push(E("span",{"data-mid":mid,onMouseEnter:this.onMouseEnter,onMouseLeave:this.onMouseLeave,
-			onClick:this.onClick, key:mid,style:style},m.username||m.author));
+			onClick:this.onClick, key:mid,style:style},this.props.getHandleCaption(m)));
 		}
 		return out;
 	}
