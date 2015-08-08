@@ -56,6 +56,8 @@ var Revision=React.createClass({
 		,context:PT.object.isRequired
 		,activated:PT.bool
 		,showSuper:PT.bool
+		,isHovering:PT.bool
+		,isEditing:PT.bool
 	}
 	,renderAuthor:function() {
 		if (this.props.showSuper) {
@@ -66,7 +68,7 @@ var Revision=React.createClass({
 		};
 	}
 	,renderNote:function() {
-		if(this.props.hovering) {
+		if(this.props.isHovering) {
 			return E(RevisionNote,
 				{editing:false,action:this.props.context.action,note:this.props.markup.note,
 				 mid:this.props.mid},
@@ -75,7 +77,7 @@ var Revision=React.createClass({
 	}
 	,getNewTextStyle:function() {
 		var style={display:"none"};
-		if (this.props.hovering) style={borderBottom:"solid 0.1em green",display:"inline"};
+		if (this.props.isHovering) style={borderBottom:"solid 0.1em green",display:"inline"};
 		else if (this.props.activated) style={display:"inline"};
 		return style;
 	}

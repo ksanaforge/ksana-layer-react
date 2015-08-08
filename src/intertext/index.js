@@ -9,6 +9,7 @@ var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 
 var IL=require("../interline");
 
+var RevisionNote=require("../revision/note");
 var handleStyle={
 			borderStyle:"solid",borderColor:"gray",fontSize:"50%",color:"silver",borderWidth:2
 			,borderRadius:"20%",cursor:"pointer",verticalAlign:"top",
@@ -55,6 +56,7 @@ var InterText=React.createClass({
 		,activated:PT.bool
 		,showSuper:PT.bool
 		,styles:PT.object
+		,isHovering:PT.bool
 	}
 	,renderHandle:function() {
 		if (this.props.showSuper) {
@@ -65,7 +67,7 @@ var InterText=React.createClass({
 		};
 	}
 	,renderNote:function() {
-		if(this.props.hovering) {
+		if(this.props.isHovering) {
 			return E(RevisionNote,
 				{editing:false,action:this.props.context.action,note:this.props.markup.note,
 				 mid:this.props.mid},
@@ -74,7 +76,7 @@ var InterText=React.createClass({
 	}
 	,getTextStyle:function() {
 		var style={};
-		if (this.props.hovering) {
+		if (this.props.isHovering) {
 			style=this.props.styles[this.props.markup.className];
 		}
 		return style;
@@ -86,7 +88,7 @@ var InterText=React.createClass({
 		 return E(IL.Container,{}
 			,E(IL.Super, {}, this.renderHandle() )
 			,E(IL.Embed, {}, this.props.markup.t)
-//			,E(IL.Sub  , {}, this.renderNote() )
+		//	,E(IL.Sub  , {}, this.renderNote() )
 
 			);
 		}
@@ -96,9 +98,12 @@ var underlinestyle={borderBottom:"solid 0.1em green",display:"inline"};
 //var linethroughstyle={textDecoration:"line-through"};
 var getOldTextStyle=function(markup,mid,context) {
 	var style={};
-	if (context.hovering===mid) {
+	var g=context.hoveringMarkup;
+	if (g) g=g.group;
+	if (context.hovering===mid || (g && g===markup.group)) {
 		style=context.styles[markup.className];
 	}
+
 
 // else if (context.editing===mid) style=linethroughstyle;
 //	else if (context.markupActivated[mid]) style={display:"none"};

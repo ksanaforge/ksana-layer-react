@@ -50,8 +50,8 @@ var markup2tag=function(markups,context) {
 			//console.log("style",context.hovering,getStyle(mid,context),mid)
 			var before=E(Component,
 							{ mid:mid,showSuper:showSuper,
-								hovering:context.hovering===mid,
-								editing:context.editing===mid,
+								isHovering:context.hovering===mid,
+								isEditing:context.editing===mid,
 								markup:m,context:context,key:mid,
 								activated:context.markupActivated[mid],
 								styles:context.styles

@@ -55,13 +55,15 @@ var InterlineView=React.createClass({
 		this.forceUpdate();
 	}
 	,markup2tag:function(nextProps,nextState) {
-		var status={editing:nextState.editing,hovering:nextState.hovering
+		var context={editing:nextState.editing
+			,hovering:nextState.hovering
+			,hoveringMarkup:this.props.markups[nextState.hovering]
 			,text:nextProps.text
 			,action:this.action,markupActivated:nextState.markupActivated,action:this.action
 			,styles:this.props.styles};
 
-		nextState.tags=markup2tag(nextProps.markups,status);
-		nextState.markupActivated=status.markupActivated; //markup2tag might change markupActivated
+		nextState.tags=markup2tag(nextProps.markups,context);
+		nextState.markupActivated=context.markupActivated; //markup2tag might change markupActivated
 	}
   ,activateMarkup:function(mid) {
   	var m=this.props.markups[mid];
@@ -114,7 +116,7 @@ var InterlineView=React.createClass({
   }
 	,action:function(act,p1,p2,p3) {
 		if(act==="enter") {
- 			this.setState({hovering:p1})
+ 			this.setState({hovering:p1});
 		} else if (act==="leave") {
 			if (this.state.editing) {
 				this.props.onDoneEdit&&this.props.onDoneEdit(this.state.editing);
