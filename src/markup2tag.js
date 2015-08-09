@@ -38,12 +38,17 @@ var createMarkupSelector=function(start,context,markups) {
 	return {s:start,l:0,before:selector};
 }
 
-
-var markup2tag=function(markups,context) {
-	var gbo=markuputil.groupByOffset(markups);
+var inSameGroup=function(group,markups){
+	if (!group) return;
+	for (var i in markups) {
+		if (markups[i].group===group) return i;
+	}
+}
+var markup2tag=function(allmarkups,context) {
+	var gbo=markuputil.groupByOffset(allmarkups);
 	defaultActiveMarkups(gbo,context.markupActivated);
 	var out=[];
-	var createTag=function(mid,showSuper) {
+	var createTag=function(markups,mid,showSuper) {
 			var m=markups[mid], cls=cls||m.type;
 			var Component=typedef[m.type].Component;
 			var getStyle=typedef[m.type].getStyle||function(){return {}};
@@ -64,16 +69,20 @@ var markup2tag=function(markups,context) {
 		var hovering=markups[context.hovering]?context.hovering:null; //this group has hovering markup
 		var editing=markups[context.editing]?context.editing:null;    //this group has editing markup
 		var markupcount=Object.keys(markups).length;
-		var showSuper=true;
-		if (!context.editing && markupcount>1 && allDisabled(markups,context.markupActivated )) {
+		var showSuper=true, grouphovering=false;
+		if (context.hovering && !hovering) {
+			grouphovering=inSameGroup(allmarkups[context.hovering].group,markups);	
+		}
+		
+		if (!grouphovering&&!context.editing && markupcount>1 && allDisabled(markups,context.markupActivated )) {
 			showSuper=false;
 			out.push(createMarkupSelector(start,context,markups));
 		}
-		if (editing||hovering) {
-			out.push(createTag(editing||hovering,showSuper));
+		if (editing||hovering||grouphovering) {
+			out.push(createTag(markups,editing||hovering||grouphovering,showSuper));
 		} else {
 			for (var mid in markups) {
-				out.push(createTag(mid, showSuper && (context.markupActivated[mid]||markupcount===1)));
+				out.push(createTag(markups,mid, showSuper && (context.markupActivated[mid]||markupcount===1)));
 			}
 		}
 	}

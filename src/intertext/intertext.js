@@ -21,9 +21,11 @@ var HandleButton=React.createClass({
 		action:PT.func.isRequired
 		,mid:PT.string.isRequired
 		,activated:PT.bool.isRequired
-		,editable:PT.bool.isRequired
 	}
-	,activatedStyle: update(handleStyle,{$merge:{borderColor:"green"}})
+	,getStyle:function() {
+		handleStyle.borderColor=this.props.activated?"brown":"gray";
+		return handleStyle;
+	}
 	,getInitialState:function() {
 		return {style:{}};
 	}
@@ -37,7 +39,7 @@ var HandleButton=React.createClass({
 		this.props.action("enter",this.props.mid);
 	}
 	,render:function(){
-		return E("span",{style:this.props.activated?this.activatedStyle:handleStyle,
+		return E("span",{style:this.getStyle(),
 			onMouseEnter:this.onMouseEnter,onMouseLeave:this.onMouseLeave,onClick:this.onClick},
 			this.props.children);
 	}
@@ -52,20 +54,22 @@ var InterText=React.createClass({
 		markup:PT.object.isRequired
 		,mid:PT.string.isRequired
 		,context:PT.object.isRequired
-		,activated:PT.bool
 		,showSuper:PT.bool
 		,styles:PT.object
 		,isHovering:PT.bool
 	}
 	,renderHandle:function() {
-		if (this.props.showSuper) {
-			return E(HandleButton,
-				{action:this.props.context.action,mid:this.props.mid
-				,activated:!!this.props.activated,editable:this.props.editable||false},
-				this.props.markup.caption)
-		};
-	}
+		if (!this.props.showSuper) return;
 
+		var g=this.props.context.hoveringMarkup;
+		if (g) g=g.group;
+		var activated=(this.props.context.hovering===this.props.mid || (g && g===this.props.markup.group));
+
+		return E(HandleButton,
+				{action:this.props.context.action,mid:this.props.mid
+				,activated:activated},
+				this.props.markup.caption);
+	}
 	,getTextStyle:function() {
 		var style={};
 		if (this.props.isHovering) {
