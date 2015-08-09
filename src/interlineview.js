@@ -22,6 +22,8 @@ var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 var SelectableView=require("./selectableview");
 var markup2tag=require("./markup2tag");
 var keyboard_mixin=require("./keyboard_mixin");
+var typedef=require("./typedef");
+
 var InterlineView=React.createClass({
 	mixins:[PureRenderMixin]
 	,propTypes:{
@@ -29,6 +31,13 @@ var InterlineView=React.createClass({
 		,user:PT.string
 		,allowkeys:PT.array
 		,onKeyPress:PT.func
+		,selections:PT.array
+		,onEditTag:PT.func
+		,onDoneEdit:PT.func
+		,onKeyPress:PT.func
+		,onFocus:PT.func
+		,onBlur:PT.func
+		,onHover:PT.func
 	}
 	,getInitialState:function() {
 		var allowKeys=keyboard_mixin.arrowkeys;
@@ -88,6 +97,20 @@ var InterlineView=React.createClass({
   		this.activateMarkup(mid);
   	}
   }
+  ,clickTag:function(mid){
+  	//translate click event to 
+  	var m=this.props.markups[mid];
+  	var T=typedef[m.type];
+
+  	if(T&&T.translateClick) {
+  		var activated=this.state.markupActivated[mid];
+  		var act=T.translateClick(m,activated);
+  		this.action(act,mid);
+  	} else {
+	  	this.props.onClickTag&&this.props.onClickTag(mid);
+	  	this.setState({editing:null,hovering:null});
+  	}
+  }
   ,deactivateMarkup:function(mid) {
 		var markupActivated=this.state.markupActivated;
 		var deactive={};
@@ -116,20 +139,24 @@ var InterlineView=React.createClass({
   }
 	,action:function(act,p1,p2,p3) {
 		if(act==="enter") {
- 			this.setState({hovering:p1});
+			this.props.onHover&&this.props.onHover(p1,this.state.hovering);
+ 			this.setState({hovering:p1}); 			
 		} else if (act==="leave") {
 			if (this.state.editing) {
 				this.props.onDoneEdit&&this.props.onDoneEdit(this.state.editing);
 			}
+			this.props.onHover&&this.props.onHover(null,this.state.hovering);
 			this.setState({hovering:null,editing:null});
 		} else if (act==="activate") {
 			this.activateMarkup(p1);
 		} else if (act==="deactivate") {
 			this.deactivateMarkup(p1)
-		} else if (act==="activate_edit") { //
+		} else if (act==="activate_edit") {
 			this.activateOrEditMarkup(p1);
 		} else if (act==="setMarkup") {
 			this.setMarkup(p1,p2,p3);
+		} else if (act==="click") {
+			this.clickTag(p1);
 		}
 	}
 	,render:function(){
@@ -138,6 +165,7 @@ var InterlineView=React.createClass({
 			allowKeys:this.state.allowKeys,
 			onFocus:this.props.onFocus,
 			onBlur:this.props.onBlur,
+			selections:this.props.selections,
 			onKeyPress:this.onKeyPress}});
 		delete props.markups;//hide markups from flattenview
 		return E(SelectableView,props);

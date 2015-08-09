@@ -21,8 +21,7 @@ var MarkupSelector=React.createClass({
 	}
 	,onClick:function(e) {
 		var mid=e.target.dataset.mid;
-		var act=this.props.activated?"deactivate":"activate_edit";
-		this.props.context.action(act,mid);
+		this.props.context.action("click",mid);
 	}
 	,renderHandlers:function() {
 		var out=[];
