@@ -14,13 +14,13 @@ var Embed=React.createClass({
 });
 var Super=React.createClass({
 	render:function() {
-		return E("div",{style:{position:"absolute",left:0,top:"-1.2em",width:"1000px"}}
+		return E("div",{className:"interline",style:{position:"absolute",left:0,top:"-1.2em",width:"1000px"}}
 			,this.props.children);
 	}
 });
 var Sub=React.createClass({
 	render:function() {
-		return E("div",{style:{position:"absolute",left:0,top:"0.6em",width:"1000px"}}
+		return E("div",{className:"interline",style:{position:"absolute",left:0,top:"0.6em",width:"1000px"}}
 			,this.props.children);
 	}
 });

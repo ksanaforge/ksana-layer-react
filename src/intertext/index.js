@@ -85,7 +85,7 @@ var InterText=React.createClass({
 		if (this.props.context.editing===this.props.mid) {
 			return E(RevisionEditMode,this.props);
 		} else {
-		 return E(IL.Container,{}
+		 return E(IL.Container,null
 			,E(IL.Super, {}, this.renderHandle() )
 			,E(IL.Embed, {}, this.props.markup.t)
 		//	,E(IL.Sub  , {}, this.renderNote() )
