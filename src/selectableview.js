@@ -75,8 +75,8 @@ var SelectableView=React.createClass({
 		var selectable=this.props.selectable;
 		if (selectable==="no") return;
 
-		if (params.ctrlKey&&selectable==="multiple") {
-			this.ranges.add(start,len,selectedtext)	
+		if (selectable==="multiple") {
+			this.ranges.add(start,len,selectedtext);	
 		} else {
 			this.ranges.set([[start,len,selectedtext]]);	
 		}
