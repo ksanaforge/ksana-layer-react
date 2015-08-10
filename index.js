@@ -2,10 +2,10 @@ var FlattenView=require("./src/flattenview");
 var SelectableView=require("./src/selectableview");
 var InterlineView=require("./src/interlineview");
 var LinkView=require("./src/linkview");
-//var MultiLinkView=require("./src/multilinkview");
+
 var textrange=require("./src/textrange");
 var markuputil=require("./src/markuputil");
-
+var PropEdit=require("./src/propedit");
 //var BaseView=require("./src/baseview");
 //var MultiSelectView=require("./src/multiselectview");
 //var ReviseView=require("./src/reviseview");
@@ -20,4 +20,5 @@ module.exports={FlattenView:FlattenView
 //	,MultiLinkView:MultiLinkView
 	,textrange:textrange
   ,markuputil:markuputil
+  ,PropEdit:PropEdit
 };

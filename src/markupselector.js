@@ -13,7 +13,8 @@ var handlerStyle={borderStyle:"solid",borderColor:"gray",fontSize:"50%",color:"s
 var handlerStyle_hover=update(handlerStyle,{$merge:{borderColor:"brown"}});
 
 var MarkupSelector=React.createClass({
-	mixins:[PureRenderMixin]
+	displayName:"MarkupSelector"
+	,mixins:[PureRenderMixin]
 	,propTypes:{
 		markups:PT.object.isRequired
 		,context:PT.object.isRequired

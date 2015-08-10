@@ -25,7 +25,8 @@ var keyboard_mixin=require("./keyboard_mixin");
 var typedef=require("./typedef");
 
 var InterlineView=React.createClass({
-	mixins:[PureRenderMixin]
+	displayName:"InterlineView"
+	,mixins:[PureRenderMixin]
 	,propTypes:{
 		markups:PT.object.isRequired  //markup from firebase
 		,user:PT.string

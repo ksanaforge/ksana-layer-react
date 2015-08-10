@@ -17,7 +17,8 @@ var authorButtonStyle={
 			backgroundColor:"drakgray",height:"0.5em",width:"0.5em"};
 
 var AuthorButton=React.createClass({
-	mixins:[PureRenderMixin]
+	displayName:"AuthorButton"
+	,mixins:[PureRenderMixin]
 	,propTypes:{
 		action:PT.func.isRequired
 		,mid:PT.string.isRequired

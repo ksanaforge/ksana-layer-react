@@ -18,7 +18,8 @@ var FlattenView=require("./flattenview");
 var textrange=require("./textrange");
 var selection=require("./selection");
 var SelectableView=React.createClass({
-	mixins:[PureRenderMixin,KeyboardMixin]
+	displayName:"SelectableView"
+	,mixins:[PureRenderMixin,KeyboardMixin]
 	,propTypes:{
 		selectable: PT.oneOf(['no', 'single', 'multiple'])
 		,showCaret:PT.bool

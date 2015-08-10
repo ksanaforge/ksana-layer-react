@@ -17,6 +17,7 @@ var handleStyle={
 
 var HandleButton=React.createClass({
 	mixins:[PureRenderMixin]
+	,displayName:"HandleButton"
 	,propTypes:{
 		action:PT.func.isRequired
 		,mid:PT.string.isRequired
@@ -49,7 +50,6 @@ var HandleButton=React.createClass({
 var InterText=React.createClass({
 	displayName:"InterText"
 	,mixins:[PureRenderMixin]
-	,style:{display:"none"}
 	,propTypes:{
 		markup:PT.object.isRequired
 		,mid:PT.string.isRequired
@@ -67,7 +67,7 @@ var InterText=React.createClass({
 
 		return E(HandleButton,
 				{action:this.props.context.action,mid:this.props.mid
-				,activated:activated},
+				,activated:!!activated},
 				this.props.markup.caption);
 	}
 	,getTextStyle:function() {
