@@ -9,8 +9,9 @@ var getOldTextStyle=function(markup,mid,context) {
 	if (markup.l==0) style={};
 	return style;
 }
-var defaultActivate=function(markup,group) {
-	return Object.keys(group).length===1;
+var defaultActivate=function(markup,group,user) {
+	return markup.author==user
+	//return Object.keys(group).length===1;
 }
 var getHandleCaption=function(markup) {
 	return markup.username||markup.author||"anonymous";

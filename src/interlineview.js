@@ -70,7 +70,8 @@ var InterlineView=React.createClass({
 			,hoveringMarkup:this.props.markups[nextState.hovering]
 			,text:nextProps.text
 			,action:this.action,markupActivated:nextState.markupActivated,action:this.action
-			,styles:this.props.styles};
+			,styles:nextProps.styles
+			,user:nextProps.user};
 
 		nextState.tags=markup2tag(nextProps.markups,context);
 		nextState.markupActivated=context.markupActivated; //markup2tag might change markupActivated
@@ -85,6 +86,10 @@ var InterlineView=React.createClass({
 		this.setState({editing:null,hovering:null,markupActivated:ma});
   }
   ,componentWillReceiveProps:function(nextProps) {
+  	if (nextProps.user!==this.props.user) {
+  		this.setState({markupActivated:{}});
+  	}
+
   	if (nextProps.editing!==this.props.editing) {
   		this.activateOrEditMarkup(nextProps.editing,nextProps);
   	}

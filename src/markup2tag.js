@@ -7,13 +7,13 @@ var MarkupSelector=require("./markupselector");
 /**
 	put no conflict markup in object markupActivated
 */
-var defaultActiveMarkups=function(gbo,markupActivated) {
+var defaultActiveMarkups=function(gbo,markupActivated,user) {
 	for (var start in gbo){
 		for (var mid in gbo[start]){
 			if (typeof markupActivated[mid]==="undefined") {
 				var m=gbo[start][mid], T=typedef[m.type];
 				if (T.defaultActivate) {
-					markupActivated[mid]=T.defaultActivate(m,gbo[start]);
+					markupActivated[mid]=T.defaultActivate(m,gbo[start],user);
 				}
 				//markupActivated[mid]= markupcount===1? true:false;
 			}
@@ -46,7 +46,7 @@ var inSameGroup=function(group,markups){
 }
 var markup2tag=function(markups,context) {
 	var gbo=markuputil.groupByOffset(markups);
-	defaultActiveMarkups(gbo,context.markupActivated);
+	defaultActiveMarkups(gbo,context.markupActivated,context.user);
 	var out=[];
 	var createTag=function(markupAtOffset,mid,showSuper) {
 			var m=markupAtOffset[mid], cls=cls||m.type;

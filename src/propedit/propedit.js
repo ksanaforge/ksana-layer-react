@@ -10,17 +10,22 @@ var update=React.addons.update, E=React.createElement, PT=React.PropTypes;
 	display markup properties  (類型)
   jump to other range.
 
+
+
   save, cancel editing markup.
 */
 
 var PropEdit=React.createClass({
 	displayName:"PropEdit"
 	,propTypes:{
+		ranges:PT.object.isRequired
 
 	}
 	,mixins:[PureRenderMixin]
 	,render:function(){
-		return E("div",null,"PropEdit");
+		return E("div",null,
+			E("span",null,this.props.ranges)
+		);
 	}
 });
 
